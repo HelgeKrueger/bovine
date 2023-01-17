@@ -1,4 +1,4 @@
-from bovine.test import get_user_keys
+from bovine.utils.test import get_user_keys
 
 from .crypto import sign_message, verify_signature, content_digest_sha256
 

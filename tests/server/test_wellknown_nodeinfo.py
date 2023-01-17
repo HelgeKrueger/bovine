@@ -3,7 +3,7 @@ import json
 import pytest
 import jsonschema
 
-from bovine.test.in_memory_test_app import app
+from bovine.utils.test.in_memory_test_app import app
 
 
 def validate_nodeinfo(data):

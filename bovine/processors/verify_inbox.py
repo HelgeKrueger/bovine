@@ -1,7 +1,7 @@
 from bovine.utils.parsers import parse_signature_header
 from bovine.utils.crypto import content_digest_sha256, verify_signature
 from bovine.clients import get_public_key
-from bovine.user_store import LocalUser
+from bovine.stores import LocalUser
 from . import InboxItem
 
 

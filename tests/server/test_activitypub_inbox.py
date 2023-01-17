@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 
-from bovine.test.in_memory_test_app import app
+from bovine.utils.test.in_memory_test_app import app
 
 
 @pytest.mark.asyncio

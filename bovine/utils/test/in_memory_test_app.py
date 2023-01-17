@@ -1,10 +1,11 @@
 from quart import Quart
 
 from bovine.server import default_configuration
-from bovine.user_store.in_memory import InMemoryUserStore
+from bovine.stores.in_memory import InMemoryUserStore
 from bovine.utils import dump_incoming_inbox_to_stdout
-from bovine.test import get_user_keys
-from bovine.user_store import LocalUser
+from bovine.stores import LocalUser
+
+from . import get_user_keys
 
 
 app = Quart(__name__)

@@ -2,7 +2,7 @@ import json
 import pytest
 from unittest.mock import patch
 
-from bovine.user_store import LocalUser
+from bovine.stores import LocalUser
 from . import InboxItem
 from .accept_follow import accept_follow_request
 

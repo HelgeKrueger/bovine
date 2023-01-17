@@ -3,7 +3,7 @@ import aiohttp
 from datetime import datetime
 
 from bovine.utils.crypto import content_digest_sha256, sign_message
-from bovine.user_store import LocalUser
+from bovine.stores import LocalUser
 
 
 async def get_public_key(key_id):

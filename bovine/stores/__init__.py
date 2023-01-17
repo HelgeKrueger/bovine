@@ -1,3 +1,5 @@
+import traceback
+
 from bovine.processors import InboxItem
 
 
@@ -10,10 +12,20 @@ class LocalUser:
         self.actor_type = actor_type
 
         self.processors = []
+        self.outbox_count_coroutine = None
+        self.outbox_items_coroutine = None
 
     def add_inbox_processor(self, processor):
         self.processors.append(processor)
         return self
+
+    def set_outbox(self, item_count, items):
+        self.outbox_count_coroutine = item_count
+        self.outbox_items_coroutine = items
+        return self
+
+    def get_account(self):
+        return self.url
 
     def get_inbox(self):
         return self.url + "/inbox"
@@ -36,15 +48,22 @@ class LocalUser:
                 working = await processor(self, working)
                 if not working:
                     return
-        except Exception as e:
+        except Exception as ex:
             print(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
             print()
-            print(e)
+            print(ex)
+            traceback.print_exception(type(ex), ex, ex.__traceback__)
             print()
             inbox_item.dump()
 
     async def outbox_item_count(self):
+        if self.outbox_count_coroutine:
+            return await self.outbox_count_coroutine(self)
+
         return 0
 
     async def outbox_items(self, start=0, limit=10):
+        if self.outbox_items_coroutine:
+            return await self.outbox_items_coroutine(self, start, limit)
+
         return []

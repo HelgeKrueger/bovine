@@ -32,7 +32,7 @@ async def webfinger() -> dict:
     if "@" in account_name:
         account_name = account_name.split("@")[0]
 
-    user_info = current_app.config.data_store.get_user(account_name)
+    user_info = await current_app.config.data_store.get_user(account_name)
 
     if not user_info:
         return {"status": "not found"}, 404

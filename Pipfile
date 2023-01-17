@@ -10,6 +10,8 @@ aiohttp = "*"
 aiodns = "*"
 flake8 = "*"
 flake8-black = "*"
+tortoise-orm = "*"
+markdown = "*"
 
 [dev-packages]
 black = "*"
@@ -17,6 +19,7 @@ pytest = "*"
 pytest-asyncio = "*"
 pylint = "*"
 jsonschema = "*"
+rich = "*"
 
 [requires]
 python_version = "3.10"

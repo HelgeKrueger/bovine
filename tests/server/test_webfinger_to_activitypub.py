@@ -29,7 +29,10 @@ async def test_get_user() -> None:
 
     self_url = self_element["href"]
 
-    response = await client.get(remove_domain_from_url(self_url))
+    response = await client.get(
+        remove_domain_from_url(self_url),
+        headers={"Accept": "application/activity+json"},
+    )
 
     assert response.status_code == 200
 

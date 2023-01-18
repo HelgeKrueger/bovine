@@ -1,7 +1,6 @@
 import bovine.clients
 from bovine.activitystreams.activities import build_accept
-from bovine.stores import LocalUser
-from . import InboxItem
+from bovine.types import InboxItem, LocalUser
 
 
 async def accept_follow_request(

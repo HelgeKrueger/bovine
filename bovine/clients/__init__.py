@@ -1,9 +1,12 @@
 import json
 import aiohttp
 from datetime import datetime
+import logging
 
-from bovine.utils.crypto import content_digest_sha256, sign_message
-from bovine.stores import LocalUser
+from bovine.utils.crypto import content_digest_sha256
+from bovine.types import LocalUser
+
+from bovine.utils import build_signature
 
 
 async def get_public_key(key_id):
@@ -46,26 +49,24 @@ async def send_activitypub_request(inbox, data, user: LocalUser):
     date_header = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
     content_type = "application/activity+json"
 
-    message = "\n".join(
-        [
-            f"(request-target): post {target}",
-            f"host: {host}",
-            f"date: {date_header}",
-            f"digest: {digest}",
-            f"content-type: {content_type}",
-        ]
+    signature_header = (
+        build_signature(host, "post", target)
+        .with_field("date", date_header)
+        .with_field("digest", digest)
+        .with_field("content-type", content_type)
+        .build_signature(user.get_public_key_url(), user.private_key)
     )
-
-    signature_string = sign_message(user.private_key, message)
-
-    signature = f'keyId="{user.get_public_key_url()}",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="{signature_string}"'
 
     headers["Digest"] = digest
     headers["Date"] = date_header
     headers["Content-Type"] = "application/activity+json"
-    headers["Signature"] = signature
+    headers["Signature"] = signature_header
 
     async with aiohttp.ClientSession() as session:
         async with session.post(inbox, data=body, headers=headers) as response:
             text = await response.text()
+
+            logging.info(f"Send activity pub request to {inbox}")
+            logging.info(text)
+
             return text, response.status

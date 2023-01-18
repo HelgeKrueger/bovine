@@ -5,6 +5,9 @@ class Signature:
         self.headers = headers
         self.signature = signature
 
+    def fields(self):
+        return self.headers.split(" ")
+
     @staticmethod
     def from_signature_header(header):
         headers = header.split(",")

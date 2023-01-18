@@ -1,8 +1,7 @@
 import json
 from unittest.mock import patch
 
-from bovine.stores import LocalUser
-from bovine.processors import InboxItem
+from bovine.types import LocalUser, InboxItem
 
 from .test_database import db_url  # noqa: F401
 from .models import Actor, Follower

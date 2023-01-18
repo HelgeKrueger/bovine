@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-from bovine.stores import LocalUser as LocalUserObject
+from bovine.types import LocalUser as LocalUserObject
 from .models import Actor
 from .processors import store_in_database, accept_follow_request
 from .outbox import outbox_item_count, outbox_items
@@ -14,7 +14,10 @@ async def init(db_url="sqlite://db.sqlite3"):
     await Tortoise.generate_schemas()
 
 
-default_inbox_processors = [accept_follow_request, store_in_database]
+default_inbox_processors = [
+    accept_follow_request,
+    store_in_database,
+]
 default_outbox = (outbox_item_count, outbox_items)
 
 

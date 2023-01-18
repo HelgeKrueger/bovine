@@ -1,5 +1,7 @@
 from quart import Blueprint, current_app, request
 
+from bovine.utils.parsers import parse_account_name
+
 wellknown = Blueprint("wellknown", __name__, url_prefix="/.well-known")
 
 
@@ -24,13 +26,12 @@ async def webfinger() -> dict:
     if not resource or not resource.startswith("acct:"):
         return {"error": "invalid request"}, 400
 
-    account_name = resource[5:]
     domain = current_app.config["DOMAIN"]
 
-    if account_name[0] == "@":
-        account_name = account_name[1:]
-    if "@" in account_name:
-        account_name = account_name.split("@")[0]
+    account_name, account_domain = parse_account_name(resource[5:])
+
+    if account_domain and account_domain != domain:
+        return {"status": "not found"}, 404
 
     user_info = await current_app.config.data_store.get_user(account_name)
 

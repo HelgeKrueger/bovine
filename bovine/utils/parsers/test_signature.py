@@ -2,7 +2,7 @@ from .signature import Signature
 
 
 def test_signature_header_parsing():
-    header_string = 'keyId="https://host.user#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="h...Kg=="'
+    header_string = 'keyId="https://host.user#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest content-type",signature="h...Kg=="'  # noqa E501
 
     result = Signature.from_signature_header(header_string)
 
@@ -10,3 +10,10 @@ def test_signature_header_parsing():
     assert result.algorithm == "rsa-sha256"
     assert result.headers == "(request-target) host date digest content-type"
     assert result.signature == "h...Kg=="
+    assert result.fields() == [
+        "(request-target)",
+        "host",
+        "date",
+        "digest",
+        "content-type",
+    ]

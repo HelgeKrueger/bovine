@@ -1,4 +1,4 @@
-from . import LocalUser
+from bovine.types import LocalUser
 
 
 class InMemoryUserStore:

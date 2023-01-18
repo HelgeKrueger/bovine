@@ -1,2 +1,5 @@
+node_modules
+build
 __pycache__
 .files
+db.sqlite3

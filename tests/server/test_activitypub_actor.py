@@ -8,7 +8,10 @@ from bovine.utils.test import remove_domain_from_url
 async def test_activitypub_actor_unknown_user() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/unknown")
+    response = await client.get(
+        "/activitypub/unknown",
+        headers={"Accept": "application/activity+json"},
+    )
 
     assert response.status_code == 404
 
@@ -21,7 +24,10 @@ async def test_activitypub_actor_unknown_user() -> None:
 async def test_activitypub_actor() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/user")
+    response = await client.get(
+        "/activitypub/user",
+        headers={"Accept": "application/activity+json"},
+    )
     data = await response.get_json()
 
     assert "https://www.w3.org/ns/activitystreams" in data["@context"]
@@ -37,7 +43,10 @@ async def test_activitypub_actor() -> None:
 async def test_activitypub_actor_public_key() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/user")
+    response = await client.get(
+        "/activitypub/user",
+        headers={"Accept": "application/activity+json"},
+    )
     data = await response.get_json()
 
     assert "publicKey" in data
@@ -52,12 +61,18 @@ async def test_activitypub_actor_public_key() -> None:
 async def test_activitypub_actor_inbox() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/user")
+    response = await client.get(
+        "/activitypub/user",
+        headers={"Accept": "application/activity+json"},
+    )
     data = await response.get_json()
 
     inbox_url = data["inbox"]
 
-    response = await client.get(remove_domain_from_url(inbox_url))
+    response = await client.get(
+        remove_domain_from_url(inbox_url),
+        headers={"Accept": "application/activity+json"},
+    )
 
     assert response.status_code == 405
 
@@ -66,11 +81,17 @@ async def test_activitypub_actor_inbox() -> None:
 async def test_activitypub_actor_outbox() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/user")
+    response = await client.get(
+        "/activitypub/user",
+        headers={"Accept": "application/activity+json"},
+    )
     data = await response.get_json()
 
     outbox_url = data["outbox"]
 
-    response = await client.get(remove_domain_from_url(outbox_url))
+    response = await client.get(
+        remove_domain_from_url(outbox_url),
+        headers={"Accept": "application/activity+json"},
+    )
 
     assert response.status_code == 200

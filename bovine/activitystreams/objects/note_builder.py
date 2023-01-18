@@ -9,10 +9,18 @@ class NoteBuilder:
         self.to = []
         self.cc = []
         self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        self.hashtags = []
+        self.conversation = None
+        self.reply_to_id = None
+        self.reply_to_atom_uri = None
 
     def as_public(self):
         self.to.append("https://www.w3.org/ns/activitystreams#Public")
         self.cc.append(f"{self.account}/followers")
+        return self
+
+    def add_cc(self, recipient):
+        self.cc.append(recipient)
         return self
 
     def as_unlisted(self):
@@ -20,8 +28,24 @@ class NoteBuilder:
         self.cc.append("https://www.w3.org/ns/activitystreams#Public")
         return self
 
+    def with_hashtag(self, hashtag):
+        self.hashtags.append(hashtag)
+        return self
+
+    def with_conversation(self, conversation):
+        self.conversation = conversation
+        return self
+
+    def with_reply(self, rid):
+        self.reply_to_id = rid
+        return self
+
+    def with_reply_to_atom_uri(self, uri):
+        self.reply_to_atom_uri = uri
+        return self
+
     def build(self):
-        return {
+        result = {
             "@context": "https://www.w3.org/ns/activitystreams",
             "id": self.url,
             "attributedTo": self.account,
@@ -32,3 +56,19 @@ class NoteBuilder:
             "to": self.to,
             "cc": self.cc,
         }
+
+        if len(self.hashtags) > 0:
+            if "tag" not in result:
+                result["tag"] = []
+            result["tag"] += [{"name": tag, "type": "Hashtag"} for tag in self.hashtags]
+
+        if self.reply_to_id:
+            result["inReplyTo"] = self.reply_to_id
+
+        if self.reply_to_atom_uri:
+            result["inReplyToAtomUri"] = self.reply_to_atom_uri
+
+        if self.conversation:
+            result["conversation"] = self.conversation
+
+        return result

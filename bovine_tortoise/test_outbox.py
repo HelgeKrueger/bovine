@@ -1,7 +1,7 @@
 from datetime import datetime
 from unittest.mock import patch
 
-from bovine.stores import LocalUser
+from bovine.types import LocalUser
 
 from .test_database import db_url  # noqa: F401
 from .models import Actor, OutboxEntry, Follower

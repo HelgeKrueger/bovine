@@ -4,8 +4,7 @@ from datetime import datetime
 import bovine.clients
 
 from bovine.activitystreams.activities import build_accept
-from bovine.stores import LocalUser
-from bovine.processors import InboxItem
+from bovine.types import InboxItem, LocalUser
 
 from .models import Actor, InboxEntry, Follower
 
@@ -52,3 +51,10 @@ async def accept_follow_request(
         print(ex)
         traceback.print_exception(type(ex), ex, ex.__traceback__)
         return item
+
+
+async def store_host_as_peer(
+    local_user: LocalUser, item: InboxItem
+) -> InboxItem | None:
+    # FIXME
+    return item

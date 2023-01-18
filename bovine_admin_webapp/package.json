@@ -1,0 +1,29 @@
+{
+  "name": "bovine_admin_webapp",
+  "version": "0.0.1",
+  "description": "Webapp to use bovine admin over port forward",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --watch"
+  },
+  "author": "Helge Krueger",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.5",
+    "esbuild": "^0.17.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.7.0",
+    "react-router-dom": "^6.7.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2"
+  }
+}

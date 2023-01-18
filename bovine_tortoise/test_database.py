@@ -2,8 +2,8 @@ import pytest
 import os
 from tortoise import Tortoise
 
-from bovine.stores import LocalUser
-from bovine.processors import InboxItem
+
+from bovine.types import InboxItem, LocalUser
 
 from . import init, ManagedDataStore
 from .processors import store_in_database

@@ -15,7 +15,10 @@ async def test_activitypub_outbox_with_configured_coroutines() -> None:
 
     client.app.config.data_store.users["user"].set_outbox(item_count, items)
 
-    response = await client.get("/activitypub/user/outbox")
+    response = await client.get(
+        "/activitypub/user/outbox",
+        headers={"Accept": "application/activity+json"},
+    )
 
     assert response.status_code == 200
 

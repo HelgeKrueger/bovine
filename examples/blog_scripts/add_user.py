@@ -3,7 +3,7 @@ import os
 
 from argparse import ArgumentParser
 
-from bovine.stores import LocalUser
+from bovine.types import LocalUser
 from bovine_tortoise import ManagedDataStore
 from bovine.utils.crypto import generate_public_private_key
 

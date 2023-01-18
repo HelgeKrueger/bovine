@@ -21,15 +21,15 @@ async def test_activitypub_inbox_post_is_unauthorized_with_signature() -> None:
         data = "XXX"
         date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-        signature = (
-            'keyId="other",headers="(request-target) host date digest",signature="XXX"'
-        )
+        signature = 'keyId="other",algorithm="rsa",headers="(request-target) host date digest",signature="XXX"'
 
         response = await client.post(
             "/activitypub/user/inbox",
             headers={
                 "Signature": signature,
                 "date": date,
+                "host": "host",
+                "digest": "XXX",
             },
             data=data,
         )

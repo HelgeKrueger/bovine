@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html>
+  <body style="background-color:lightgoldenrodyellow;">
+    <h1 style="text-align:center;">@helge@mymath.rocks</h1>
+
+    {% for content  in contents  %}
+      <div style="width:80%;margin-left:10%;background-color:white;border:1px black solid;">
+      <p>
+      {{ content | safe }}
+      </p>
+      </div>
+    {% endfor %}
+  </body>
+</html>

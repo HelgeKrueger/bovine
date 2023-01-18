@@ -1,8 +1,9 @@
+import logging
+
 from bovine.utils.parsers import parse_signature_header
 from bovine.utils.crypto import content_digest_sha256, verify_signature
 from bovine.clients import get_public_key
-from bovine.stores import LocalUser
-from . import InboxItem
+from bovine.types import InboxItem, LocalUser
 
 
 async def verify_inbox_request(
@@ -10,7 +11,8 @@ async def verify_inbox_request(
 ) -> InboxItem | None:
     for header in ["Signature", "Digest", "Host", "Date", "Content-Type"]:
         if header not in item.headers:
-            return
+            logging.error("NOT ALL HEADER FIELDS")
+            return item
 
     signature_header = item.headers["Signature"]
     digest = item.headers["Digest"]
@@ -24,7 +26,7 @@ async def verify_inbox_request(
     content = item.body
 
     if digest != content_digest_sha256(content):
-        return
+        logging.error("DIGEST MISSMATCH")
 
     public_key = await get_public_key(headers.key_id)
 
@@ -38,6 +40,6 @@ async def verify_inbox_request(
         ]
     )
     if not verify_signature(public_key, message, headers.signature):
-        return
+        logging.error("WRONG SIGNATURE")
 
     return item

@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "bovine"
+version = "0.0.1"
+description = "Modular ActivityPub Server"
+authors = ["Helge <helge.krueger@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+quart = "*"
+cryptography = "*"
+aiohttp = "*"
+aiodns = "*"
+tortoise-orm = "*"
+markdown = "*"
+rich = "*"
+aerich = "^0.7.1"
+python-markdown-math = "^0.8"
+
+[tool.poetry.group.test.dependencies]
+black = "*"
+pytest = "*"
+pytest-asyncio = "*"
+flake8 = "*"
+flake8-black = "*"
+jsonschema = "*"
+
+
+[tool.aerich]
+tortoise_orm = "examples.blog.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

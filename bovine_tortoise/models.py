@@ -1,6 +1,8 @@
 from tortoise.models import Model
 from tortoise import fields
 
+from .types import PeerType
+
 
 class Actor(Model):
     id = fields.IntField(pk=True)
@@ -22,6 +24,14 @@ class Follower(Model):
     public_key = fields.TextField(null=True)
 
 
+class Following(Model):
+    id = fields.IntField(pk=True)
+    actor = fields.ForeignKeyField("models.Actor", related_name="following")
+
+    account = fields.CharField(max_length=255)
+    followed_on = fields.DatetimeField()
+
+
 class InboxEntry(Model):
     id = fields.IntField(pk=True)
     actor = fields.ForeignKeyField("models.Actor", related_name="inbox_entries")
@@ -35,3 +45,15 @@ class OutboxEntry(Model):
     local_path = fields.CharField(max_length=255)
     created = fields.DatetimeField()
     content = fields.JSONField()
+
+
+class Peer(Model):
+    id = fields.IntField(pk=True)
+
+    domain = fields.CharField(max_length=255)
+    peer_type = fields.CharEnumField(PeerType, default=PeerType.NEW)
+    software = fields.CharField(max_length=255, null=True)
+    version = fields.CharField(max_length=255, null=True)
+
+    created = fields.DatetimeField(auto_now_add=True)
+    updated = fields.DatetimeField(null=True)

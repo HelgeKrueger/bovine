@@ -1,8 +1,9 @@
 import asyncio
 from datetime import datetime
+import logging
 import traceback
 
-from bovine.stores import LocalUser
+from bovine.types import LocalUser
 import bovine.clients
 
 from .models import OutboxEntry, Actor, Follower
@@ -32,12 +33,14 @@ async def send_activity(local_user: LocalUser, activity: dict, local_path: str) 
     try:
         actor = await Actor.get_or_none(account=local_user.name)
         if actor is None:
-            print("Failed to fetch actor")
+            logging.warn("Failed to fetch actor")
             return 0
 
         await OutboxEntry.create(
             actor=actor, created=datetime.now(), content=activity, local_path=local_path
         )
+
+        logging.info(f"Create outbox entry for {local_path}")
 
         followers = await Follower.filter(actor=actor).all()
         inboxes = [x.inbox for x in followers]
@@ -51,3 +54,5 @@ async def send_activity(local_user: LocalUser, activity: dict, local_path: str) 
     except Exception as ex:
         print(ex)
         traceback.print_exception(type(ex), ex, ex.__traceback__)
+
+        logging.error("Something went wrong when sending activity")

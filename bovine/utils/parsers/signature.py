@@ -1,9 +1,15 @@
+import logging
+
+
 class Signature:
     def __init__(self, key_id, algorithm, headers, signature):
         self.key_id = key_id
         self.algorithm = algorithm
         self.headers = headers
         self.signature = signature
+
+        if self.algorithm != "rsa-sha256":
+            logging.error(f"Unsupported algorithm {self.algorithm}")
 
     def fields(self):
         return self.headers.split(" ")

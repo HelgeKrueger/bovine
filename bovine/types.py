@@ -16,7 +16,7 @@ class InboxItem:
 
     def get_body_id(self) -> str:
         try:
-            parsed = json.dumps(self.body.decode("utf-8"))
+            parsed = json.loads(self.body.decode("utf-8"))
             return parsed["id"]
         except Exception as e:
             logging.info(e)
@@ -24,23 +24,28 @@ class InboxItem:
 
     def dump(self):
         logging.info("###########################################################")
-        logging.info()
         logging.info("---HEADERS----")
         logging.info(json.dumps(self.headers))
-        logging.info()
         logging.info("---BODY----")
         logging.info(self.body.decode("utf-8"))
-        logging.info()
-        logging.info()
 
 
 class LocalUser:
-    def __init__(self, name, url, public_key, private_key, actor_type):
+    def __init__(
+        self,
+        name: str,
+        url: str,
+        public_key: str,
+        private_key: str,
+        actor_type: str,
+        no_auth_fetch: bool = False,
+    ):
         self.private_key = private_key
         self.public_key = public_key
         self.url = url
         self.name = name
         self.actor_type = actor_type
+        self.no_auth_fetch = no_auth_fetch
 
         self.processors = []
         self.outbox_count_coroutine = None
@@ -68,9 +73,9 @@ class LocalUser:
         return self.url + "#main-key"
 
     def dump(self):
-        print(f"url: {self.url}")
-        print(f"name: {self.name}")
-        print(f"type: {self.actor_type}")
+        logging.info(f"url: {self.url}")
+        logging.info(f"name: {self.name}")
+        logging.info(f"type: {self.actor_type}")
 
     async def process_inbox_item(self, inbox_item: InboxItem):
         working = inbox_item
@@ -83,7 +88,6 @@ class LocalUser:
             logging.warning(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
             logging.warning(ex)
             traceback.print_exception(type(ex), ex, ex.__traceback__)
-            print()
             inbox_item.dump()
 
     async def outbox_item_count(self):

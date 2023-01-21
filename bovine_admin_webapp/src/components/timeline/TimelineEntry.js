@@ -11,7 +11,10 @@ const TimelineEntry = ({ entry }) => {
   }
 
   if (entry?.type === "Create" && entry?.object?.type === "Note") {
-    return <CreateNote entry={entry} />;
+    return <CreateNote note={entry?.object} source={entry} />;
+  }
+  if (entry?.type === "Note") {
+    return <CreateNote note={entry} source={entry} />;
   }
 
   if (entry?.type === "Announce") {

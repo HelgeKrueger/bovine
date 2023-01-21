@@ -6,30 +6,39 @@ class NoteBuilder:
         self.account = account
         self.content = content
         self.url = url
-        self.to = []
-        self.cc = []
+        self.to = set()
+        self.cc = set()
         self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-        self.hashtags = []
+        self.hashtags = set()
+        self.mentions = set()
         self.conversation = None
         self.reply_to_id = None
         self.reply_to_atom_uri = None
 
     def as_public(self):
-        self.to.append("https://www.w3.org/ns/activitystreams#Public")
-        self.cc.append(f"{self.account}/followers")
+        self.to.add("https://www.w3.org/ns/activitystreams#Public")
+        self.cc.add(f"{self.account}/followers")
         return self
 
     def add_cc(self, recipient):
-        self.cc.append(recipient)
+        self.cc.add(recipient)
+        return self
+
+    def add_to(self, recipient):
+        self.to.add(recipient)
         return self
 
     def as_unlisted(self):
-        self.to.append(f"{self.account}/followers")
-        self.cc.append("https://www.w3.org/ns/activitystreams#Public")
+        self.to.add(f"{self.account}/followers")
+        self.cc.add("https://www.w3.org/ns/activitystreams#Public")
         return self
 
     def with_hashtag(self, hashtag):
-        self.hashtags.append(hashtag)
+        self.hashtags.add(hashtag)
+        return self
+
+    def with_mention(self, mention):
+        self.mentions.add(mention)
         return self
 
     def with_conversation(self, conversation):
@@ -53,14 +62,22 @@ class NoteBuilder:
             "inReplyTo": None,
             "content": self.content,
             "published": self.published,
-            "to": self.to,
-            "cc": self.cc,
+            "to": list(self.to),
+            "cc": list(self.cc - self.to),
         }
 
         if len(self.hashtags) > 0:
             if "tag" not in result:
                 result["tag"] = []
             result["tag"] += [{"name": tag, "type": "Hashtag"} for tag in self.hashtags]
+
+        if len(self.mentions) > 0:
+            if "tag" not in result:
+                result["tag"] = []
+            result["tag"] += [
+                {"href": mention, "name": mention, "type": "Mention"}
+                for mention in self.mentions
+            ]
 
         if self.reply_to_id:
             result["inReplyTo"] = self.reply_to_id

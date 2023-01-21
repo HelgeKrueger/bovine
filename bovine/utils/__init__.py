@@ -27,8 +27,6 @@ def get_public_private_key_from_files(public_key_path, private_key_path):
     public_key = None
     private_key = None
 
-    print(public_key_path, private_key_path)
-
     if os.path.exists(public_key_path):
         with open(public_key_path) as f:
             public_key = f.read()

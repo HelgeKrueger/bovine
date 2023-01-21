@@ -29,11 +29,11 @@ app = Quart(__name__)
 
 @app.before_serving
 async def startup():
-    app.config.session = aiohttp.ClientSession()
+    app.config["session"] = aiohttp.ClientSession()
 
 
 def get_public_key_wrapper(key_id):
-    return get_public_key(bovine_user, app.config.session, key_id)
+    return get_public_key(app.config["session"], bovine_user, key_id)
 
 
 signature_checker = SignatureChecker(get_public_key_wrapper)

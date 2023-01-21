@@ -1,3 +1,5 @@
+from quart import current_app
+
 import bovine.clients
 from bovine.activitystreams.activities import build_accept
 from bovine.types import InboxItem, LocalUser
@@ -15,6 +17,8 @@ async def accept_follow_request(
 
     inbox = data["actor"] + "/inbox"
 
-    await bovine.clients.send_activitypub_request(inbox, request_data, local_user)
+    await bovine.clients.send_activitypub_request(
+        current_app.config["session"], inbox, request_data, local_user
+    )
 
     return None

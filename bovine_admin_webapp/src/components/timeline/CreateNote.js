@@ -5,22 +5,22 @@ import Attachments from "./Attachments";
 import ReplyToNote from "./ReplyToNote";
 import Source from "./Source";
 
-const CreateNote = ({ entry }) => {
+const CreateNote = ({ note, source }) => {
   return (
     <Paper
       sx={{ backgroundColor: "white", padding: 2, margin: 2 }}
       elevation={2}
     >
-      <Actor name={entry?.actor} /> posted a{" "}
-      <Link href={entry?.object?.id} target="_blank">
+      <Actor name={note.attributedTo} /> posted a{" "}
+      <Link href={note.id} target="_blank">
         Status
       </Link>{" "}
-      at {entry?.object?.published}
+      at {note.published}
       <Divider />
-      <div dangerouslySetInnerHTML={{ __html: entry?.object?.content }} />
-      <Attachments attachments={entry?.object?.attachment} />
-      <ReplyToNote entry={entry} />
-      <Source entry={entry} />
+      <div dangerouslySetInnerHTML={{ __html: note.content }} />
+      <Attachments attachments={note.attachment} />
+      <ReplyToNote entry={note} />
+      <Source entry={source} />
     </Paper>
   );
 };

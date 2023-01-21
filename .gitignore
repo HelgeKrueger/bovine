@@ -3,3 +3,5 @@ build
 __pycache__
 .files
 db.sqlite3
+debug.log
+.coverage

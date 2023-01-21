@@ -16,10 +16,42 @@ def test_note_builder_hashtags():
     assert result["tag"][0] == {"name": "#tag1", "type": "Hashtag"}
 
 
+def test_note_builder_hashtag_and_mention():
+    result = (
+        NoteBuilder("account", "url", "content")
+        .with_hashtag("#tag1")
+        .with_mention("proto://server/path/mention")
+        .build()
+    )
+
+    assert isinstance(result["tag"], list)
+    assert result["tag"][0] == {"name": "#tag1", "type": "Hashtag"}
+    assert result["tag"][1] == {
+        "href": "proto://server/path/mention",
+        "name": "proto://server/path/mention",
+        "type": "Mention",
+    }
+
+
 def test_note_builder_cc():
     result = NoteBuilder("account", "url", "content").as_public().add_cc("user").build()
 
-    assert result["cc"] == ["account/followers", "user"]
+    assert set(result["cc"]) == {"account/followers", "user"}
+
+
+def test_note_builder_cc_and_to():
+    result = (
+        NoteBuilder("account", "url", "content")
+        .as_public()
+        .add_cc("user")
+        .add_cc("user")
+        .add_cc("to_user")
+        .add_to("to_user")
+        .build()
+    )
+
+    assert set(result["cc"]) == {"account/followers", "user"}
+    assert "to_user" in result["to"]
 
 
 def test_note_builder_for_reply():

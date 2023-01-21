@@ -1,8 +1,12 @@
 import logging
+import traceback
 from urllib.parse import urlparse
 
 from .crypto import sign_message, verify_signature
 from .parsers import parse_signature_header
+from .date import check_max_offset_now, parse_gmt
+
+logger = logging.getLogger("http-signature")
 
 
 class HttpSignature:
@@ -17,7 +21,7 @@ class HttpSignature:
 
         signature_parts = [
             f'keyId="{key_id}"',
-            'algorithm="rsa-sha256"',
+            'algorithm="rsa-sha256"',  # FIXME: Should other algorithms be supported?
             f'headers="{headers}"',
             f'signature="{signature_string}"',
         ]
@@ -42,12 +46,12 @@ class SignatureChecker:
 
     async def validate_signature(self, request, digest=None):
         if "signature" not in request.headers:
-            logging.warning("Signature not present")
+            logger.warning("Signature not present")
             return False
 
         if digest is not None:
             if request.headers["digest"] != digest:
-                logging.warning("Different diggest")
+                logger.warning("Different diggest")
                 return False
 
         try:
@@ -59,14 +63,19 @@ class SignatureChecker:
                 "(request-target)" not in signature_fields
                 or "date" not in signature_fields
             ):
-                logging.warning("Required field not present in signature")
+                logger.warning("Required field not present in signature")
                 return False
 
             if digest is not None and "digest" not in signature_fields:
-                logging.warning("Digest not present, but computable")
+                logger.warning("Digest not present, but computable")
                 return False
 
-            # FIXME Validate date
+            http_date = parse_gmt(request.headers["date"])
+            if not check_max_offset_now(http_date):
+                logger.warning(
+                    f"Encountered invalid http date {request.headers['date']}"
+                )
+                return False
 
             for field in signature_fields:
                 if field == "(request-target)":
@@ -78,7 +87,13 @@ class SignatureChecker:
 
             public_key = await self.key_retriever(parsed_signature.key_id)
 
+            if public_key is None:
+                logger.warn(f"Could not retrieve key from {parsed_signature.key_id}")
+                return False
+
             return http_signature.verify(public_key, parsed_signature.signature)
         except Exception as e:
-            logging.error(str(e))
+            logger.error(str(e))
+            for log_line in traceback.format_exc().splitlines():
+                logger.error(log_line)
             return False

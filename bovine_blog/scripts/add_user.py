@@ -38,6 +38,10 @@ if __name__ == "__main__":
     if not public_key or not private_key:
         public_key, private_key = generate_public_private_key()
 
+    if public_key is None or private_key is None:
+        print("Failed to generate keys")
+        exit(1)
+
     local_user = LocalUser(
         args.username,
         url,

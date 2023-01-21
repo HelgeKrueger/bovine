@@ -1,3 +1,4 @@
+import aiohttp
 import asyncio
 from datetime import datetime
 import logging
@@ -29,7 +30,12 @@ async def outbox_items(local_user: LocalUser, start: int, limit: int) -> list | 
     return [x.content for x in result]
 
 
-async def send_activity(local_user: LocalUser, activity: dict, local_path: str):
+async def send_activity(
+    session: aiohttp.ClientSession,
+    local_user: LocalUser,
+    activity: dict,
+    local_path: str,
+):
     try:
         actor = await Actor.get_or_none(account=local_user.name)
         if actor is None:
@@ -44,27 +50,34 @@ async def send_activity(local_user: LocalUser, activity: dict, local_path: str):
 
         inboxes = []
 
-        # FIXME
-
+        # FIXME: Do I need to take into account the audience field?
+        # Currently, the audience field is not supported for anything ...
         for account in activity.get("to", []) + activity.get("cc", []):
             if "/followers" in account:
                 followers = await Follower.filter(actor=actor).all()
-                inboxes = [x.inbox for x in followers]
+                inboxes += [x.inbox for x in followers]
+                logging.info("Adding followers")
             elif "#Public" in account:
                 logging.info("Public post")
             else:
-                inboxes.append(account + "/inbox")
+                if "mymath.rocks" not in account:
+                    logging.info(f"Getting inbox for {account}")
+                    inbox = await bovine.clients.get_inbox(session, local_user, account)
+                    inboxes.append(inbox)
 
-        logging.warning("Inboxes " + ", ".join(inboxes))
+        inboxes = list(set(inboxes))
+
+        logging.info("Inboxes " + ", ".join(inboxes))
 
         await asyncio.gather(
             *[
-                bovine.clients.send_activitypub_request(inbox, activity, local_user)
+                bovine.clients.send_activitypub_request(
+                    session, local_user, inbox, activity
+                )
                 for inbox in inboxes
             ]
         )
     except Exception as ex:
-        print(ex)
         traceback.print_exception(type(ex), ex, ex.__traceback__)
 
-        logging.error("Something went wrong when sending activity")
+        logging.error("Something went wrong when sending activity", ex)

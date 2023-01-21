@@ -14,3 +14,4 @@ async def nodeinfo() -> dict:
         "usage": {"users": {}},
         "version": "2.0",
     }
+    # FIXME: Need a way to specify more information here

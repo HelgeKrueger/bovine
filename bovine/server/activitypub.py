@@ -23,13 +23,17 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
     if not re.match(r"application/.*json", request.headers["Accept"]):
         print("redirecting")
-        return redirect(request_path.replace("/activitypub", ""))
-
-    if not await current_app.config["validate_signature"](request, digest=None):
-        logger.warning("Invalid signature on get http request for account")
-        return {"status": "http signature not valid"}, 401
+        return redirect(
+            request_path.replace("/activitypub", "")
+        )  # FIXME: Need a better way to redirect here
 
     user_info = await current_app.config["get_user"](account_name)
+
+    if user_info and user_info.no_auth_fetch:
+        logging.debug(f"Skipping signature check for user {account_name}")
+    elif not await current_app.config["validate_signature"](request, digest=None):
+        logger.warning("Invalid signature on get http request for account")
+        return {"status": "http signature not valid"}, 401
 
     if not user_info:
         return {"status": "not found"}, 404

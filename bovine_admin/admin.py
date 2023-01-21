@@ -1,20 +1,19 @@
+import json
+import logging
+import uuid
+
+import aiohttp
 from quart import Quart, request
 from tortoise.contrib.quart import register_tortoise
-import aiohttp
-import uuid
-import json
-
-from markdown import Markdown
-
-from bovine.activitystreams.objects import build_note
-from bovine.activitystreams.activities import build_create
 
 from bovine_tortoise.models import Actor, InboxEntry, Following, Follower
-from bovine_tortoise.actions import follow
+from bovine_tortoise.actions import follow, fetch_post
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.outbox import send_activity
+from bovine_tortoise.processors import store_in_database
 
-import logging
+from .utils import build_create_note_activity_from_data_base_case
+
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
 
@@ -31,7 +30,7 @@ username = "helge"
 
 @app.before_serving
 async def startup():
-    app.client = aiohttp.ClientSession()
+    app.config["session"] = aiohttp.ClientSession()
 
 
 @app.get("/")
@@ -66,7 +65,7 @@ async def add_follow():
 
     print(remote_account)
 
-    await follow(app.client, local_user, remote_account)
+    await follow(app.config["session"], local_user, remote_account)
 
     print("done")
 
@@ -95,33 +94,31 @@ async def handle_post():
     local_path = f"{username}/{str(uuid.uuid4())}"
     url = f"https://mymath.rocks/testing_notes/{local_path}"
 
-    source = data["content"]
-    md = Markdown(extensions=["mdx_math"])
-
-    message = md.convert(source)
-
-    builder = build_note(local_user.get_account(), url, message).as_public()
-
-    for tag in data["hashtags"]:
-        builder = builder.with_hashtag(tag)
-
-    if "conversation" in data:
-        builder = builder.with_conversation(data["conversation"])
-    if "reply_to_id" in data:
-        builder = builder.with_reply(data["reply_to_id"])
-    if "reply_to_atom_uri" in data:
-        builder = builder.with_reply_to_atom_uri(data["reply_to_atom_uri"])
-    if "reply_to_actor" in data:
-        builder = builder.add_cc(data["reply_to_actor"])
-
-    note = builder.build()
-
-    create = build_create(note).build()
+    create = build_create_note_activity_from_data_base_case(
+        local_user.get_account(), url, data
+    )
 
     logging.info("Posting")
     logging.info(json.dumps(create))
 
-    app.add_background_task(send_activity_wrapper, (local_user, create, local_path))
+    app.add_background_task(
+        send_activity_wrapper, (app.config["session"], local_user, create, local_path)
+    )
+
+    return {}
+
+
+@app.route("/fetch", methods=["POST"])
+async def fetch_url():
+    store = ManagedDataStore(inbox_processors=[store_in_database])
+    local_user = await store.get_user(username)
+    data = await request.get_json()
+
+    url = data["url"]
+
+    logging.info(f"Fetching {url}")
+
+    app.add_background_task(fetch_post, app.config["session"], local_user, url)
 
     return {}
 

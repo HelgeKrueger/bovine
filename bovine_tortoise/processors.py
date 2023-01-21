@@ -1,6 +1,8 @@
 import traceback
 from datetime import datetime
 
+from quart import current_app
+
 import bovine.clients
 
 from bovine.activitystreams.activities import build_accept
@@ -44,7 +46,9 @@ async def accept_follow_request(
         )
 
         request_data = build_accept(local_user.url, data).build()
-        await bovine.clients.send_activitypub_request(inbox, request_data, local_user)
+        await bovine.clients.send_activitypub_request(
+            current_app.config["session"], inbox, request_data, local_user
+        )
 
         return None
     except Exception as ex:

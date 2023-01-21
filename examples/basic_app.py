@@ -4,7 +4,7 @@ from quart import Quart
 
 from bovine.server import default_configuration
 from bovine.types import LocalUser
-from bovine.stores.in_memory import InMemoryUserStore
+from bovine.utils.in_memory_store import InMemoryUserStore
 from bovine.utils.test import get_user_keys
 from bovine.utils import dump_incoming_inbox_to_stdout
 from bovine.processors.accept_follow import accept_follow_request

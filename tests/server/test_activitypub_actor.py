@@ -23,6 +23,10 @@ async def return_true(*args, **kwargs):
     return True
 
 
+async def return_false(*args, **kwargs):
+    return True
+
+
 async def test_activitypub_actor_unknown_user() -> None:
     app.config["validate_signature"] = return_true
     client = app.test_client()
@@ -111,3 +115,25 @@ async def test_activitypub_actor_outbox() -> None:
     )
 
     assert response.status_code == 200
+
+
+async def test_activitypub_bovine_actor() -> None:
+    app.config["validate_signature"] = return_false
+    client = app.test_client()
+
+    response = await client.get(
+        "/activitypub/bovine",
+        headers={"Accept": "application/activity+json"},
+    )
+
+    assert response.status_code == 200
+
+    data = await response.get_json()
+
+    assert data["id"] == "https://my_domain/activitypub/bovine"
+    assert "publicKey" in data
+
+    key_data = data["publicKey"]
+
+    assert key_data["publicKeyPem"].startswith("-----BEGIN PUBLIC KEY-----\n")
+    assert key_data["publicKeyPem"].endswith("\n-----END PUBLIC KEY-----\n")

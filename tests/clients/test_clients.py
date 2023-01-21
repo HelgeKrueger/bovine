@@ -10,7 +10,7 @@ async def test_get_public_key():
     bovine_user = get_bovine_user("test_domain")
     async with aiohttp.ClientSession() as session:
         key = await get_public_key(
-            bovine_user, session, "https://mas.to/users/helgek#main-key"
+            session, bovine_user, "https://mas.to/users/helgek#main-key"
         )
 
     assert key.startswith("-----BEGIN PUBLIC KEY-----\n")
@@ -19,6 +19,8 @@ async def test_get_public_key():
 
 # @pytest.mark.skip
 async def test_get_inbox():
-    inbox = await get_inbox("https://mas.to/users/helgek")
+    bovine_user = get_bovine_user("test_domain")
+    async with aiohttp.ClientSession() as session:
+        inbox = await get_inbox(session, bovine_user, "https://mas.to/users/helgek")
 
     assert inbox == "https://mas.to/users/helgek/inbox"

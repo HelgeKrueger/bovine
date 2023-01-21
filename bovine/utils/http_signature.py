@@ -11,8 +11,8 @@ class HttpSignature:
 
     def build_signature(self, key_id, private_key):
         message = self.build_message()
-        signature_string = sign_message(private_key, message)
 
+        signature_string = sign_message(private_key, message)
         headers = " ".join(name for name, _ in self.fields)
 
         signature_parts = [
@@ -25,7 +25,8 @@ class HttpSignature:
         return ",".join(signature_parts)
 
     def verify(self, public_key, signature):
-        return verify_signature(public_key, self.build_message(), signature)
+        message = self.build_message()
+        return verify_signature(public_key, message, signature)
 
     def build_message(self):
         return "\n".join(f"{name}: {value}" for name, value in self.fields)
@@ -39,19 +40,35 @@ class SignatureChecker:
     def __init__(self, key_retriever):
         self.key_retriever = key_retriever
 
-    async def validate_signature(self, request, digest):
+    async def validate_signature(self, request, digest=None):
         if "signature" not in request.headers:
+            logging.warning("Signature not present")
             return False
 
         if digest is not None:
             if request.headers["digest"] != digest:
-                logging.warn("Different diggest")
+                logging.warning("Different diggest")
+                return False
 
         try:
             http_signature = HttpSignature()
             parsed_signature = parse_signature_header(request.headers["signature"])
+            signature_fields = parsed_signature.fields()
 
-            for field in parsed_signature.fields():
+            if (
+                "(request-target)" not in signature_fields
+                or "date" not in signature_fields
+            ):
+                logging.warning("Required field not present in signature")
+                return False
+
+            if digest is not None and "digest" not in signature_fields:
+                logging.warning("Digest not present, but computable")
+                return False
+
+            # FIXME Validate date
+
+            for field in signature_fields:
                 if field == "(request-target)":
                     method = request.method.lower()
                     path = urlparse(request.url).path
@@ -63,5 +80,5 @@ class SignatureChecker:
 
             return http_signature.verify(public_key, parsed_signature.signature)
         except Exception as e:
-            print(e)
+            logging.error(str(e))
             return False

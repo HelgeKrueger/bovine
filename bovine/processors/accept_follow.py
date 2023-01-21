@@ -16,3 +16,5 @@ async def accept_follow_request(
     inbox = data["actor"] + "/inbox"
 
     await bovine.clients.send_activitypub_request(inbox, request_data, local_user)
+
+    return None

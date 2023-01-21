@@ -9,16 +9,9 @@ from bovine.clients import get_public_key
 
 from . import get_user_keys
 
-
-app = Quart(__name__)
-
 signature_checker = SignatureChecker(get_public_key)
 
-app.config.update({"DOMAIN": "my_domain"})
-app.config.data_store = InMemoryUserStore()
-app.config.validate_signature = signature_checker.validate_signature
 public_key, private_key = get_user_keys()
-
 local_user = LocalUser(
     "user",
     "https://my_domain/activitypub/user",
@@ -26,6 +19,16 @@ local_user = LocalUser(
     private_key,
     "Person",
 ).add_inbox_processor(dump_incoming_inbox_to_stdout)
-app.config.data_store.add_user(local_user)
 
+data_store = InMemoryUserStore()
+data_store.add_user(local_user)
+
+app = Quart(__name__)
+app.config.update(
+    {
+        "DOMAIN": "my_domain",
+        "validate_signature": signature_checker.validate_signature,
+        "get_user": data_store.get_user,
+    }
+)
 app.register_blueprint(default_configuration)

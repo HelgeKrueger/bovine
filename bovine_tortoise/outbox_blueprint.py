@@ -19,8 +19,9 @@ async def element(username: str, uuid: str):
         print("redirecting")
         return redirect(request_path.replace("/testing_notes", ""))
 
-    if not await current_app.config.validate_signature(request, digest=None):
-        logging.warn("Incorrect get http request")
+    if not await current_app.config["validate_signature"](request, digest=None):
+        logging.warn("Invalid signature on get http request")
+        return {"status": "http signature not valid"}, 401
 
     actor = await Actor.get_or_none(account=username)
 

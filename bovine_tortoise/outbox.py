@@ -18,23 +18,23 @@ async def outbox_item_count(local_user: LocalUser) -> int:
     return await OutboxEntry.filter(actor=actor).count()
 
 
-async def outbox_items(local_user: LocalUser, start: int, limit: int) -> list:
+async def outbox_items(local_user: LocalUser, start: int, limit: int) -> list | None:
     actor = await Actor.get_or_none(account=local_user.name)
     if actor is None:
         print("Failed to fetch actor")
-        return 0
+        return None
 
     result = await OutboxEntry.filter(actor=actor).offset(0).limit(limit).all()
 
     return [x.content for x in result]
 
 
-async def send_activity(local_user: LocalUser, activity: dict, local_path: str) -> None:
+async def send_activity(local_user: LocalUser, activity: dict, local_path: str):
     try:
         actor = await Actor.get_or_none(account=local_user.name)
         if actor is None:
             logging.warn("Failed to fetch actor")
-            return 0
+            return
 
         await OutboxEntry.create(
             actor=actor, created=datetime.now(), content=activity, local_path=local_path
@@ -42,8 +42,20 @@ async def send_activity(local_user: LocalUser, activity: dict, local_path: str) 
 
         logging.info(f"Create outbox entry for {local_path}")
 
-        followers = await Follower.filter(actor=actor).all()
-        inboxes = [x.inbox for x in followers]
+        inboxes = []
+
+        # FIXME
+
+        for account in activity.get("to", []) + activity.get("cc", []):
+            if "/followers" in account:
+                followers = await Follower.filter(actor=actor).all()
+                inboxes = [x.inbox for x in followers]
+            elif "#Public" in account:
+                logging.info("Public post")
+            else:
+                inboxes.append(account + "/inbox")
+
+        logging.warning("Inboxes " + ", ".join(inboxes))
 
         await asyncio.gather(
             *[

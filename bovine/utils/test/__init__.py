@@ -1,6 +1,4 @@
-import os
-
-from bovine.utils.crypto import generate_public_private_key
+from bovine.utils import get_public_private_key_from_files
 
 
 def remove_domain_from_url(url):
@@ -10,28 +8,6 @@ def remove_domain_from_url(url):
 
 
 def get_user_keys():
-    public_key = None
-    private_key = None
-
-    if os.path.exists(".files/public_key.pem"):
-        with open(".files/public_key.pem") as f:
-            public_key = f.read()
-    if os.path.exists(".files/private_key.pem"):
-        with open(".files/private_key.pem") as f:
-            private_key = f.read()
-
-    if public_key and private_key:
-        return public_key, private_key
-
-    public_key_pem, private_key_pem = generate_public_private_key()
-
-    if not os.path.exists(".files"):
-        os.mkdir(".files")
-
-    with open(".files/public_key.pem", "w") as f:
-        f.write(public_key_pem)
-
-    with open(".files/private_key.pem", "w") as f:
-        f.write(private_key_pem)
-
-    return public_key_pem, private_key_pem
+    return get_public_private_key_from_files(
+        ".files/public_key.pem", ".files/private_key.pem"
+    )

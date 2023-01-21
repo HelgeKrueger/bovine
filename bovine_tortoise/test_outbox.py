@@ -51,8 +51,15 @@ async def test_send_activity(mock_send_activitypub_request, db_url):  # noqa: F8
 
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
 
+    activity_to_send = {
+        "id": "https://domain/something/name/uuid",
+        "to": ["somebody/followers"],
+    }
+
     await send_activity(
-        local_user, {"id": "https://domain/something/name/uuid"}, "local_path"
+        local_user,
+        activity_to_send,
+        "local_path",
     )
 
     assert mock_send_activitypub_request.await_count == 1
@@ -61,5 +68,5 @@ async def test_send_activity(mock_send_activitypub_request, db_url):  # noqa: F8
     assert await outbox_elements.count() == 1
     element = await outbox_elements.get()
 
-    assert element.content == {"id": "https://domain/something/name/uuid"}
+    assert element.content == activity_to_send
     assert element.local_path == "local_path"

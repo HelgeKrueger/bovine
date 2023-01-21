@@ -6,7 +6,7 @@ wellknown = Blueprint("wellknown", __name__, url_prefix="/.well-known")
 
 
 @wellknown.get("/nodeinfo")
-async def nodeinfo() -> dict:
+async def nodeinfo() -> tuple[dict, int]:
     domain = current_app.config["DOMAIN"]
 
     return {
@@ -16,11 +16,11 @@ async def nodeinfo() -> dict:
                 "href": f"https://{domain}/info/nodeinfo2_0",
             }
         ]
-    }
+    }, 200
 
 
 @wellknown.get("/webfinger")
-async def webfinger() -> dict:
+async def webfinger() -> tuple[dict, int]:
     resource = request.args.get("resource")
 
     if not resource or not resource.startswith("acct:"):
@@ -33,7 +33,7 @@ async def webfinger() -> dict:
     if account_domain and account_domain != domain:
         return {"status": "not found"}, 404
 
-    user_info = await current_app.config.data_store.get_user(account_name)
+    user_info = await current_app.config["get_user"](account_name)
 
     if not user_info:
         return {"status": "not found"}, 404
@@ -49,4 +49,4 @@ async def webfinger() -> dict:
                 "type": "application/activity+json",
             }
         ],
-    }
+    }, 200

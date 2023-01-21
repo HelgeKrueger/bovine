@@ -9,7 +9,7 @@ def dismiss_delete(callback):
 
         if data["type"] == "Delete":
             await callback(local_user, item)
-            return
+            return None
 
         return item
 

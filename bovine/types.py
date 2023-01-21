@@ -1,5 +1,6 @@
 import json
 import traceback
+import logging
 
 
 class InboxItem:
@@ -13,16 +14,24 @@ class InboxItem:
             self.data = json.loads(self.body)
         return self.data
 
+    def get_body_id(self) -> str:
+        try:
+            parsed = json.dumps(self.body.decode("utf-8"))
+            return parsed["id"]
+        except Exception as e:
+            logging.info(e)
+            return "failed fetching id"
+
     def dump(self):
-        print("###########################################################")
-        print()
-        print("---HEADERS----")
-        print(json.dumps(self.headers))
-        print()
-        print("---BODY----")
-        print(self.body.decode("utf-8"))
-        print()
-        print()
+        logging.info("###########################################################")
+        logging.info()
+        logging.info("---HEADERS----")
+        logging.info(json.dumps(self.headers))
+        logging.info()
+        logging.info("---BODY----")
+        logging.info(self.body.decode("utf-8"))
+        logging.info()
+        logging.info()
 
 
 class LocalUser:
@@ -71,9 +80,8 @@ class LocalUser:
                 if not working:
                     return
         except Exception as ex:
-            print(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
-            print()
-            print(ex)
+            logging.warning(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
+            logging.warning(ex)
             traceback.print_exception(type(ex), ex, ex.__traceback__)
             print()
             inbox_item.dump()

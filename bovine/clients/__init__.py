@@ -7,27 +7,33 @@ from bovine.utils.crypto import content_digest_sha256
 from bovine.types import LocalUser
 
 from bovine.utils import build_signature
+from .signed_http import signed_get
 
 
-async def get_public_key(key_id):
-    headers = {"accept": "application/activity+json"}
-    async with aiohttp.ClientSession() as session:
-        async with session.get(key_id, headers=headers) as response:
-            text = await response.text()
-            data = json.loads(text)
+async def get_public_key(
+    local_user: LocalUser, session: aiohttp.ClientSession, key_id: str
+) -> str | None:
 
-            if "publicKey" not in data:
-                return
+    response = await signed_get(
+        session, local_user.get_public_key_url(), local_user.private_key, key_id
+    )
+    text = await response.text()
+    data = json.loads(text)
 
-            key_data = data["publicKey"]
+    if "publicKey" not in data:
+        logging.warning(f"Public key not found in data for {key_id}")
+        return None
 
-            if key_data["id"] != key_id:
-                return
+    key_data = data["publicKey"]
 
-            return key_data["publicKeyPem"]
+    if key_data["id"] != key_id:
+        logging.warning(f"Public key id mismatches for {key_id}")
+        return None
+
+    return key_data["publicKeyPem"]
 
 
-async def get_inbox(actor):
+async def get_inbox(actor) -> dict:
     headers = {"accept": "application/activity+json"}
     async with aiohttp.ClientSession() as session:
         async with session.get(actor, headers=headers) as response:
@@ -37,7 +43,7 @@ async def get_inbox(actor):
             return data["inbox"]
 
 
-async def send_activitypub_request(inbox, data, user: LocalUser):
+async def send_activitypub_request(inbox, data, user: LocalUser) -> tuple[str, int]:
     headers = {"Accept": "application/activity+json"}
 
     body = json.dumps(data)

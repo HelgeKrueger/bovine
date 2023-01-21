@@ -5,7 +5,7 @@ from bovine_tortoise.models import OutboxEntry, Actor
 html_blueprint = Blueprint("html_blueprint", __name__)
 
 
-def extract_content(activity):
+def extract_content(activity: dict) -> str:
     obj = activity["object"]
     return obj["content"]
 

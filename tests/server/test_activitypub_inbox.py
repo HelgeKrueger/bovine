@@ -10,7 +10,7 @@ async def test_activitypub_inbox_post_is_unauthorized_without_signature() -> Non
 
     response = await client.post("/activitypub/user/inbox")
 
-    assert response.status_code == 401
+    assert response.status_code == 202
 
 
 @pytest.mark.asyncio

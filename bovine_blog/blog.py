@@ -1,57 +1,53 @@
 import os
-
+import aiohttp
+import logging
 from quart import Quart
 from tortoise.contrib.quart import register_tortoise
 
 from bovine.server import default_configuration
-from bovine_tortoise import (
-    ManagedDataStore,
-    default_inbox_processors,
-    default_outbox,
-)
-from bovine.processors.dismiss_delete import dismiss_delete
+
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine.utils.http_signature import SignatureChecker
 from bovine.clients import get_public_key
 
 from .html import html_blueprint
-
-import logging
-
-
-app = Quart(__name__)
-
-signature_checker = SignatureChecker(get_public_key)
+from .build_store import build_get_user
 
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
-
 logging.basicConfig(
     level=logging.INFO,
     format=log_format,
     filename=("debug.log"),
 )
+domain = os.environ.get("DOMAIN", "my_domain")
+bovine_user, get_user = build_get_user(domain)
+
 
 app = Quart(__name__)
 
-domain = os.environ.get("DOMAIN", "my_domain")
+
+@app.before_serving
+async def startup():
+    app.config.session = aiohttp.ClientSession()
+
+
+def get_public_key_wrapper(key_id):
+    return get_public_key(bovine_user, app.config.session, key_id)
+
+
+signature_checker = SignatureChecker(get_public_key_wrapper)
+
 
 app.config.update(
     {
         "DOMAIN": domain,
+        "get_user": get_user,
+        "validate_signature": signature_checker.validate_signature,
     }
 )
-app.config.validate_signature = signature_checker.validate_signature
 
 
-async def on_delete(local_user, item):
-    item.dump()
-
-
-inbox_processors = [dismiss_delete(on_delete)] + default_inbox_processors
-app.config.data_store = ManagedDataStore(
-    inbox_processors=inbox_processors, outbox_handlers=default_outbox
-)
 app.register_blueprint(default_configuration)
 app.register_blueprint(outbox_blueprint, url_prefix="/testing_notes")
 app.register_blueprint(html_blueprint)
@@ -65,7 +61,6 @@ TORTOISE_ORM = {
         },
     },
 }
-
 
 register_tortoise(
     app,

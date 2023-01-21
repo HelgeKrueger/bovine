@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import logging
 
 from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
@@ -51,6 +52,7 @@ def verify_signature(public_key, message, signature):
             hashes.SHA256(),
         )
     except InvalidSignature:
+        logging.warning("invalid signature")
         return False
 
     return True

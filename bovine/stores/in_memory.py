@@ -11,4 +11,4 @@ class InMemoryUserStore:
     async def get_user(self, username: str) -> LocalUser | None:
         if username in self.users:
             return self.users[username]
-        return
+        return None

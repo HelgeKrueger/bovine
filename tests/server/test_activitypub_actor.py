@@ -4,8 +4,27 @@ from bovine.utils.test.in_memory_test_app import app
 from bovine.utils.test import remove_domain_from_url
 
 
-@pytest.mark.asyncio
+async def test_activitypub_actor_unauthorized() -> None:
+    client = app.test_client()
+
+    response = await client.get(
+        "/activitypub/unknown",
+        headers={"Accept": "application/activity+json"},
+    )
+
+    assert response.status_code == 401
+
+    data = await response.get_json()
+
+    assert data == {"status": "http signature not valid"}
+
+
+async def return_true(*args, **kwargs):
+    return True
+
+
 async def test_activitypub_actor_unknown_user() -> None:
+    app.config["validate_signature"] = return_true
     client = app.test_client()
 
     response = await client.get(
@@ -39,7 +58,6 @@ async def test_activitypub_actor() -> None:
     assert data["outbox"] == "https://my_domain/activitypub/user/outbox"
 
 
-@pytest.mark.asyncio
 async def test_activitypub_actor_public_key() -> None:
     client = app.test_client()
 
@@ -57,7 +75,6 @@ async def test_activitypub_actor_public_key() -> None:
     assert key_data["publicKeyPem"].endswith("\n-----END PUBLIC KEY-----\n")
 
 
-@pytest.mark.asyncio
 async def test_activitypub_actor_inbox() -> None:
     client = app.test_client()
 
@@ -77,7 +94,6 @@ async def test_activitypub_actor_inbox() -> None:
     assert response.status_code == 405
 
 
-@pytest.mark.asyncio
 async def test_activitypub_actor_outbox() -> None:
     client = app.test_client()
 

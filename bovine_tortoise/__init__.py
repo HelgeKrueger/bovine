@@ -6,12 +6,14 @@ from .processors import store_in_database, accept_follow_request
 from .outbox import outbox_item_count, outbox_items
 
 
-async def init(db_url="sqlite://db.sqlite3"):
+async def init(db_url: str = "sqlite://db.sqlite3") -> None:
     await Tortoise.init(
         db_url=db_url,
         modules={"models": ["bovine_tortoise.models"]},
     )
     await Tortoise.generate_schemas()
+
+    return None
 
 
 default_inbox_processors = [
@@ -40,7 +42,7 @@ class ManagedDataStore:
     async def get_user(self, username: str) -> LocalUserObject | None:
         result = await Actor.get_or_none(account=username)
         if not result:
-            return
+            return None
 
         local_user = LocalUserObject(
             result.account,
@@ -65,4 +67,3 @@ class ManagedDataStore:
             private_key=local_user.private_key,
             public_key=local_user.public_key,
         )
-        return

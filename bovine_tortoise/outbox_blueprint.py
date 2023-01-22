@@ -1,9 +1,10 @@
-from quart import Blueprint, redirect, request, current_app
+import logging
 import re
 from urllib.parse import urlparse
-import logging
 
-from .models import OutboxEntry, Actor
+from quart import Blueprint, current_app, redirect, request
+
+from .models import Actor, OutboxEntry
 
 outbox_blueprint = Blueprint("outbox", __name__)
 
@@ -13,11 +14,14 @@ async def element(username: str, uuid: str):
     request_path = urlparse(request.url).path
 
     if "Accept" not in request.headers:
-        return redirect(request_path.replace("/testing_notes", ""))
+        new_path = request_path.replace("/activitypub", "")
+        new_path = new_path.replace("/testing_notes", "")
+        return redirect(new_path)
 
     if not re.match(r"application/.*json", request.headers["Accept"]):
-        print("redirecting")
-        return redirect(request_path.replace("/testing_notes", ""))
+        new_path = request_path.replace("/activitypub", "")
+        new_path = new_path.replace("/testing_notes", "")
+        return redirect(new_path)
 
     if not await current_app.config["validate_signature"](request, digest=None):
         logging.warn("Invalid signature on get http request")

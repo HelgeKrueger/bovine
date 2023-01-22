@@ -1,29 +1,11 @@
-import pytest
-import os
-from tortoise import Tortoise
-
-
 from bovine.types import InboxItem, LocalUser
 
-from . import init, ManagedDataStore
+from . import ManagedDataStore
 from .processors import store_in_database
+from .utils import db_url  # noqa: F401
 
 
-@pytest.fixture
-async def db_url():
-    db_file = "test_db.sqlite3"
-    db_url = f"sqlite://{db_file}"
-
-    await init(db_url)
-
-    yield db_url
-
-    await Tortoise.close_connections()
-
-    os.unlink(db_file)
-
-
-async def test_basic_data_store(db_url):
+async def test_basic_data_store(db_url):  # noqa: F811
     store = ManagedDataStore(db_url=db_url)
 
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
@@ -39,7 +21,7 @@ async def test_basic_data_store(db_url):
     assert result.name == "name"
 
 
-async def test_store_in_database(db_url):
+async def test_store_in_database(db_url):  # noqa: F811
     store = ManagedDataStore(db_url=db_url)
 
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")

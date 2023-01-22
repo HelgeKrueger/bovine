@@ -1,7 +1,8 @@
 import re
 
-from .create_builder import CreateBuilder
 from bovine.activitystreams.objects import build_note
+
+from .create_builder import CreateBuilder
 
 
 def test_basic_build():

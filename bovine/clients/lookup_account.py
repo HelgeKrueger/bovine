@@ -1,6 +1,7 @@
-import aiohttp
 import json
 import logging
+
+import aiohttp
 
 from bovine.utils.parsers import parse_account_name
 

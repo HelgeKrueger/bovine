@@ -2,7 +2,7 @@ import aiohttp
 
 # import pytest
 from bovine import get_bovine_user
-from bovine.clients import get_public_key, get_inbox
+from bovine.clients import get_inbox, get_public_key
 
 
 # @pytest.mark.skip

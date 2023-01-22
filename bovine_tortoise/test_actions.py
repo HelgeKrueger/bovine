@@ -1,14 +1,15 @@
-import aiohttp
 from unittest.mock import patch
+
+import aiohttp
 
 from bovine.types import LocalUser
 from bovine.utils.test import get_user_keys
 
-from .test_database import db_url  # noqa: F401
-from .models import Following, InboxEntry
 from . import ManagedDataStore
-from .actions import follow, fetch_post
+from .actions import fetch_post, follow
+from .models import Following, InboxEntry
 from .processors import store_in_database
+from .test_database import db_url  # noqa: F401
 
 
 @patch("bovine.clients.send_activitypub_request")

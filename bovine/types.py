@@ -1,6 +1,6 @@
 import json
-import traceback
 import logging
+import traceback
 
 
 class InboxItem:

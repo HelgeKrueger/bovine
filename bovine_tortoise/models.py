@@ -1,5 +1,5 @@
-from tortoise.models import Model
 from tortoise import fields
+from tortoise.models import Model
 
 from .types import PeerType
 
@@ -38,6 +38,9 @@ class InboxEntry(Model):
     created = fields.DatetimeField()
     content = fields.JSONField()
 
+    conversation = fields.CharField(max_length=255, null=True)
+    read = fields.BooleanField(default=True)
+
 
 class OutboxEntry(Model):
     id = fields.IntField(pk=True)
@@ -57,3 +60,9 @@ class Peer(Model):
 
     created = fields.DatetimeField(auto_now_add=True)
     updated = fields.DatetimeField(null=True)
+
+
+class PublicKey(Model):
+    id = fields.IntField(pk=True)
+    url = fields.CharField(max_length=255, unique=True)
+    public_key = fields.TextField()

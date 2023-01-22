@@ -1,11 +1,12 @@
-import aiohttp
 from urllib.parse import urlparse
 
-from bovine.utils import build_signature
-from bovine.utils.date import get_gmt_now
-from bovine.utils.crypto import content_digest_sha256
+import aiohttp
 
-BOVINE_CLIENT_NAME = "bovine-client / 0.0.1"
+from bovine.utils import build_signature
+from bovine.utils.crypto import content_digest_sha256
+from bovine.utils.date import get_gmt_now
+
+from .consts import BOVINE_CLIENT_NAME
 
 
 async def signed_get(

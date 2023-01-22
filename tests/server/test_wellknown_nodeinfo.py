@@ -1,7 +1,7 @@
 import json
 
-import pytest
 import jsonschema
+import pytest
 
 from bovine.utils.test.in_memory_test_app import app
 

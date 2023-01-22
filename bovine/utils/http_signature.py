@@ -3,10 +3,10 @@ import traceback
 from urllib.parse import urlparse
 
 from .crypto import sign_message, verify_signature
-from .parsers import parse_signature_header
 from .date import check_max_offset_now, parse_gmt
+from .parsers import parse_signature_header
 
-logger = logging.getLogger("http-signature")
+logger = logging.getLogger("http-sig")
 
 
 class HttpSignature:
@@ -80,7 +80,8 @@ class SignatureChecker:
             for field in signature_fields:
                 if field == "(request-target)":
                     method = request.method.lower()
-                    path = urlparse(request.url).path
+                    parsed_url = urlparse(request.url)
+                    path = parsed_url.path
                     http_signature.with_field(field, f"{method} {path}")
                 else:
                     http_signature.with_field(field, request.headers[field])

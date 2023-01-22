@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        config: ["MMLorHTML.js"],
+        jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+        extensions: ["MathMenu.js", "MathZoom.js"]
+      });
+    </script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"
+    ></script>
+
+    <title>@{{username}}@{{domain_name}}</title>
+  </head>
+  <body>
+    <h1>@{{username}}<a href="/">@{{domain_name}}</a></h1>
+
+    {% for entry in entries %} {% include 'common/article.html.j2' %} {% endfor
+    %}
+    <footer>
+      Powered by <a href="https://github.com/HelgeKrueger/bovine">bovine</a>
+    </footer>
+  </body>
+</html>

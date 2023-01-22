@@ -16,11 +16,11 @@ const CreateNote = ({ note, source }) => {
         Status
       </Link>{" "}
       at {note.published}
+      <ReplyToNote entry={note} />
+      <Source entry={source} />
       <Divider />
       <div dangerouslySetInnerHTML={{ __html: note.content }} />
       <Attachments attachments={note.attachment} />
-      <ReplyToNote entry={note} />
-      <Source entry={source} />
     </Paper>
   );
 };

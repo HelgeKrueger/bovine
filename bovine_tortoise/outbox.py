@@ -1,13 +1,14 @@
-import aiohttp
 import asyncio
-from datetime import datetime
 import logging
 import traceback
+from datetime import datetime
 
-from bovine.types import LocalUser
+import aiohttp
+
 import bovine.clients
+from bovine.types import LocalUser
 
-from .models import OutboxEntry, Actor, Follower
+from .models import Actor, Follower, OutboxEntry
 
 
 async def outbox_item_count(local_user: LocalUser) -> int:

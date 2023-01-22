@@ -1,8 +1,6 @@
-from .crypto import generate_public_private_key
-
-
-from .http_signature import HttpSignature
 from . import build_signature
+from .crypto import generate_public_private_key
+from .http_signature import HttpSignature
 
 
 def test_http_signature():

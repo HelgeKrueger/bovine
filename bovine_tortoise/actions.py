@@ -1,15 +1,16 @@
-import aiohttp
 import json
+import logging
 from datetime import datetime
 from urllib.parse import urlparse
 
-import logging
+import aiohttp
 
-from bovine.types import LocalUser, InboxItem
 import bovine.clients
-from bovine.clients.lookup_account import lookup_account_with_webfinger
 from bovine.activitystreams.activities import build_follow
+from bovine.clients.lookup_account import lookup_account_with_webfinger
 from bovine.clients.signed_http import signed_get
+from bovine.types import InboxItem, LocalUser
+
 from .models import Actor, Following
 
 logger = logging.getLogger("bovine_torroise")

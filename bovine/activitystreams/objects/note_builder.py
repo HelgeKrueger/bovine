@@ -14,6 +14,7 @@ class NoteBuilder:
         self.conversation = None
         self.reply_to_id = None
         self.reply_to_atom_uri = None
+        self.source = None
 
     def as_public(self):
         self.to.add("https://www.w3.org/ns/activitystreams#Public")
@@ -39,6 +40,7 @@ class NoteBuilder:
 
     def with_mention(self, mention):
         self.mentions.add(mention)
+        self.cc.add(mention)
         return self
 
     def with_conversation(self, conversation):
@@ -51,6 +53,10 @@ class NoteBuilder:
 
     def with_reply_to_atom_uri(self, uri):
         self.reply_to_atom_uri = uri
+        return self
+
+    def with_source(self, content, media_type):
+        self.source = {"content": content, "mediaType": media_type}
         return self
 
     def build(self):
@@ -87,5 +93,8 @@ class NoteBuilder:
 
         if self.conversation:
             result["conversation"] = self.conversation
+
+        if self.source:
+            result["source"] = self.source
 
         return result

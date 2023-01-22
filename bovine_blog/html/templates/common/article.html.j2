@@ -1,0 +1,8 @@
+    <article>
+      <header>
+        <a href="{{ entry.link }}">{% if entry.in_reply_to -%} Reply {% else -%}Post {% endif %}</a> by
+        <b><a href="/{{entry.author}}">@{{ entry.author }}</a></b> on {{
+        entry.published }} {% if entry.in_reply_to -%} to <a href="{{ entry.in_reply_to }}">this post</a> {% endif %}
+      </header>
+      {{ entry.content | safe }}
+    </article>

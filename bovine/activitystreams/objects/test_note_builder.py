@@ -31,6 +31,7 @@ def test_note_builder_hashtag_and_mention():
         "name": "proto://server/path/mention",
         "type": "Mention",
     }
+    assert result["cc"] == ["proto://server/path/mention"]
 
 
 def test_note_builder_cc():
@@ -66,3 +67,11 @@ def test_note_builder_for_reply():
     assert result["conversation"] == "conversation"
     assert result["inReplyTo"] == "reply_id"
     assert result["inReplyToAtomUri"] == "atom_uri"
+
+
+def test_note_builder_for_source():
+    result = (
+        NoteBuilder("account", "url", "content").with_source("source", "format").build()
+    )
+
+    assert result["source"] == {"content": "source", "mediaType": "format"}

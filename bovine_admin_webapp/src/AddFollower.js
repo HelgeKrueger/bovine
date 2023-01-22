@@ -8,7 +8,7 @@ const AddFollower = () => {
     fetch("/api/add_follow", {
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ account: username }),
+      body: JSON.stringify({ account: username.trim() }),
     })
       .then((x) => x.json())
       .then(console.log);

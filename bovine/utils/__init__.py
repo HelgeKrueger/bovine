@@ -1,7 +1,7 @@
 import os
 
-from .http_signature import HttpSignature
 from .crypto import generate_public_private_key
+from .http_signature import HttpSignature
 
 
 def build_signature(host, method, target):

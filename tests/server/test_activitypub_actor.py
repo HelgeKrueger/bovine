@@ -1,7 +1,7 @@
 import pytest
 
-from bovine.utils.test.in_memory_test_app import app
 from bovine.utils.test import remove_domain_from_url
+from bovine.utils.test.in_memory_test_app import app
 
 
 async def test_activitypub_actor_unauthorized() -> None:

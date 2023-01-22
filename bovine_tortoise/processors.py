@@ -1,14 +1,16 @@
+import logging
 import traceback
 from datetime import datetime
 
 from quart import current_app
 
 import bovine.clients
-
 from bovine.activitystreams.activities import build_accept
 from bovine.types import InboxItem, LocalUser
 
-from .models import Actor, InboxEntry, Follower
+from .models import Actor, Follower, InboxEntry
+
+logger = logging.getLogger("tortoise")
 
 
 async def store_in_database(local_user: LocalUser, item: InboxItem) -> InboxItem | None:
@@ -16,15 +18,27 @@ async def store_in_database(local_user: LocalUser, item: InboxItem) -> InboxItem
         actor = await Actor.get_or_none(account=local_user.name)
 
         if actor is None:
-            print(f"Actor not found!!! {local_user.name}")
+            logging.error(f"Actor not found!!! {local_user.name}")
             return item
 
-        await InboxEntry.create(actor=actor, created=datetime.now(), content=item.body)
+        obj = item.get_data().get("object", {})
+        if isinstance(obj, dict):
+            conversation = obj.get("conversation", None)
+        else:
+            conversation = None
+
+        await InboxEntry.create(
+            actor=actor,
+            created=datetime.now(),
+            content=item.body,
+            conversation=conversation,
+        )
 
         return item
     except Exception as ex:
-        print(ex)
-        traceback.print_exception(type(ex), ex, ex.__traceback__)
+        logger.error(f"{str(ex)} happened when storing into database")
+        for log_line in traceback.format_exc().splitlines():
+            logger.error(log_line)
 
         return item
 

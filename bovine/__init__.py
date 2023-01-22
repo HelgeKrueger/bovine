@@ -1,8 +1,10 @@
 from .types import LocalUser
-from .utils import get_server_keys, dump_incoming_inbox_to_stdout
+from .utils import dump_incoming_inbox_to_stdout, get_server_keys
 
 
-def get_bovine_user(domain):
+def get_bovine_user(
+    domain: str,
+) -> LocalUser:
     server_public_key, server_private_key = get_server_keys()
 
     url = f"https://{domain}/activitypub/bovine"

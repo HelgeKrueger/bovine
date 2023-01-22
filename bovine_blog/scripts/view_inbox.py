@@ -1,8 +1,8 @@
 import asyncio
+from argparse import ArgumentParser
 
 from rich import print as pprint
 
-from argparse import ArgumentParser
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.models import Actor, InboxEntry
 

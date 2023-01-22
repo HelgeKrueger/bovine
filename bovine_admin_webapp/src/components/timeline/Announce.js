@@ -1,6 +1,7 @@
 import { Link, Paper } from "@mui/material";
 import React from "react";
 import Actor from "./Actor";
+import Source from "./Source";
 
 const Announce = ({ entry }) => {
   const { actor, object } = entry;
@@ -14,6 +15,7 @@ const Announce = ({ entry }) => {
       <Link href={object} target="_blank">
         {object}
       </Link>
+      <Source entry={entry} />
     </Paper>
   );
 };

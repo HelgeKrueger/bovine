@@ -1,11 +1,10 @@
 import asyncio
 import os
-
 from argparse import ArgumentParser
 
 from bovine.types import LocalUser
-from bovine_tortoise import ManagedDataStore
 from bovine.utils.crypto import generate_public_private_key
+from bovine_tortoise import ManagedDataStore
 
 
 async def store_user():

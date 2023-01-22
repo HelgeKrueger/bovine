@@ -1,9 +1,9 @@
 import logging
-from urllib.parse import urlparse
 import re
+from urllib.parse import urlparse
 
 import werkzeug
-from quart import Blueprint, current_app, request, redirect
+from quart import Blueprint, current_app, redirect, request
 
 from bovine.activitystreams import build_actor, build_outbox
 from bovine.types import InboxItem
@@ -22,7 +22,9 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         return redirect(request_path.replace("/activitypub", ""))
 
     if not re.match(r"application/.*json", request.headers["Accept"]):
-        print("redirecting")
+        new_path = request_path.replace("/activitypub", "")
+        print("redirecting", new_path)
+
         return redirect(
             request_path.replace("/activitypub", "")
         )  # FIXME: Need a better way to redirect here
@@ -77,7 +79,8 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         return redirect(request_path.replace("/activitypub", ""))
 
     if not re.match(r"application/.*json", request.headers["Accept"]):
-        print("redirecting")
+        new_path = request_path.replace("/activitypub", "")
+        print("redirecting", new_path)
         return redirect(request_path.replace("/activitypub", ""))
 
     if not await current_app.config["validate_signature"](request, digest=None):

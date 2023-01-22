@@ -1,13 +1,13 @@
-import aiohttp
 from datetime import datetime
 from unittest.mock import patch
 
+import aiohttp
+
 from bovine.types import LocalUser
 
-from .test_database import db_url  # noqa: F401
-from .models import Actor, OutboxEntry, Follower
-
+from .models import Actor, Follower, OutboxEntry
 from .outbox import outbox_item_count, outbox_items, send_activity
+from .test_database import db_url  # noqa: F401
 
 
 async def test_basic_outbox(db_url):  # noqa: F811

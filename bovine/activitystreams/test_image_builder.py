@@ -1,6 +1,7 @@
 import json
-import rdflib
+
 import pytest
+import rdflib
 
 
 @pytest.mark.skip

@@ -1,14 +1,18 @@
 import json
-import aiohttp
 import logging
 
+import aiohttp
+
 from bovine.types import LocalUser
+
 from .signed_http import signed_get, signed_post
 
 
 async def get_public_key(
     session: aiohttp.ClientSession, local_user: LocalUser, key_id: str
 ) -> str | None:
+
+    logging.info(f"getting public key for {key_id}")
 
     response = await signed_get(
         session, local_user.get_public_key_url(), local_user.private_key, key_id

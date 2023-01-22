@@ -1,4 +1,4 @@
-import { Reply } from "@mui/icons-material";
+import { Close, Reply } from "@mui/icons-material";
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -12,14 +12,19 @@ const ReplyToNote = ({ entry }) => {
     let newHashtags = [];
     let newMentions = [];
 
-    for (let tag of entry?.tag) {
-      if (tag?.type === "Mention") {
-        newMentions.push(tag?.href);
-      } else if (tag?.type === "Hashtag") {
-        newHashtags.push(tag?.name);
+    if (entry?.tag) {
+      for (let tag of entry?.tag) {
+        if (tag?.type === "Mention") {
+          newMentions.push(tag?.href);
+        } else if (tag?.type === "Hashtag") {
+          newHashtags.push(tag?.name);
+        }
       }
     }
 
+    if (entry?.attributedTo) {
+      newMentions.push(entry?.attributedTo);
+    }
     setHashtags(newHashtags.join(", "));
     setMentions(newMentions.join(", "));
   }, [entry]);
@@ -31,6 +36,8 @@ const ReplyToNote = ({ entry }) => {
         onClick={() => {
           setOpen(true);
         }}
+        variant="outlined"
+        sx={{ margin: 1 }}
       >
         Reply
       </Button>
@@ -60,7 +67,16 @@ const ReplyToNote = ({ entry }) => {
 
   return (
     <Paper sx={{ margin: 2, padding: 2 }} elevation={3}>
-      <Typography variant="h6">Reply</Typography>
+      <Typography variant="h6">
+        Reply{" "}
+        <Button
+          variant="outlined"
+          startIcon={<Close />}
+          onClick={() => setOpen(false)}
+        >
+          Close
+        </Button>
+      </Typography>
       <TextField
         value={content}
         onChange={(e) => setContent(e.target.value)}

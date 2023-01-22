@@ -1,6 +1,6 @@
-from .follow_builder import FollowBuilder
 from .accept_builder import AcceptBuilder
 from .create_builder import CreateBuilder
+from .follow_builder import FollowBuilder
 
 
 def build_follow(domain, actor, tofollow):

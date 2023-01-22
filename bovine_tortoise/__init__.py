@@ -1,9 +1,10 @@
 from tortoise import Tortoise
 
 from bovine.types import LocalUser as LocalUserObject
+
 from .models import Actor
-from .processors import store_in_database, accept_follow_request
 from .outbox import outbox_item_count, outbox_items
+from .processors import accept_follow_request, store_in_database
 
 
 async def init(db_url: str = "sqlite://db.sqlite3") -> None:

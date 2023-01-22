@@ -1,19 +1,21 @@
 import json
 import logging
 import uuid
+from collections import defaultdict
 
 import aiohttp
 from quart import Quart, request
 from tortoise.contrib.quart import register_tortoise
 
-from bovine_tortoise.models import Actor, InboxEntry, Following, Follower
-from bovine_tortoise.actions import follow, fetch_post
+from bovine_blog.stores.types import PostEntry
 from bovine_tortoise import ManagedDataStore
+from bovine_tortoise.actions import fetch_post, follow
+from bovine_tortoise.models import (Actor, Follower, Following, InboxEntry,
+                                    OutboxEntry)
 from bovine_tortoise.outbox import send_activity
 from bovine_tortoise.processors import store_in_database
 
 from .utils import build_create_note_activity_from_data_base_case
-
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
 
@@ -36,11 +38,35 @@ async def startup():
 @app.get("/")
 async def index():
     actor = await Actor.get_or_none(account=username)
-    entries = await InboxEntry.filter(actor=actor).all()
+    entries = await InboxEntry.filter(actor=actor, read=True).all()
 
     contents = [[entry.id, entry.content] for entry in entries]
 
     return contents[::-1]
+
+
+@app.get("/conversations")
+async def conversations():
+    actor = await Actor.get_or_none(account=username)
+    entries = await InboxEntry.filter(actor=actor).all()
+
+    conversations = defaultdict(list)
+    for entry in entries:
+        if entry.conversation is None:
+            if entry.read:
+                conversations["____________"].append(
+                    [entry.id, entry.content, entry.read]
+                )
+        else:
+            conversations[entry.conversation].append(
+                [entry.id, entry.content, entry.read]
+            )
+
+    result = {
+        key: value for key, value in conversations.items() if any(v[2] for v in value)
+    }
+
+    return result
 
 
 @app.get("/follow")
@@ -76,7 +102,7 @@ async def add_follow():
 async def cleanup_timeline():
     max_id = request.args.get("max_id")
     actor = await Actor.get_or_none(account=username)
-    await InboxEntry.filter(actor=actor).filter(id__lt=max_id).delete()
+    await InboxEntry.filter(actor=actor).filter(id__lt=max_id).update(read=False)
 
     return {"status": "done"}
 
@@ -92,7 +118,7 @@ async def handle_post():
     data = await request.get_json()
 
     local_path = f"{username}/{str(uuid.uuid4())}"
-    url = f"https://mymath.rocks/testing_notes/{local_path}"
+    url = f"https://mymath.rocks/activitypub/{local_path}"
 
     create = build_create_note_activity_from_data_base_case(
         local_user.get_account(), url, data
@@ -121,6 +147,16 @@ async def fetch_url():
     app.add_background_task(fetch_post, app.config["session"], local_user, url)
 
     return {}
+
+
+@app.route("/my_posts")
+async def my_posts():
+    actor = await Actor.get_or_none(account=username)
+    entries = await OutboxEntry.filter(actor=actor).all()
+
+    contents = [PostEntry.from_outbox_entry(entry).as_dict() for entry in entries]
+
+    return contents
 
 
 register_tortoise(

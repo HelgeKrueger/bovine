@@ -28,6 +28,7 @@ def test_build_create_note_activity_from_data_base_case():
             "published": "XXX",
             "to": ["https://www.w3.org/ns/activitystreams#Public"],
             "type": "Note",
+            "source": {"content": "text", "mediaType": "text/markdown"},
         },
         "published": "XXX",
         "to": ["https://www.w3.org/ns/activitystreams#Public"],

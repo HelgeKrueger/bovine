@@ -24,6 +24,7 @@ rdflib = "^6.2.0"
 python-dateutil = "^2.8.2"
 pytest-cov = "^4.0.0"
 types-python-dateutil = "^2.8.19.6"
+isort = "^5.11.4"
 
 [tool.poetry.group.test.dependencies]
 black = "*"
@@ -35,7 +36,7 @@ jsonschema = "*"
 
 
 [tool.aerich]
-tortoise_orm = "examples.blog.TORTOISE_ORM"
+tortoise_orm = "bovine_blog.TORTOISE_ORM"
 location = "./migrations"
 src_folder = "./."
 [build-system]

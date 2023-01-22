@@ -1,50 +1,47 @@
-from quart import Blueprint, render_template
+from quart import Blueprint, current_app, render_template, send_from_directory
 
-from bovine_tortoise.models import OutboxEntry, Actor
-
-html_blueprint = Blueprint("html_blueprint", __name__)
-
-
-def extract_content(activity: dict) -> str:
-    obj = activity["object"]
-    return obj["content"]
+html_blueprint = Blueprint("html_blueprint", __name__, template_folder="./templates/")
 
 
 @html_blueprint.get("/")
 async def index():
-    actor = await Actor.get_or_none(account="helge")
-    entries = await OutboxEntry.filter(actor=actor).all()
+    contents = await current_app.config["data_store"].index_contents()
 
-    contents = [extract_content(entry.content) for entry in entries][::-1]
+    domain_name = current_app.config["domain_name"]
 
-    return await render_template("index.html", contents=contents)
+    contents = sorted(contents, key=lambda x: x["published"], reverse=True)
+
+    return await render_template(
+        "index.html", entries=contents, domain_name=domain_name
+    )
+
+
+@html_blueprint.get("/style.css")
+async def stylesheet():
+    return await send_from_directory("static", "style.css")
 
 
 @html_blueprint.get("/<username>")
 @html_blueprint.get("/<username>/")
 async def user(username):
-    actor = await Actor.get_or_none(account="helge")
-    entries = await OutboxEntry.filter(actor=actor).all()
+    contents = await current_app.config["data_store"].user_contents(username)
+    domain_name = current_app.config["domain_name"]
 
-    contents = [extract_content(entry.content) for entry in entries][::-1]
+    contents = sorted(contents, key=lambda x: x["published"], reverse=True)
 
-    return await render_template("index.html", contents=contents)
+    return await render_template(
+        "user.html", entries=contents, domain_name=domain_name, username=username
+    )
 
 
 @html_blueprint.get("/<username>/<uuid>")
 async def post(username, uuid):
-    actor = await Actor.get_or_none(account=username)
-
-    if actor is None:
+    content = await current_app.config["data_store"].user_post(username, uuid)
+    if content is None:
         return {"status": "not found"}, 404
 
-    local_path = f"{username}/{uuid}"
+    domain_name = current_app.config["domain_name"]
 
-    entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
-
-    if entry is None:
-        return {"status": "not found"}, 404
-
-    content = extract_content(entry.content)
-
-    return await render_template("post.html", content=content)
+    return await render_template(
+        "post.html", entry=content, domain_name=domain_name, username=username
+    )

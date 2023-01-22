@@ -1,7 +1,7 @@
 from markdown import Markdown
 
-from bovine.activitystreams.objects import build_note
 from bovine.activitystreams.activities import build_create
+from bovine.activitystreams.objects import build_note
 
 
 def build_create_note_activity_from_data_base_case(
@@ -13,6 +13,7 @@ def build_create_note_activity_from_data_base_case(
     message = md.convert(source)
 
     builder = build_note(account_url, post_url, message).as_public()
+    builder = builder.with_source(source, "text/markdown")
 
     for tag in data.get("hashtags", []):
         builder = builder.with_hashtag(tag)

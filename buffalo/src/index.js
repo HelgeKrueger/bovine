@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { Link, RouterProvider } from "react-router-dom";
+import { DataUpdate } from "./helpers/DataUpdate";
 import router from "./router";
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
     <>
       <CssBaseline />
       <RouterProvider router={router} />
+      <DataUpdate />
     </>
   );
 };

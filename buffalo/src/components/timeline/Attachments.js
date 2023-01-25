@@ -2,7 +2,6 @@ import { Link } from "@mui/material";
 import React from "react";
 
 const Attachment = ({ entry }) => {
-  console.log(entry?.mediaType);
   if (entry?.mediaType?.startsWith("image")) {
     return (
       <Link target="_blank" href={entry?.url}>

@@ -8,7 +8,7 @@ from .create_builder import CreateBuilder
 def test_basic_build():
     result = CreateBuilder({"a": "message"}).build()
 
-    assert result["@context"] == "https://www.w3.org/ns/activitystreams"
+    assert "https://www.w3.org/ns/activitystreams" in result["@context"]
     assert result["type"] == "Create"
     assert result["id"] is None
     assert result["actor"] is None

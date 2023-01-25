@@ -14,7 +14,14 @@ def test_build_create_note_activity_from_data_base_case():
     result["object"]["published"] = "XXX"
 
     assert result == {
-        "@context": "https://www.w3.org/ns/activitystreams",
+        "@context": [
+            "https://www.w3.org/ns/activitystreams",
+            {
+                "inReplyToAtomUri": "ostatus:inReplyToAtomUri",
+                "conversation": "ostatus:conversation",
+                "ostatus": "http://ostatus.org#",
+            },
+        ],
         "actor": "proto://to_account",
         "cc": ["proto://to_account/followers"],
         "id": "proto://to_post",

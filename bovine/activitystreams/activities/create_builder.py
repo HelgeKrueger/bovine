@@ -26,7 +26,14 @@ class CreateBuilder:
 
     def build(self):
         return {
-            "@context": "https://www.w3.org/ns/activitystreams",
+            "@context": [
+                "https://www.w3.org/ns/activitystreams",
+                {
+                    "inReplyToAtomUri": "ostatus:inReplyToAtomUri",
+                    "conversation": "ostatus:conversation",
+                    "ostatus": "http://ostatus.org#",
+                },
+            ],
             "id": self.url,
             "type": "Create",
             "actor": self.account,

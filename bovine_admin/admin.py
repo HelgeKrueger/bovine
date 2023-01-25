@@ -10,8 +10,7 @@ from tortoise.contrib.quart import register_tortoise
 from bovine_blog.stores.types import PostEntry
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.actions import fetch_post, follow
-from bovine_tortoise.models import (Actor, Follower, Following, InboxEntry,
-                                    OutboxEntry)
+from bovine_tortoise.models import Actor, Follower, Following, InboxEntry, OutboxEntry
 from bovine_tortoise.outbox import send_activity
 from bovine_tortoise.processors import store_in_database
 
@@ -37,8 +36,9 @@ async def startup():
 
 @app.get("/")
 async def index():
+    minimal_id = int(request.args["min_id"])
     actor = await Actor.get_or_none(account=username)
-    entries = await InboxEntry.filter(actor=actor, read=True).all()
+    entries = await InboxEntry.filter(actor=actor, read=True, id__gt=minimal_id).all()
 
     contents = [[entry.id, entry.content] for entry in entries]
 

@@ -9,7 +9,7 @@ const Main = () => {
     <Box sx={{ display: "flex" }}>
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <h1 style={{ textAlign: "center" }}>My Math Rocks: Administration</h1>
+        {/* <h1 style={{ textAlign: "center" }}>My Math Rocks: Administration</h1> */}
         <Outlet />
       </Box>
     </Box>

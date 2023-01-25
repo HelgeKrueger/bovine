@@ -3,7 +3,6 @@ import pytest
 from bovine.utils.test.in_memory_test_app import app, data_store
 
 
-@pytest.mark.asyncio
 async def test_activitypub_outbox_with_configured_coroutines() -> None:
     client = app.test_client()
 
@@ -26,3 +25,16 @@ async def test_activitypub_outbox_with_configured_coroutines() -> None:
 
     assert data["totalItems"] == 1
     assert data["orderedItems"] == [{"start": 0, "limit": 10}]
+
+
+async def test_activitypub_post_to_outbox() -> None:
+    client = app.test_client()
+    response = await client.post(
+        "/activitypub/user/outbox",
+        data="XXX",
+        headers={"Accept": "application/activity+json"},
+    )
+
+    data = await response.get_json()
+
+    assert data == {"status": "request not signed"}

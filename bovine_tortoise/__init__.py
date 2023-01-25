@@ -26,11 +26,16 @@ default_outbox = (outbox_item_count, outbox_items)
 
 class ManagedDataStore:
     def __init__(
-        self, db_url="sqlite://db.sqlite3", inbox_processors=[], outbox_handlers=None
+        self,
+        db_url="sqlite://db.sqlite3",
+        inbox_processors=[],
+        outbox_handlers=None,
+        outbox_inserter=None,
     ):
         self.db_url = db_url
         self.inbox_processors = inbox_processors
         self.outbox_handlers = outbox_handlers
+        self.outbox_inserter = outbox_inserter
 
     async def connect(self):
         await Tortoise.init(
@@ -57,6 +62,9 @@ class ManagedDataStore:
 
         if self.outbox_handlers:
             local_user = local_user.set_outbox(*self.outbox_handlers)
+
+        if self.outbox_inserter:
+            local_user.add_outbox_item_coroutine = self.outbox_inserter
 
         return local_user
 

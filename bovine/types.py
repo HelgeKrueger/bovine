@@ -50,6 +50,7 @@ class LocalUser:
         self.processors = []
         self.outbox_count_coroutine = None
         self.outbox_items_coroutine = None
+        self.add_outbox_item_coroutine = None
 
     def add_inbox_processor(self, processor):
         self.processors.append(processor)
@@ -101,3 +102,9 @@ class LocalUser:
             return await self.outbox_items_coroutine(self, start, limit)
 
         return []
+
+    async def add_outbox_item(self, session, activity):
+        if self.add_outbox_item_coroutine:
+            return await self.add_outbox_item_coroutine(self, session, activity)
+
+        return None

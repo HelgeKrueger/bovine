@@ -44,15 +44,15 @@ class SignatureChecker:
     def __init__(self, key_retriever):
         self.key_retriever = key_retriever
 
-    async def validate_signature(self, request, digest=None):
+    async def validate_signature(self, request, digest=None) -> str | None:
         if "signature" not in request.headers:
             logger.warning("Signature not present")
-            return False
+            return
 
         if digest is not None:
             if request.headers["digest"] != digest:
                 logger.warning("Different diggest")
-                return False
+                return
 
         try:
             http_signature = HttpSignature()
@@ -64,18 +64,18 @@ class SignatureChecker:
                 or "date" not in signature_fields
             ):
                 logger.warning("Required field not present in signature")
-                return False
+                return
 
             if digest is not None and "digest" not in signature_fields:
                 logger.warning("Digest not present, but computable")
-                return False
+                return
 
             http_date = parse_gmt(request.headers["date"])
             if not check_max_offset_now(http_date):
                 logger.warning(
                     f"Encountered invalid http date {request.headers['date']}"
                 )
-                return False
+                return
 
             for field in signature_fields:
                 if field == "(request-target)":
@@ -90,11 +90,12 @@ class SignatureChecker:
 
             if public_key is None:
                 logger.warn(f"Could not retrieve key from {parsed_signature.key_id}")
-                return False
+                return
 
-            return http_signature.verify(public_key, parsed_signature.signature)
+            if http_signature.verify(public_key, parsed_signature.signature):
+                return parsed_signature.key_id
         except Exception as e:
             logger.error(str(e))
             for log_line in traceback.format_exc().splitlines():
                 logger.error(log_line)
-            return False
+            return

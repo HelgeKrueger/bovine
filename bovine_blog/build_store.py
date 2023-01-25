@@ -4,8 +4,8 @@ from bovine import get_bovine_user
 from bovine.processors.dismiss_delete import dismiss_delete
 from bovine.types import InboxItem, LocalUser
 from bovine.utils.in_memory_store import InMemoryUserStore
-from bovine_tortoise import (ManagedDataStore, default_inbox_processors,
-                             default_outbox)
+from bovine_tortoise import ManagedDataStore, default_inbox_processors, default_outbox
+from bovine_tortoise.outbox import send_activity_no_local_path
 
 
 async def on_delete(
@@ -38,7 +38,9 @@ def build_get_user(domain: str):
 
     inbox_processors = [dismiss_delete(on_delete)] + default_inbox_processors
     data_store = ManagedDataStore(
-        inbox_processors=inbox_processors, outbox_handlers=default_outbox
+        inbox_processors=inbox_processors,
+        outbox_handlers=default_outbox,
+        outbox_inserter=send_activity_no_local_path,
     )
 
     return bovine_user, Chain(bovine_store.get_user, data_store.get_user).execute

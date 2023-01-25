@@ -49,6 +49,14 @@ poetry run hypercorn examples.local_test_blog:app
 
 The provided content is hard coded in `examples/local_test_blog.py`. Due to the nature of http signatures. The ids of posts correspond to the ActivityPub objects, e.g. `https://my_domain/activitypub/test/1234-5678`. The current implementation redirects requests to these urls not having the accept type matching `application/.*json` to `https://my_domain/test/1234-5678`.
 
+`bovine_blog/scripts` contains some scripts that were useful during testing and development. In particular
+
+```
+poetry run python bovine_blog/scripts/add_user.py USERNAME
+```
+
+can be used to create new users including public/private keys.
+
 ### bovine_admin and bovine_admin_webapp
 
 This provides an user interface to interact with the instance. Basically, it provides a view of the inbox and allows one to empty it, write replies, and compose new posts. The formatting uses markdown.

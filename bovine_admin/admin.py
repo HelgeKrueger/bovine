@@ -10,7 +10,8 @@ from tortoise.contrib.quart import register_tortoise
 from bovine_blog.stores.types import PostEntry
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.actions import fetch_post, follow
-from bovine_tortoise.models import Actor, Follower, Following, InboxEntry, OutboxEntry
+from bovine_tortoise.models import (Actor, Follower, Following, InboxEntry,
+                                    OutboxEntry)
 from bovine_tortoise.outbox import send_activity
 from bovine_tortoise.processors import store_in_database
 

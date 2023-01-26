@@ -9,6 +9,8 @@ from bovine.server import default_configuration
 from bovine.utils.http_signature import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
+from bovine_tortoise.inbox import inbox_content_starting_from
+
 
 from .build_store import build_get_user
 from .html import html_blueprint
@@ -43,6 +45,7 @@ app.config.update(
         "get_user": get_user,
         "data_store": TortoiseStore(),
         "domain_name": "mymath.rocks",
+        "inbox_getter": inbox_content_starting_from,
     }
 )
 

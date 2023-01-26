@@ -1,5 +1,4 @@
 import logging
-import json
 import re
 from urllib.parse import urlparse
 
@@ -53,6 +52,7 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
 
 @activitypub.post("/<account_name>/inbox")
+# @route_cors(allow_origin="*")
 async def inbox(account_name: str) -> tuple[dict, int]:
     current_app.add_background_task(handle_inbox, (account_name, request))
 
@@ -96,29 +96,3 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     items = await local_user.outbox_items()
 
     return build_outbox(outbox_url).with_count(count).with_items(items).build()
-
-
-@activitypub.post("/<account_name>/outbox")
-async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-    raw_data = await request.get_data()
-    digest = content_digest_sha256(raw_data)
-
-    used_key_url = await current_app.config["validate_signature"](
-        request, digest=digest
-    )
-
-    if used_key_url is None:
-        logger.warning("Invalid signature on get http request for outbox")
-        return {"status": "request not signed"}, 401
-
-    local_user = await current_app.config["get_user"](account_name)
-
-    if local_user.get_public_key_url() != used_key_url:
-        logger.warning(f"Attempt to post with incorrect key {used_key_url}")
-        return {"status": "request not signed"}, 401
-
-    await local_user.add_outbox_item(
-        current_app.config["session"], json.loads(raw_data)
-    )
-
-    return {"status": "testing"}, 200

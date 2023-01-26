@@ -1,13 +1,14 @@
-import aiohttp
 import asyncio
-import cowsay
-import random
-from markdown import Markdown
-import uuid
 import json
+import random
+import uuid
 
-from bovine.activitystreams.objects import build_note
+import aiohttp
+import cowsay
+from markdown import Markdown
+
 from bovine.activitystreams.activities import build_create
+from bovine.activitystreams.objects import build_note
 from bovine.clients.signed_http import signed_post
 
 

@@ -57,8 +57,8 @@ poetry run python bovine_blog/scripts/add_user.py USERNAME
 
 can be used to create new users including public/private keys.
 
-### bovine_admin and bovine_admin_webapp
+### buffalo
 
-This provides an user interface to interact with the instance. Basically, it provides a view of the inbox and allows one to empty it, write replies, and compose new posts. The formatting uses markdown.
-
-Note: it is assumed that bovine_admin runs on the same server as bovine_blog, and the resulting service is port forwarded to port 8000 using ssh. See `server.js` for details.
+Buffalo is an attempt at writing a webapp able to interact with bovine through ActivityPub Client to Server.
+It uses ReactJS for frontend management and JSX to give the code some kind of structure. Data is stored
+client side using dexie.js.

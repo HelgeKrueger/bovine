@@ -26,6 +26,7 @@ pytest-cov = "^4.0.0"
 types-python-dateutil = "^2.8.19.6"
 isort = "^5.11.4"
 cowsay = "^5.0"
+quart-cors = "^0.6.0"
 
 [tool.poetry.group.test.dependencies]
 black = "*"
@@ -36,6 +37,10 @@ flake8-black = "*"
 jsonschema = "*"
 
 
+
+[tool.poetry.group.dev.dependencies]
+pytest-env = "^0.8.1"
+
 [tool.aerich]
 tortoise_orm = "bovine_blog.TORTOISE_ORM"
 location = "./migrations"
@@ -43,3 +48,9 @@ src_folder = "./."
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+env = [
+    "ACCESS_TOKEN=test_token"
+]
+asyncio_mode="auto"

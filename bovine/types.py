@@ -30,6 +30,10 @@ class InboxItem:
         logging.info(self.body.decode("utf-8"))
 
 
+async def dummy(*args):
+    return
+
+
 class LocalUser:
     def __init__(
         self,
@@ -50,7 +54,7 @@ class LocalUser:
         self.processors = []
         self.outbox_count_coroutine = None
         self.outbox_items_coroutine = None
-        self.add_outbox_item_coroutine = None
+        self.add_outbox_item_coroutine = dummy
 
     def add_inbox_processor(self, processor):
         self.processors.append(processor)

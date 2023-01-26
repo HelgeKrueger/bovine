@@ -4,7 +4,8 @@ from bovine import get_bovine_user
 from bovine.processors.dismiss_delete import dismiss_delete
 from bovine.types import InboxItem, LocalUser
 from bovine.utils.in_memory_store import InMemoryUserStore
-from bovine_tortoise import ManagedDataStore, default_inbox_processors, default_outbox
+from bovine_tortoise import (ManagedDataStore, default_inbox_processors,
+                             default_outbox)
 from bovine_tortoise.outbox import send_activity_no_local_path
 
 

@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import React from "react";
 import TimelineEntry from "./TimelineEntry";
 
-const buildTree = (conversation) => {
+const buildTree = (conversation, fallback) => {
   let root = null;
   let idToElement = {};
   let parents = {};
@@ -21,6 +21,12 @@ const buildTree = (conversation) => {
     }
   }
 
+  if (!parents[fallback?.id]) {
+    if (!Object.values(parents).find((a) => a.indexOf(fallback?.id) > -1)) {
+      return;
+    }
+  }
+
   for (let parent of Object.keys(parents)) {
     if (!idToElement[parent]) {
       idToElement[parent] = {};
@@ -34,7 +40,7 @@ const buildTree = (conversation) => {
 };
 
 export const DisplayConversation = ({ conversation, fallback }) => {
-  const root = buildTree(conversation);
+  const root = buildTree(conversation, fallback);
   if (!root) {
     return <TimelineEntry entry={fallback} />;
   }
@@ -48,9 +54,10 @@ const DisplayTreeItem = ({ entry }) => {
     // console.log(a, new Date(a?.updated));
     return new Date(b?.updated) - new Date(a?.updated);
   });
+  const seen = entry?.seen;
   return (
     <>
-      <TimelineEntry entry={entry?.data} seen={entry?.seen} />
+      <TimelineEntry entry={entry?.data} seen={seen} />
       <Container style={{ paddingRight: 0, marginRight: 0 }}>
         {sortedChildren?.map((child) => (
           <DisplayTreeItem entry={child} key={child?.id} />

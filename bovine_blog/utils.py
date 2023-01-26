@@ -1,6 +1,9 @@
+import logging
 import re
 
 from quart import redirect, request
+
+logger = logging.getLogger("rewrite")
 
 
 async def rewrite_activity_request():
@@ -13,7 +16,7 @@ async def rewrite_activity_request():
             if not re.match(r"application/.*json", accept_header):
                 new_path = request.path.replace(r"/activitypub", "")
                 new_path = new_path.replace(r"/testing_notes", "")
-                print(new_path)
+                logging.info(f"Rewrote path to {new_path}")
                 return redirect(new_path)
 
     return

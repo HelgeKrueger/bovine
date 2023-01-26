@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../database";
+import config from "../config";
 
 const transformEntry = (entry) => {
   let data = entry[1];
@@ -25,6 +26,7 @@ const transformEntry = (entry) => {
     remoteId,
   };
 };
+
 export const DataUpdate = () => {
   const [timeline, setTimeline] = useState([]);
   const reloadTimeline = async () => {
@@ -38,7 +40,15 @@ export const DataUpdate = () => {
       min_id = minArrayList[0].remoteId;
     }
     // console.log(min_id);
-    fetch(`/api/?min_id=${min_id}`)
+    // fetch(`/api/?min_id=${min_id}`)
+    //   .then((x) => x.json())
+    //   .then((x) => setTimeline(x));
+
+    fetch(`https://mymath.rocks/activitypub/helge/inbox_tmp?min_id=${min_id}`, {
+      headers: {
+        Authorization: `Bearer ${config.accessToken}`,
+      },
+    })
       .then((x) => x.json())
       .then((x) => setTimeline(x));
   };

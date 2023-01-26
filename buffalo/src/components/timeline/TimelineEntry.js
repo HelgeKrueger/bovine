@@ -6,12 +6,16 @@ import CreateNote from "./CreateNote";
 import UpdateQuestion from "./UpdateQuestion";
 import { db } from "../../database";
 
-const TimelineEntry = ({ entry, seen }) => {
+const TimelineEntry = ({ entry, seen, update }) => {
   useEffect(() => {
-    if (entry?.id) {
-      db.activity.update(entry["id"], { seen: 1 });
-    }
-  }, []);
+    setTimeout(() => {
+      if (update !== "xxx") {
+        if (entry?.id) {
+          db.activity.update(entry["id"], { seen: 1 });
+        }
+      }
+    }, 300);
+  }, [entry]);
 
   if (entry?.type === "Accept" && entry?.object?.type === "Follow") {
     return <AcceptFollow entry={entry} />;

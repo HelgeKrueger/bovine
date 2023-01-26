@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --watch"
+    "watch": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --watch --servedir=. "
   },
   "author": "Helge Krueger",
   "license": "MIT",
@@ -21,7 +21,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.7.0",
-    "react-router-dom": "^6.7.0"
+    "react-router-dom": "^6.7.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.20.7",

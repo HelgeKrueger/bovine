@@ -1,10 +1,12 @@
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddUrl from "../components/timeline/AddUrl";
 
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
+import TimelineEntry from "../components/timeline/TimelineEntry";
+import { Check } from "@mui/icons-material";
 
 const Timeline = () => {
   const [entry, setEntry] = useState({});
@@ -16,9 +18,9 @@ const Timeline = () => {
   );
 
   updateEntry = async () => {
-    if (entry?.id) {
-      await db.activity.update(entry["id"], { seen: 1 });
-    }
+    // if (entry?.id) {
+    // await db.activity.update(entry["id"], { seen: 1 });
+    // }
     const newEntry = await db.activity
       .where("seen")
       .equals(0)
@@ -32,7 +34,6 @@ const Timeline = () => {
       return;
     }
 
-    // console.log("new entry", newEntry);
     const element = newEntry[0];
     setEntry(element["data"]);
     setConversationId(element["conversation"]);
@@ -57,6 +58,18 @@ const Timeline = () => {
     updateConversation();
   }, [conversationId]);
 
+  const allRead = () => {
+    db.activity
+      .where("seen")
+      .equals(0)
+      .toArray()
+      .then((data) => {
+        for (let entry of data) {
+          db.activity.update(entry.id, { seen: 1 });
+        }
+      });
+  };
+
   return (
     <Container>
       <Box
@@ -70,9 +83,19 @@ const Timeline = () => {
         <Button variant="contained" onClick={updateEntry} margin="normal">
           Next
         </Button>
+        <Button
+          variant="contained"
+          onClick={allRead}
+          margin="normal"
+          startIcon={<Check />}
+        >
+          All Read
+        </Button>
         <AddUrl />
         Number: {number}
       </Box>
+      <TimelineEntry entry={entry} seen={0} />
+      <Divider />
       <DisplayConversation conversation={conversation} fallback={entry} />
     </Container>
   );

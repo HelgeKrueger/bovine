@@ -82,7 +82,7 @@ const Timeline = () => {
           // padding: 1,
           // margin: 1,
           display: "flex",
-          maxWidth: "800px",
+          // maxWidth: "800px",
         }}
       >
         <Button variant="contained" onClick={updateEntry} margin="normal">
@@ -96,8 +96,7 @@ const Timeline = () => {
         >
           All Read
         </Button>
-        {/* <AddUrl /> */}
-        <Container>Number: {number}</Container>
+        Number: {number}
         <Button
           variant="contained"
           margin="normal"

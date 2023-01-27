@@ -9,8 +9,12 @@ test("test buildLike", () => {
 test("test buildNote", () => {
   const result = buildNote("my_actor", "content");
 
-  expect(result.content).toBe("<p>content</p>");
-  expect(result.hashtags).toBeFalsy();
+  expect(result.content).toBe("<p>content</p>\n");
+  expect(result.source).toStrictEqual({
+    content: "content",
+    mediaType: "text/markdown",
+  });
+  expect(result.tag).toStrictEqual([]);
 });
 
 test("test buildNote with hashtags", () => {
@@ -18,7 +22,10 @@ test("test buildNote with hashtags", () => {
     hashtags: ["#tag1", "#tag2"],
   });
 
-  expect(result.hashtags).toStrictEqual(["#tag1", "#tag2"]);
+  expect(result.tag).toStrictEqual([
+    { name: "#tag1", type: "Hashtag" },
+    { name: "#tag2", type: "Hashtag" },
+  ]);
 });
 
 test("test buildCreateForNote", () => {

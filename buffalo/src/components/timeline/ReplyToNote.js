@@ -8,6 +8,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import { buildNote, buildCreateForNote } from "../../activitystreams/builders";
+import { sendToOutbox } from "../../client";
+import config from "../../config";
+
 const ReplyToNote = ({ entry }) => {
   const [content, setContent] = useState("");
   const [hashtags, setHashtags] = useState("");
@@ -50,22 +54,20 @@ const ReplyToNote = ({ entry }) => {
   }
 
   const sendPost = () => {
-    const data = {
+    const note = buildNote(config.actor, content, {
       content: content,
       hashtags: hashtags.split(",").map((x) => x.trim()),
       mentions: mentions.split(",").map((x) => x.trim()),
-      previous_cc: entry?.cc,
+      cc: entry?.cc,
+      to: entry?.to,
       conversation: entry?.conversation,
-      reply_to_id: entry?.id,
-      reply_to_atom_uri: entry?.atomUri,
-      reply_to_actor: entry?.attributedTo,
-    };
+      inReplyTo: entry?.id,
+      inReplyToAtomUri: entry?.atomUri,
+      replyToActor: entry?.attributedTo,
+    });
 
-    fetch("/api/post", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).then(() => {
+    const data = buildCreateForNote(note);
+    sendToOutbox(data).then(() => {
       setOpen(false);
     });
   };

@@ -39,10 +39,7 @@ const TimelineEntry = ({ entry, seen, update }) => {
   const text = JSON.stringify(entry, null, 2);
 
   return (
-    <Paper
-      sx={{ backgroundColor: "white", padding: 2, margin: 2 }}
-      elevation={2}
-    >
+    <Paper sx={{ backgroundColor: "white" }} elevation={2}>
       <pre>{text}</pre>
     </Paper>
   );

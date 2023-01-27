@@ -1,4 +1,4 @@
-import { Star } from "@mui/icons-material";
+import { Favorite, Star } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { buildLike } from "../../../activitystreams/builders";
@@ -24,7 +24,8 @@ const Like = ({ object }) => {
       color="primary"
       disabled={disabled}
     >
-      <Star />
+      <Favorite />
+      {/* <Star /> */}
     </IconButton>
   );
 };

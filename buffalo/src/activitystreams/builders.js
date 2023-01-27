@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import { marked } from "marked";
+import { PropaneTank } from "@mui/icons-material";
 
 const currentDate = () => new Date().toISOString();
 
@@ -14,26 +16,90 @@ const buildLike = (actor, object) => {
   };
 };
 
+const buildSource = (content) => {
+  return {
+    content: content,
+    mediaType: "text/markdown",
+  };
+};
+
+const buildTag = (hashtags, mentions) => {
+  let tags = [];
+  if (hashtags) {
+    tags = tags.concat(
+      hashtags?.map((x) => {
+        return { name: x, type: "Hashtag" };
+      })
+    );
+  }
+  if (mentions) {
+    tags = tags.concat(
+      mentions?.map((x) => {
+        return { href: x, name: x, type: "Mention" };
+      })
+    );
+  }
+
+  return tags;
+};
+
 const buildNote = (actor, content, properties) => {
+  const id = actor + "/" + uuidv4();
+  const formatted = marked.parse(content);
+  let to = ["https://www.w3.org/ns/activitystreams#Public"];
+  let cc = [actor + "/followers"];
+  // if (properties?.to) {
+  //   to = properties.to;
+  // }
+  if (properties?.replyToActor) {
+    cc.push(properties?.replyToActor);
+  }
+  // if (properties?.cc) {
+  //   cc = properties.cc;
+  // }
+  if (properties?.mentions) {
+    cc = cc.concat(properties.mentions);
+  }
+  to = Array.from(new Set(to));
+  cc = Array.from(new Set(cc));
   return {
     "@context": "https://www.w3.org/ns/activitystreams",
+    atomUri: id,
+    attachment: [],
     attributedTo: actor,
-    cc: [actor + "/followers"],
-    content: `<p>${content}</p>`,
-    id: actor + "/" + uuidv4(),
-    inReplyTo: null,
+    cc: cc,
+    content: formatted,
+    contentMap: {
+      en: content,
+    },
+    conversation: properties?.conversation,
+    id: id,
+    inReplyTo: properties?.inReplyTo,
+    inReplyToAtomUri: properties?.inReplyToAtomUri,
     published: currentDate(),
-    hashtags: properties?.hashtags,
-    to: ["https://www.w3.org/ns/activitystreams#Public"],
+    tag: buildTag(properties?.hashtags, properties?.mentions),
+    replies: {
+      type: "Collection",
+      totalItems: 0,
+      items: [],
+    },
+    source: buildSource(content),
+    to: to,
     type: "Note",
+    url: id.replace("/activitypub", ""),
   };
 };
 
 const buildCreateForNote = (note) => {
+  const copyOfNote = { ...note };
+  if (copyOfNote["@context"]) {
+    delete copyOfNote["@context"];
+  }
   return {
     "@context": [
       "https://www.w3.org/ns/activitystreams",
       {
+        atomUri: "ostatus:atomUri",
         inReplyToAtomUri: "ostatus:inReplyToAtomUri",
         conversation: "ostatus:conversation",
         ostatus: "http://ostatus.org#",
@@ -42,7 +108,7 @@ const buildCreateForNote = (note) => {
     actor: note?.attributedTo,
     cc: note?.cc,
     id: note?.id + "/activity",
-    object: note,
+    object: copyOfNote,
     published: note?.published,
     to: note?.to,
     type: "Create",

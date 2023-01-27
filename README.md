@@ -62,3 +62,65 @@ can be used to create new users including public/private keys.
 Buffalo is an attempt at writing a webapp able to interact with bovine through ActivityPub Client to Server.
 It uses ReactJS for frontend management and JSX to give the code some kind of structure. Data is stored
 client side using dexie.js.
+
+# Implementation notes
+
+## ActivityPub Client 2 Server
+
+The ReactJS web frontend `buffalo` speaks with the python `bovine` running on a server using a "version" of [client to server activity pub](https://www.w3.org/TR/activitypub/#client-to-server-interactions). At least that is the goal.
+
+### Posting
+
+Posting is done pretty much as explained in the document. I'm still deciding what authentication is best. For the [munching cow](https://mymath.rocks/munchingcow), a version of http signatures is used. For the web frontend currently hard coded access tokens are used.
+
+Something like a Like currently requires a "to" field.
+
+```
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Like",
+  "id": "https://mymath.rocks/activitypub/helge/....",
+  "actor": "https://mymath.rocks/activitypub/helge",
+  "object": "https://mas.to/users/helgek/...",
+  "to": [
+    "https://mas.to/users/helgek"
+  ]
+}
+```
+
+This is a difference to what Mastodon sends out. Note Mastodon's implementation without a to is suspect.
+
+### Reading
+
+My current plan is to allow an authorized GET on the inbox, e.g.
+
+```
+GET https://mymath.rocks/activitypub/helge/inbox
+```
+
+This will then return an [OrderedCollection](https://www.w3.org/TR/activitypub/#inbox) as specified in the spec. I will probably include a new link type that allows one to fetch newer items, e.g.
+
+```
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "nextUpdates": "https:/mymath.rocks/activitypub/helge/inbox?min_id=1235",
+    "first": "https:/mymath.rocks/activitypub/helge/inbox?max_id=1234",
+    "id": "mymath.rocks/activitypub/helge/inbox",
+    "last": "mymath.rocks/activitypub/helge/inbox?min_id=0",
+    "totalItems": 446,
+    "type": "OrderedCollection"
+}
+
+```
+
+or something similar.
+
+### Fetching
+
+This will be a new endpoint of the form
+
+```
+GET https://mymath.rocks/activitypub/helge/fetch?query
+```
+
+which allows one to fetch remote resources. Examples for query strings would be `user=@munchingcow@mymath.rocks` or the url of an ActivityPub object, i.e. `object=https://...`.

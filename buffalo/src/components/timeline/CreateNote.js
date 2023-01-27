@@ -1,6 +1,7 @@
 import { Expand, ExpandMore } from "@mui/icons-material";
 import { Divider, Link, Paper, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import Like from "./actions/Like";
 import Actor from "./Actor";
 import Attachments from "./Attachments";
 import ReplyToNote from "./ReplyToNote";
@@ -71,9 +72,10 @@ const CreateNote = ({ note, source, seen }) => {
         Status
       </Link>{" "}
       at {note.published}
-      <ReplyToNote entry={note} />
+      <Like object={note} />
       <Source entry={source} />
       <NoteContent collapse={collapse} note={note} />
+      <ReplyToNote entry={note} />
     </Paper>
   );
 };

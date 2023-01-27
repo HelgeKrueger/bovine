@@ -1,6 +1,7 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { sendToOutbox } from "../client";
 
 import config from "../config";
 
@@ -39,16 +40,7 @@ const Post = () => {
       type: "Create",
     };
 
-    fetch(config.outbox, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${config.accessToken}`,
-      },
-      body: JSON.stringify(data),
-    })
-      .then(console.log)
-      .catch(console.error);
+    sendToOutbox(data);
   };
 
   return (

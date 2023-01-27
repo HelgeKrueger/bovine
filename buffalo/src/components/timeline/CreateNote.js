@@ -28,6 +28,12 @@ const CreateNote = ({ note, source, seen }) => {
   if (collapse) {
     return (
       <Paper
+        style={{
+          paddingRight: 0,
+          paddingLeft: 0,
+          marginLeft: 0,
+          marginRight: 0,
+        }}
         sx={{ backgroundColor: "lightgray", padding: 0, margin: 0 }}
         elevation={2}
       >
@@ -50,7 +56,14 @@ const CreateNote = ({ note, source, seen }) => {
 
   return (
     <Paper
-      sx={{ backgroundColor: "white", padding: 2, margin: 2 }}
+      sx={{
+        backgroundColor: "white",
+        padding: 1,
+        margin: 0,
+
+        marginTop: 2,
+        marginBottom: 2,
+      }}
       elevation={2}
     >
       <Actor name={note.attributedTo} /> posted a{" "}

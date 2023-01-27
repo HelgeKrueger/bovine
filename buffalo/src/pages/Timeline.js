@@ -71,13 +71,14 @@ const Timeline = () => {
   };
 
   return (
-    <Container>
+    <>
       <Box
         sx={{
           backgroundColor: "white",
-          padding: 1,
-          margin: 1,
+          // padding: 1,
+          // margin: 1,
           display: "flex",
+          maxWidth: "800px",
         }}
       >
         <Button variant="contained" onClick={updateEntry} margin="normal">
@@ -91,13 +92,13 @@ const Timeline = () => {
         >
           All Read
         </Button>
-        <AddUrl />
+        {/* <AddUrl /> */}
         Number: {number}
       </Box>
       <TimelineEntry entry={entry} seen={0} />
       <Divider />
       <DisplayConversation conversation={conversation} fallback={entry} />
-    </Container>
+    </>
   );
 };
 

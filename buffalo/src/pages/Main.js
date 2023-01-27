@@ -6,14 +6,19 @@ import Sidebar from "../components/Sidebar";
 
 const Main = () => {
   return (
-    <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {/* <h1 style={{ textAlign: "center" }}>My Math Rocks: Administration</h1> */}
-        <Outlet />
-      </Box>
+    <Box sx={{ maxWidth: "800px", marginLeft: "calc(50% - 400px)" }}>
+      <Outlet />
     </Box>
   );
+  // return (
+  //   // <Box sx={{ display: "flex" }}>
+  //     {/* <Sidebar /> */}
+  //     {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
+  //     {/* <h1 style={{ textAlign: "center" }}>My Math Rocks: Administration</h1> */}
+  //     <Outlet />
+  //     {/* </Box> */}
+  //   // </Box>
+  // );
 };
 
 export default Main;

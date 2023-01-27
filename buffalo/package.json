@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --watch --servedir=. "
+    "watch": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --watch --servedir=. ",
+    "build": "esbuild src/index.js --bundle --outdir=build/ --loader:.js=jsx --minify "
   },
   "author": "Helge Krueger",
   "license": "MIT",

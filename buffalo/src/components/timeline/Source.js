@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Button,
   FormControlLabel,
+  IconButton,
   Paper,
   Switch,
   Typography,
@@ -26,16 +24,15 @@ const Source = ({ entry }) => {
 
   if (!open) {
     return (
-      <Button
-        startIcon={<Code />}
+      <IconButton
         onClick={() => {
           setOpen(true);
         }}
+        color="primary"
         variant="outlined"
-        sx={{ margin: 1 }}
       >
-        Source
-      </Button>
+        <Code />
+      </IconButton>
     );
   }
 

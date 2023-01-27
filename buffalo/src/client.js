@@ -8,9 +8,7 @@ const sendToOutbox = (activity) => {
       Authorization: `Bearer ${config.accessToken}`,
     },
     body: JSON.stringify(activity),
-  })
-    .then(console.log)
-    .catch(console.error);
+  }).catch(console.error);
 };
 
 export { sendToOutbox };

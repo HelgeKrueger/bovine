@@ -64,7 +64,7 @@ export const DataUpdate = () => {
   }, [timeline]);
 
   useEffect(() => {
-    setInterval(reloadTimeline, 60 * 1000);
+    setInterval(reloadTimeline, 5 * 60 * 1000);
   }, []);
 
   return <></>;

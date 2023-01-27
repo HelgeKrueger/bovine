@@ -54,11 +54,15 @@ class PostEntry:
     @staticmethod
     def from_outbox_entry(entry: OutboxEntry):
         content = extract_content(entry.content)
-        if "/" in entry.local_path:
-            author, local_id = entry.local_path.split("/", 1)
+
+        local_path = entry.local_path
+        local_path = local_path.removesuffix("/activity")
+
+        if "/" in local_path:
+            author, local_id = local_path.split("/", 1)
         else:
             author = ""
-            local_id = entry.local_path
+            local_id = local_path
         entry = PostEntry(local_id, author, entry.created, content).set_in_reply_to(
             extract_in_reply_to(entry.content)
         )

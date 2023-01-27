@@ -1,5 +1,5 @@
 import { Expand, ExpandMore } from "@mui/icons-material";
-import { Divider, Link, Paper, Button } from "@mui/material";
+import { Divider, Link, Paper, Button, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Like from "./actions/Like";
 import Actor from "./Actor";
@@ -59,7 +59,7 @@ const CreateNote = ({ note, source, seen }) => {
     <Paper
       sx={{
         backgroundColor: "white",
-        padding: 1,
+        padding: 0,
         margin: 0,
 
         marginTop: 2,
@@ -67,15 +67,21 @@ const CreateNote = ({ note, source, seen }) => {
       }}
       elevation={2}
     >
-      <Actor name={note.attributedTo} /> posted a{" "}
-      <Link href={note.id} target="_blank">
-        Status
-      </Link>{" "}
-      at {note.published}
-      <Like object={note} />
-      <Source entry={source} />
-      <NoteContent collapse={collapse} note={note} />
-      <ReplyToNote entry={note} />
+      <Box sx={{ backgroundColor: "#cccccc", padding: 1 }}>
+        <Actor name={note.attributedTo} /> posted a{" "}
+        <Link href={note.id} target="_blank">
+          Status
+        </Link>{" "}
+        at {note.published}
+      </Box>
+      <Box sx={{ padding: 2 }}>
+        <NoteContent collapse={collapse} note={note} />
+      </Box>
+      <Box sx={{ backgroundColor: "#cccccc", padding: 0 }}>
+        <ReplyToNote entry={note} />
+        <Source entry={source} />
+        <Like object={note} />
+      </Box>
     </Paper>
   );
 };

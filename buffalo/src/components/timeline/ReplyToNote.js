@@ -1,5 +1,11 @@
 import { Close, Reply } from "@mui/icons-material";
-import { Button, Paper, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const ReplyToNote = ({ entry }) => {
@@ -31,16 +37,15 @@ const ReplyToNote = ({ entry }) => {
 
   if (!open) {
     return (
-      <Button
-        startIcon={<Reply />}
+      <IconButton
         onClick={() => {
           setOpen(true);
         }}
-        variant="outlined"
+        color="primary"
         sx={{ margin: 1 }}
       >
-        Reply
-      </Button>
+        <Reply />
+      </IconButton>
     );
   }
 

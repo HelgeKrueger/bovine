@@ -2,16 +2,20 @@ import { Box, Button, Container, Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddUrl from "../components/timeline/AddUrl";
 
+import { useNavigate } from "react-router-dom";
+
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
 import TimelineEntry from "../components/timeline/TimelineEntry";
-import { Check } from "@mui/icons-material";
+import { Check, Create } from "@mui/icons-material";
 
 const Timeline = () => {
   const [entry, setEntry] = useState({});
   const [conversationId, setConversationId] = useState(null);
   const [conversation, setConversation] = useState([]);
+
+  const navigate = useNavigate();
 
   const number = useLiveQuery(() =>
     db.activity.where("seen").equals(0).count()
@@ -93,7 +97,17 @@ const Timeline = () => {
           All Read
         </Button>
         {/* <AddUrl /> */}
-        Number: {number}
+        <Container>Number: {number}</Container>
+        <Button
+          variant="contained"
+          margin="normal"
+          startIcon={<Create />}
+          onClick={() => {
+            navigate("/post");
+          }}
+        >
+          Post
+        </Button>
       </Box>
       <TimelineEntry entry={entry} seen={0} />
       <Divider />

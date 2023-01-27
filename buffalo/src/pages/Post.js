@@ -1,46 +1,29 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { sendToOutbox } from "../client";
 
 import config from "../config";
+import { buildNote, buildCreateForNote } from "../activitystreams/builders";
 
 const Post = () => {
   const [content, setContent] = useState("");
   const [hashtags, setHashtags] = useState("");
 
+  const navigate = useNavigate();
+
   const sendPost = () => {
     const id = config.actor + "/" + uuidv4();
-    const published = new Date().toISOString();
-    const data = {
-      "@context": [
-        "https://www.w3.org/ns/activitystreams",
-        {
-          inReplyToAtomUri: "ostatus:inReplyToAtomUri",
-          conversation: "ostatus:conversation",
-          ostatus: "http://ostatus.org#",
-        },
-      ],
-      actor: config.actor,
-      cc: [config.actor + "/followers"],
-      id: id,
-      object: {
-        "@context": "https://www.w3.org/ns/activitystreams",
-        attributedTo: config.actor,
-        cc: [config.actor + "/followers"],
-        content: `<p>${content}</p>`,
-        id: id,
-        inReplyTo: null,
-        published: published,
-        to: ["https://www.w3.org/ns/activitystreams#Public"],
-        type: "Note",
-      },
-      published: published,
-      to: ["https://www.w3.org/ns/activitystreams#Public"],
-      type: "Create",
-    };
 
-    sendToOutbox(data);
+    const note = buildNote(config.actor, content, {
+      hashtags: hashtags.split(",").map((x) => x.trim()),
+    });
+    const data = buildCreateForNote(note);
+
+    sendToOutbox(data).then(() => {
+      navigate("/");
+    });
   };
 
   return (

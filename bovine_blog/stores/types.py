@@ -4,18 +4,24 @@ from bovine_tortoise.models import OutboxEntry
 
 
 def extract_content(activity: dict) -> str:
-    obj = activity["object"]
+    try:
+        obj = activity.get("object", None)
 
-    if "content" not in obj or not isinstance(obj["content"], str):
+        if "content" not in obj or not isinstance(obj["content"], str):
+            return "bad input"
+        return obj["content"]
+    except Exception:
         return "bad input"
-    return obj["content"]
 
 
 def extract_in_reply_to(activity: dict) -> str | None:
-    obj = activity["object"]
-    if not isinstance(obj["content"], str):
+    try:
+        obj = activity.get("object", "not found")
+        if not isinstance(obj["content"], str):
+            return None
+        return obj.get("inReplyTo", None)
+    except Exception:
         return None
-    return obj.get("inReplyTo", None)
 
 
 class PostEntry:

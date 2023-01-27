@@ -10,8 +10,7 @@ class TortoiseStore:
         self.username = username
 
     async def index_contents(self) -> List[PostEntry]:
-        actor = await Actor.get_or_none(account=self.username)
-        entries = await OutboxEntry.filter(actor=actor).all()
+        entries = await OutboxEntry.filter().order_by("-created").limit(10).all()
 
         contents = [PostEntry.from_outbox_entry(entry).as_dict() for entry in entries]
 
@@ -19,7 +18,9 @@ class TortoiseStore:
 
     async def user_contents(self, username) -> List[PostEntry]:
         actor = await Actor.get_or_none(account=username)
-        entries = await OutboxEntry.filter(actor=actor).all()
+        entries = (
+            await OutboxEntry.filter(actor=actor).order_by("-created").limit(10).all()
+        )
 
         contents = [PostEntry.from_outbox_entry(entry).as_dict() for entry in entries]
 

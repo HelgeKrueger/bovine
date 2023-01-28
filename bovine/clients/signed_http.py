@@ -15,7 +15,7 @@ async def signed_get(
     private_key: str,
     url: str,
     headers: dict = {},
-):
+) -> aiohttp.ClientResponse:
     parsed_url = urlparse(url)
     host = parsed_url.netloc
     target = parsed_url.path
@@ -47,7 +47,7 @@ async def signed_post(
     url: str,
     body: str,
     headers: dict = {},
-) -> tuple[str, int]:
+) -> aiohttp.ClientResponse:
     parsed_url = urlparse(url)
     host = parsed_url.netloc
     target = parsed_url.path
@@ -74,7 +74,4 @@ async def signed_post(
     headers["signature"] = signature_header
     headers["user-agent"] = BOVINE_CLIENT_NAME
 
-    async with session.post(url, data=body, headers=headers) as response:
-        text = await response.text()
-
-        return text, response.status
+    return await session.post(url, data=body, headers=headers)

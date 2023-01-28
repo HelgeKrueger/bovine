@@ -5,8 +5,10 @@ import logging
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.hazmat.primitives.serialization import (load_pem_private_key,
-                                                          load_pem_public_key)
+from cryptography.hazmat.primitives.serialization import (
+    load_pem_private_key,
+    load_pem_public_key,
+)
 
 
 def generate_public_private_key():

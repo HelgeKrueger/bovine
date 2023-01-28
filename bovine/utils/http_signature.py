@@ -47,12 +47,12 @@ class SignatureChecker:
     async def validate_signature(self, request, digest=None) -> str | None:
         if "signature" not in request.headers:
             logger.warning("Signature not present")
-            return
+            return None
 
         if digest is not None:
             if request.headers["digest"] != digest:
                 logger.warning("Different diggest")
-                return
+                return None
 
         try:
             http_signature = HttpSignature()
@@ -64,18 +64,18 @@ class SignatureChecker:
                 or "date" not in signature_fields
             ):
                 logger.warning("Required field not present in signature")
-                return
+                return None
 
             if digest is not None and "digest" not in signature_fields:
                 logger.warning("Digest not present, but computable")
-                return
+                return None
 
             http_date = parse_gmt(request.headers["date"])
             if not check_max_offset_now(http_date):
                 logger.warning(
                     f"Encountered invalid http date {request.headers['date']}"
                 )
-                return
+                return None
 
             for field in signature_fields:
                 if field == "(request-target)":
@@ -90,7 +90,7 @@ class SignatureChecker:
 
             if public_key is None:
                 logger.warn(f"Could not retrieve key from {parsed_signature.key_id}")
-                return
+                return None
 
             if http_signature.verify(public_key, parsed_signature.signature):
                 return parsed_signature.key_id
@@ -98,4 +98,4 @@ class SignatureChecker:
             logger.error(str(e))
             for log_line in traceback.format_exc().splitlines():
                 logger.error(log_line)
-            return
+            return None

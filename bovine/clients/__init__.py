@@ -50,10 +50,11 @@ async def send_activitypub_request(
 ) -> tuple[str, int]:
     body = json.dumps(data)
 
-    text, status = await signed_post(
+    response = await signed_post(
         session, user.get_public_key_url(), user.private_key, inbox, body
     )
     logging.info(f"Send activity pub request to {inbox}")
-    logging.info(text)
+    text = await response.text()
+    logging.debug(text)
 
-    return text, status
+    return text, response.status

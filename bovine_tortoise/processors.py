@@ -61,10 +61,10 @@ async def accept_follow_request(
 
         request_data = build_accept(local_user.url, data).build()
         await bovine.clients.send_activitypub_request(
-            current_app.config["session"], inbox, request_data, local_user
+            current_app.config["session"], local_user, inbox, request_data
         )
 
-        return None
+        return item
     except Exception as ex:
         print(ex)
         traceback.print_exception(type(ex), ex, ex.__traceback__)

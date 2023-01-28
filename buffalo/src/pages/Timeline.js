@@ -1,13 +1,11 @@
-import { Box, Button, Container, Divider, IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AddUrl from "../components/timeline/AddUrl";
 
 import { useNavigate } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
-import TimelineEntry from "../components/timeline/TimelineEntry";
 import { Check, Create, NavigateNext } from "@mui/icons-material";
 import { DataUpdate } from "../components/timeline/DataUpdate";
 
@@ -22,7 +20,7 @@ const Timeline = () => {
     db.activity.where("seen").equals(0).count()
   );
 
-  updateEntry = async () => {
+  const updateEntry = async () => {
     // if (entry?.id) {
     // await db.activity.update(entry["id"], { seen: 1 });
     // }

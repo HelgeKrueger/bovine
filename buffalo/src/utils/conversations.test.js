@@ -1,4 +1,3 @@
-import { Experimental_CssVarsProvider } from "@mui/material";
 import { buildTree } from "./conversations";
 
 const buildElement = (id, inReplyTo) => {

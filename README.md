@@ -61,7 +61,24 @@ can be used to create new users including public/private keys.
 
 Buffalo is an attempt at writing a webapp able to interact with bovine through ActivityPub Client to Server.
 It uses ReactJS for frontend management and JSX to give the code some kind of structure. Data is stored
-client side using dexie.js.
+client side using dexie.js. Features included
+
+- Threaded conversation view. Already seen elements are collapsed
+- On mobile: Swipe left for next conversation
+- Composing both replies / and new new posts
+- Liking
+
+ActivityPub activities are currently created in the frontend.
+
+#### Configuration
+
+Currently, the authorization and used user are hardcoded in `buffalo/src/config.js`.
+
+#### Development
+
+`npm` is used for package management. The root directory with the package files is `buffalo`.
+
+There are some `jest` tests. Code is formatted with `prettier`. Source can be linted with `eslint`.
 
 # Implementation notes
 

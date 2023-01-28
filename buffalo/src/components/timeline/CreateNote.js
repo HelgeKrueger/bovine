@@ -1,5 +1,5 @@
-import { Expand, ExpandMore } from "@mui/icons-material";
-import { Divider, Link, Paper, Button, Box, IconButton } from "@mui/material";
+import { ExpandMore } from "@mui/icons-material";
+import { Divider, Link, Paper, Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Like from "./actions/Like";
 import Actor from "./Actor";
@@ -45,7 +45,7 @@ const CreateNote = ({ note, source, seen }) => {
       >
         <small>
           <Actor name={note.attributedTo} short />
-          's
+          &lsquo;s
           <Link href={note.id} target="_blank">
             Status
           </Link>{" "}

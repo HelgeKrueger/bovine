@@ -22,8 +22,10 @@ const ReplyToNote = ({ entry }) => {
     let newHashtags = [];
     let newMentions = [];
 
-    if (entry?.tag) {
-      for (let tag of entry?.tag) {
+    const tags = entry?.tag;
+
+    if (tags) {
+      for (let tag of tags) {
         if (tag?.type === "Mention") {
           newMentions.push(tag?.href);
         } else if (tag?.type === "Hashtag") {

@@ -1,5 +1,5 @@
-import { Favorite, Star } from "@mui/icons-material";
-import { Button, IconButton } from "@mui/material";
+import { Favorite } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { buildLike } from "../../../activitystreams/builders";
 import { sendToOutbox } from "../../../client";

@@ -8,16 +8,13 @@ const determineAncestor = (id, parents) => {
 };
 
 const buildTree = (conversation, fallback) => {
-  let root = null;
   let idToElement = {};
   let parents = {};
 
   for (let entry of conversation) {
     idToElement[entry.id] = entry;
     const entryData = entry.data;
-    if (!entryData?.inReplyTo) {
-      root = entryData?.id;
-    } else {
+    if (entryData?.inReplyTo) {
       if (!parents[entryData.inReplyTo]) {
         parents[entryData.inReplyTo] = [];
       }
@@ -31,6 +28,10 @@ const buildTree = (conversation, fallback) => {
   while (nextAncestor) {
     currentAncestor = nextAncestor;
     nextAncestor = determineAncestor(currentAncestor, parents);
+  }
+
+  if (currentAncestor === fallback.id) {
+    return fallback;
   }
 
   // idToElement[fallback.id] = fallback;

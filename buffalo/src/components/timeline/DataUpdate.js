@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../database";
 import config from "../../config";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { Refresh } from "@mui/icons-material";
 
 const transformEntry = (entry) => {

@@ -1,7 +1,6 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 import { sendToOutbox } from "../client";
 
 import config from "../config";
@@ -14,8 +13,6 @@ const Post = () => {
   const navigate = useNavigate();
 
   const sendPost = () => {
-    const id = config.actor + "/" + uuidv4();
-
     const note = buildNote(config.actor, content, {
       hashtags: hashtags.split(",").map((x) => x.trim()),
     });

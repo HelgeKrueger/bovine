@@ -13,7 +13,7 @@ const UpdateQuestion = ({ entry }) => {
     >
       <QuestionMark />
       <Actor name={actor} />
-      's{" "}
+      &apos;s{" "}
       <Link href={object?.id} target="_blank">
         Question
       </Link>{" "}

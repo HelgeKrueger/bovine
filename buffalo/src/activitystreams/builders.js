@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 import { marked } from "marked";
-import { PropaneTank } from "@mui/icons-material";
 
 const currentDate = () => new Date().toISOString();
 

@@ -83,15 +83,30 @@ async def inbox_get(account_name: str):
 @activitypub_client.post("/<account_name>/outbox_tmp")
 @route_cors(allow_origin=["http://localhost:8000"], allow_methods=["POST"])
 async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-    raw_data = await request.get_data()
+    content_type = request.headers.get("content-type")
+    if content_type and content_type.startswith("multipart"):
+        await request.get_data(parse_form_data=True)
+    else:
+        await request.get_data()
 
     local_user = await current_app.config["get_user"](account_name)
     if not has_authorization(local_user):
         return {"status": "access denied"}, 401
 
-    await local_user.add_outbox_item(
-        current_app.config["session"], json.loads(raw_data)
-    )
+    if request.headers["content-type"].startswith("multipart"):
+        files = await request.files
+        form = await request.form
+        for key in files.keys():
+            await current_app.config["object_storage"].add_object(
+                key, files[key].read()
+            )
+        await local_user.add_outbox_item(
+            current_app.config["session"], json.loads(form["activity"])
+        )
+    else:
+        await local_user.add_outbox_item(
+            current_app.config["session"], await request.get_json()
+        )
 
     return {"status": "success"}, 200
 

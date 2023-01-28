@@ -94,6 +94,53 @@ const buildNote = (actor, content, properties) => {
   };
 };
 
+const buildImage = (actor, imagePath, properties) => {
+  const id = actor + "/" + uuidv4();
+  let to = ["https://www.w3.org/ns/activitystreams#Public"];
+  let cc = [actor + "/followers"];
+  if (properties?.replyToActor) {
+    cc.push(properties?.replyToActor);
+  }
+  if (properties?.mentions) {
+    cc = cc.concat(properties.mentions);
+  }
+  to = Array.from(new Set(to));
+  cc = Array.from(new Set(cc));
+  // let to = [
+  //   "https://mas.to/users/helgek",
+  //   "https://i.calckey.cloud/users/99is5hpneh",
+  // ];
+  // let cc = [];
+  return {
+    "@context": "https://www.w3.org/ns/activitystreams",
+    atomUri: id,
+    attributedTo: actor,
+    cc: cc,
+    conversation: properties?.conversation,
+    id: id,
+    inReplyTo: properties?.inReplyTo,
+    inReplyToAtomUri: properties?.inReplyToAtomUri,
+    published: currentDate(),
+    tag: buildTag(properties?.hashtags, properties?.mentions),
+    content:
+      "Apparently, Mastodon doesn't like Objects of type Image, so I'm adding some text here. My reply is just the image.",
+    replies: {
+      type: "Collection",
+      totalItems: 0,
+      items: [],
+    },
+    to: to,
+    type: "Note",
+    attachment: [
+      {
+        type: "Image",
+        url: imagePath,
+        mediaType: "image/png",
+      },
+    ],
+  };
+};
+
 const buildCreateForNote = (note) => {
   const copyOfNote = { ...note };
   if (copyOfNote["@context"]) {
@@ -119,4 +166,4 @@ const buildCreateForNote = (note) => {
   };
 };
 
-export { buildLike, buildCreateForNote, buildNote };
+export { buildLike, buildCreateForNote, buildNote, buildImage };

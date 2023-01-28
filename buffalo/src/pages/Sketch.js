@@ -1,22 +1,13 @@
 import { Button, Paper, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { Stage, Layer, Line } from "react-konva";
+import { Stage, Layer, Line, Rect } from "react-konva";
 import { v4 as uuidv4 } from "uuid";
 import { ArrowBack, Clear } from "@mui/icons-material";
+import { buildImage, buildCreateForNote } from "../activitystreams/builders";
+import config from "../config";
 
-function dataURItoBlob(dataURI, type) {
-  var byteString = atob(dataURI.split(",")[1]);
-
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-
-  var bb = new Blob([ab], { type: type });
-  return bb;
-}
+import { dataURItoBlob } from "../utils/image";
 
 const Sketch = () => {
   const [lines, setLines] = useState([]);
@@ -27,27 +18,29 @@ const Sketch = () => {
 
   const sendPost = () => {
     const image = stageRef.current.toDataURL();
-    console.log(image);
-
     const formData = new FormData();
 
-    const imageName = "image";
+    const imageName = uuidv4();
 
     formData.append(imageName, dataURItoBlob(image, "image/png"), "image.png");
 
-    fetch("http://localhost:5000/add", {
-      method: "POST",
-      body: formData,
-    });
+    const imageObject = buildImage(config.actor, config.storage + imageName);
+    const data = buildCreateForNote(imageObject);
+
+    formData.append("activity", JSON.stringify(data));
 
     // const note = buildNote(config.actor, content, {
     //   hashtags: hashtags.split(",").map((x) => x.trim()),
     // });
-    // const data = buildCreateForNote(note);
-
-    // sendToOutbox(data).then(() => {
-    //   navigate("/");
-    // });
+    fetch(config.outbox, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.accessToken}`,
+      },
+      body: formData,
+    }).then(() => {
+      navigate("/");
+    });
   };
 
   const handleMouseDown = (e) => {
@@ -88,6 +81,7 @@ const Sketch = () => {
           onTouchMove={handleMouseMove}
         >
           <Layer>
+            <Rect x={0} y={0} width={300} height={300} fill={"#fec"} />
             {lines.map((line, i) => (
               <Line
                 key={i}

@@ -10,6 +10,8 @@ from bovine.utils.http_signature import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.inbox import inbox_content_starting_from
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
+from bovine_tortoise.storage import storage_blueprint
+from bovine_tortoise.storage.storage import Storage
 
 from .build_store import build_get_user
 from .html import html_blueprint
@@ -53,6 +55,7 @@ app.config.update(
         "domain_name": "mymath.rocks",
         "inbox_getter": inbox_content_starting_from,
         "account_name_or_none_for_token": account_name_or_none_for_token,
+        "object_storage": Storage(),
     }
 )
 
@@ -61,6 +64,7 @@ app.register_blueprint(default_configuration)
 app.register_blueprint(outbox_blueprint, url_prefix="/testing_notes")
 app.register_blueprint(outbox_blueprint, url_prefix="/activitypub")
 app.register_blueprint(html_blueprint)
+app.register_blueprint(storage_blueprint)
 
 TORTOISE_ORM = {
     "connections": {"default": "sqlite://db.sqlite3"},

@@ -8,7 +8,7 @@ async def test_activitypub_post_to_outbox() -> None:
     client = app.test_client()
     response = await client.post(
         "/activitypub/user/outbox",
-        data="XXX",
+        data=json.dumps({"test": "xxx"}),
         headers={"Accept": "application/activity+json"},
     )
 

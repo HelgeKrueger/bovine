@@ -19,7 +19,13 @@ app = cors(app)
 async def my_post():
     await request.get_data(parse_form_data=True)
     files = await request.files
-    await app.config["object_storage"].add_object("image", files["image"].read())
+    form = await request.form
+
+    print(files.keys())
+    print(form["activity"])
+
+    for key in files.keys():
+        await app.config["object_storage"].add_object(key, files[key].read())
 
     return "success", 200
 

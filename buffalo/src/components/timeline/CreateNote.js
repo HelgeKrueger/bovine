@@ -5,6 +5,7 @@ import Like from "./actions/Like";
 import Actor from "./Actor";
 import Attachments from "./Attachments";
 import ReplyToNote from "./ReplyToNote";
+import ReplyWithSketch from "./ReplyWithSketch";
 import Source from "./Source";
 
 const NoteContent = ({ collapse, note }) => {
@@ -86,6 +87,7 @@ const CreateNote = ({ note, source, seen }) => {
       </Box>
       <Box sx={{ backgroundColor: "#cccccc", padding: 0 }}>
         <ReplyToNote entry={note} />
+        <ReplyWithSketch entry={note} />
         <Source entry={source} />
         <Like object={note} />
       </Box>

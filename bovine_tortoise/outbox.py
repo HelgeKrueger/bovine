@@ -10,7 +10,6 @@ from bovine.types import LocalUser
 
 from .models import Actor, Follower, OutboxEntry
 
-
 logger = logging.getLogger("outbox")
 
 

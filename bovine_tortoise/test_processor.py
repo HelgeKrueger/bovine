@@ -28,7 +28,7 @@ async def test_accept_follow_request(
         item = InboxItem({}, json.dumps({"type": "Follow", "actor": "url"}))
         result = await accept_follow_request(local_user, item)
 
-        assert result is None
+        assert result
 
         mock_send_activitypub_request.assert_called_once()
 

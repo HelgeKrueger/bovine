@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { marked } from "marked";
 
+const defaults = {
+  likeEmoji: "🐮",
+};
+
 const currentDate = () => new Date().toISOString();
 
 const buildLike = (actor, object) => {
@@ -9,7 +13,7 @@ const buildLike = (actor, object) => {
     type: "Like",
     id: actor + "/like-" + uuidv4(),
     actor: actor,
-    content: "💚",
+    content: defaults.likeEmoji,
     object: object?.id,
     to: [object?.attributedTo],
     // published: currentDate(),

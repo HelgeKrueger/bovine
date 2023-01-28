@@ -1,0 +1,78 @@
+import logging
+import os
+import re
+
+from quart import current_app, g, request
+
+from bovine.utils.crypto import content_digest_sha256
+from bovine.utils.parsers.accept_header import is_activity_request
+
+logger = logging.getLogger("rewrite")
+
+
+access_token = os.environ.get("ACCESS_TOKEN", None)
+
+
+def is_get():
+    return re.match(r"^get$", request.method, re.IGNORECASE)
+
+
+def is_post():
+    return re.match(r"^post$", request.method, re.IGNORECASE)
+
+
+def is_activity_pub():
+    if is_get():
+        accept_header = request.headers.get("accept", "*/*")
+        return is_activity_request(accept_header)
+
+    if is_post:
+        # content_type = request.headers.get("content-type", "*/*")
+        # return is_activity_request(content_type)
+        # will support posts with form encoded data for images.
+        return True
+
+    if re.match(r"^option$", request.method, re.IGNORECASE):
+        return True
+
+    return False
+
+
+async def compute_signature_result() -> str | None:
+    if is_get():
+        return await current_app.config["validate_signature"](request, digest=None)
+
+    if is_post():
+        raw_data = await request.get_data()
+        digest = content_digest_sha256(raw_data)
+        return await current_app.config["validate_signature"](request, digest=digest)
+
+    return None
+
+
+async def retrieve_authorizated_user() -> str | None:
+    authorization_header = request.headers.get("Authorization", None)
+
+    if not authorization_header:
+        return None
+
+    if not authorization_header.startswith("Bearer "):
+        logger.warning(
+            f"Non Bearer Authorization used {authorization_header} for {request.path}"
+        )
+        return None
+
+    token = authorization_header.removeprefix("Bearer ")
+
+    return await current_app.config["account_name_or_none_for_token"](token)
+
+
+async def rewrite_activity_request():
+    new_request_path = request.path.removeprefix("/activitypub")
+
+    if is_activity_pub():
+        new_request_path = "/activitypub" + new_request_path
+        g.signature_result = await compute_signature_result()
+        g.authorized_user = await retrieve_authorizated_user()
+
+    request.path = new_request_path

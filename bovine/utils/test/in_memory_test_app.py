@@ -1,3 +1,5 @@
+import logging
+import sys
 from unittest.mock import AsyncMock
 
 import aiohttp
@@ -12,6 +14,9 @@ from bovine.utils.http_signature import SignatureChecker
 from bovine.utils.in_memory_store import InMemoryUserStore
 
 from . import get_user_keys
+
+log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=log_format, stream=sys.stderr)
 
 
 async def silly(*args):

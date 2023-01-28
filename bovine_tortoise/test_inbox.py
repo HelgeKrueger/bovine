@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from .models import Actor, InboxEntry
 from .inbox import inbox_content_starting_from
+from .models import Actor, InboxEntry
 from .test_database import db_url  # noqa: F401
 
 

@@ -5,6 +5,8 @@ import aiohttp
 
 from bovine.utils.parsers import parse_account_name
 
+from .consts import BOVINE_CLIENT_NAME
+
 
 async def lookup_account_with_webfinger(
     session: aiohttp.ClientSession, account_name: str
@@ -16,7 +18,7 @@ async def lookup_account_with_webfinger(
     params = {"resource": f"acct:{username}@{domain}"}
 
     async with session.get(
-        webfinger_url, params=params, headers={"user-agent": "bovine-client / 0.0.1"}
+        webfinger_url, params=params, headers={"user-agent": BOVINE_CLIENT_NAME}
     ) as response:
         if response.status != 200:
             logging.warn(f"{account_name} not found using webfinger")

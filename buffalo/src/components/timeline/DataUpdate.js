@@ -46,6 +46,7 @@ export const DataUpdate = () => {
     fetch(`https://mymath.rocks/activitypub/helge/inbox_tmp?min_id=${min_id}`, {
       headers: {
         Authorization: `Bearer ${config.accessToken}`,
+        Accept: "application/activity+json",
       },
     })
       .then((x) => x.json())

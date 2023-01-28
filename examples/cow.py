@@ -14,6 +14,10 @@ from bovine.clients.signed_http import signed_post
 
 def create_note_activity(account_url):
     food_list = [
+        "snowdrops",
+        "crocuses",
+        "last nights pizza",
+        "the hedge",
         "daisies",
         "roses",
         "dandelions",
@@ -37,7 +41,7 @@ def create_note_activity(account_url):
     food = random.choice(food_list)
 
     md = Markdown()
-    cow_string = cowsay.get_output_string("cow", f"I'm muniching on {food}.")
+    cow_string = cowsay.get_output_string("cow", f"I'm munching on {food}.")
     markdown_string = f"""
 If the following looks poorly, try opening original post.
 Then contact your instance admin, and tell him to support the code tag.

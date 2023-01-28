@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bovine"
-version = "0.0.1"
+version = "0.0.2"
 description = "Modular ActivityPub Server"
 authors = ["Helge <helge.krueger@gmail.com>"]
 license = "MIT License"

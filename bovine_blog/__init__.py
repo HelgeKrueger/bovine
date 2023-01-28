@@ -8,9 +8,8 @@ from tortoise.contrib.quart import register_tortoise
 from bovine.server import default_configuration
 from bovine.utils.http_signature import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
-from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine_tortoise.inbox import inbox_content_starting_from
-
+from bovine_tortoise.outbox_blueprint import outbox_blueprint
 
 from .build_store import build_get_user
 from .html import html_blueprint
@@ -39,6 +38,13 @@ async def startup():
     app.config["validate_signature"] = signature_checker.validate_signature
 
 
+async def account_name_or_none_for_token(token):
+    access_token = os.environ.get("ACCESS_TOKEN", None)
+    if token == access_token:
+        return "helge"
+    return None
+
+
 app.config.update(
     {
         "DOMAIN": domain,
@@ -46,6 +52,7 @@ app.config.update(
         "data_store": TortoiseStore(),
         "domain_name": "mymath.rocks",
         "inbox_getter": inbox_content_starting_from,
+        "account_name_or_none_for_token": account_name_or_none_for_token,
     }
 )
 

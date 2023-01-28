@@ -1,12 +1,9 @@
-import os
 import json
 import logging
 
 import werkzeug
-from quart import Blueprint, current_app, request
+from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
-
-from bovine.utils.crypto import content_digest_sha256
 
 activitypub_client = Blueprint(
     "activitypub_client", __name__, url_prefix="/activitypub"
@@ -15,23 +12,57 @@ activitypub_client = Blueprint(
 logger = logging.getLogger("ap-c2s")
 
 
-access_token = os.environ.get("ACCESS_TOKEN", None)
+def has_authorization(local_user) -> bool:
+    authorized_user = g.get("authorized_user")
+    used_public_key = g.get("signature_result")
+    account_name = local_user.name
+
+    if authorized_user is None:
+        if used_public_key is None:
+            logger.warning(
+                "Request for "
+                + str(account_name)
+                + " at "
+                + str(request.path)
+                + " with "
+                + str(request.method)
+                + " without authorization",
+            )
+            return False
+
+        if local_user.get_public_key_url() != used_public_key:
+            logger.warning(
+                "Request for "
+                + str(account_name)
+                + " at "
+                + str(request.path)
+                + " with "
+                + str(request.method)
+                + " with authorization for wrong user",
+            )
+            return False
+
+    elif authorized_user != account_name:
+        logger.warning(
+            "Request for "
+            + str(account_name)
+            + " at "
+            + str(request.path)
+            + " with "
+            + str(request.method)
+            + " with authorization for wrong user",
+        )
+        return False
+
+    return True
 
 
-# FIXME This does not implement anything good yet
 @activitypub_client.get("/<account_name>/inbox_tmp")
 @route_cors(allow_origin=["http://localhost:8000"], allow_methods=["GET"])
 async def inbox_get(account_name: str):
-    authorization_header = request.headers.get("Authorization", None)
+    local_user = await current_app.config["get_user"](account_name)
 
-    if not authorization_header or not authorization_header.startswith("Bearer "):
-        logger.warning(f"GET on inbox for {account_name} without authorization")
-        return {"status": "access denied"}, 401
-
-    token = authorization_header.removeprefix("Bearer ")
-
-    if token != access_token:
-        logger.warning(f"GET on inbox for {account_name} with incorrect authorization")
+    if not has_authorization(local_user):
         return {"status": "access denied"}, 401
 
     logger.info("Fetching inbox with GET")
@@ -51,39 +82,9 @@ async def inbox_get(account_name: str):
 async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     raw_data = await request.get_data()
 
-    authorization_header = request.headers.get("Authorization", None)
-
-    if authorization_header:
-        if not authorization_header or not authorization_header.startswith("Bearer "):
-            logger.warning(
-                f"POST on outbox for {account_name} with incorrect authorization"
-            )
-            return {"status": "access denied"}, 401
-
-        token = authorization_header.removeprefix("Bearer ")
-
-        if token != access_token:
-            logger.warning(
-                f"POST on outbox for {account_name} with incorrect authorization"
-            )
-            return {"status": "access denied"}, 401
-        local_user = await current_app.config["get_user"](account_name)
-    else:
-        digest = content_digest_sha256(raw_data)
-
-        used_key_url = await current_app.config["validate_signature"](
-            request, digest=digest
-        )
-
-        if used_key_url is None:
-            logger.warning("Invalid signature on get http request for outbox")
-            return {"status": "request not signed"}, 401
-
-        local_user = await current_app.config["get_user"](account_name)
-
-        if local_user.get_public_key_url() != used_key_url:
-            logger.warning(f"Attempt to post with incorrect key {used_key_url}")
-            return {"status": "request not signed"}, 401
+    local_user = await current_app.config["get_user"](account_name)
+    if not has_authorization(local_user):
+        return {"status": "access denied"}, 401
 
     await local_user.add_outbox_item(
         current_app.config["session"], json.loads(raw_data)

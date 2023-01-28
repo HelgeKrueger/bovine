@@ -9,6 +9,7 @@ const buildLike = (actor, object) => {
     type: "Like",
     id: actor + "/like-" + uuidv4(),
     actor: actor,
+    content: "💚",
     object: object?.id,
     to: [object?.attributedTo],
     // published: currentDate(),

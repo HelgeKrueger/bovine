@@ -16,7 +16,7 @@ test("buildTree fallback not in conversation", () => {
 
   const result = buildTree(conversation, fallback);
 
-  expect(result).toStrictEqual(fallback);
+  expect(result).toBeFalsy();
 });
 
 test("buildTree fallback in conversation", () => {

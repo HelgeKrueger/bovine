@@ -31,10 +31,8 @@ const buildTree = (conversation, fallback) => {
   }
 
   if (currentAncestor === fallback.id) {
-    return fallback;
+    return;
   }
-
-  // idToElement[fallback.id] = fallback;
 
   for (let parent of Object.keys(parents)) {
     if (!idToElement[parent]) {
@@ -43,8 +41,6 @@ const buildTree = (conversation, fallback) => {
     const childrenIds = Array.from(new Set(parents[parent]));
     idToElement[parent].children = childrenIds.map((id) => idToElement[id]);
   }
-
-  // console.log(fallback.id, parents);
 
   return idToElement[currentAncestor];
 };

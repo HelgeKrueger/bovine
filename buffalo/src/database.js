@@ -10,3 +10,6 @@ db.version(2).stores({
 db.version(3).stores({
   activity: "&id, conversation, seen, updated, remoteId",
 });
+db.version(4).stores({
+  activity: "&id, conversation, seen, displayed, updated, remoteId",
+});

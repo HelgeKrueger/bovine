@@ -21,9 +21,10 @@ const Timeline = () => {
   );
 
   const updateEntry = async () => {
-    // if (entry?.id) {
-    // await db.activity.update(entry["id"], { seen: 1 });
-    // }
+    const toUpdate = await db.activity.where("displayed").equals(1).toArray();
+    for (let update of toUpdate) {
+      await db.activity.update(update["id"], { seen: 1, displayed: 0 });
+    }
     const newEntry = await db.activity
       // .orderBy("updated")
       .where("seen")
@@ -105,8 +106,6 @@ const Timeline = () => {
         <DataUpdate />
         Number: {number}
       </Box>
-      {/* <TimelineEntry entry={entry} seen={0} />
-      <Divider /> */}
       <DisplayConversation conversation={conversation} fallback={entry} />
     </div>
   );

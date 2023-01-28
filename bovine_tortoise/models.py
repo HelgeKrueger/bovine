@@ -66,3 +66,9 @@ class PublicKey(Model):
     id = fields.IntField(pk=True)
     url = fields.CharField(max_length=255, unique=True)
     public_key = fields.TextField()
+
+
+class StoredObject(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(max_length=255, unique=True)
+    data = fields.BinaryField()

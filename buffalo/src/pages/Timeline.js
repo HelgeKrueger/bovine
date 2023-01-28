@@ -6,7 +6,7 @@ import { useSwipeable } from "react-swipeable";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
-import { Check, Create, NavigateNext } from "@mui/icons-material";
+import { Brush, Check, Create, NavigateNext } from "@mui/icons-material";
 import { DataUpdate } from "../components/timeline/DataUpdate";
 
 const Timeline = () => {
@@ -102,6 +102,14 @@ const Timeline = () => {
           }}
         >
           <Create />
+        </IconButton>
+        <IconButton
+          color="primary"
+          onClick={() => {
+            navigate("/sketch");
+          }}
+        >
+          <Brush />
         </IconButton>
         <DataUpdate />
         Number: {number}

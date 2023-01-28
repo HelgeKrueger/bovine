@@ -6,7 +6,13 @@ import { useSwipeable } from "react-swipeable";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
-import { Brush, Check, Create, NavigateNext } from "@mui/icons-material";
+import {
+  Brush,
+  Check,
+  Create,
+  NavigateNext,
+  Search,
+} from "@mui/icons-material";
 import { DataUpdate } from "../components/timeline/DataUpdate";
 
 const Timeline = () => {
@@ -17,7 +23,7 @@ const Timeline = () => {
   const navigate = useNavigate();
 
   const number = useLiveQuery(() =>
-    db.activity.where("seen").equals(0).count()
+    db.activity.where({ seen: 0, displayed: 0 }).count()
   );
 
   const updateEntry = async () => {
@@ -110,6 +116,14 @@ const Timeline = () => {
           }}
         >
           <Brush />
+        </IconButton>
+        <IconButton
+          color="primary"
+          onClick={() => {
+            navigate("/fetch");
+          }}
+        >
+          <Search />
         </IconButton>
         <DataUpdate />
         Number: {number}

@@ -107,6 +107,8 @@ Something like a Like currently requires a "to" field.
 
 This is a difference to what Mastodon sends out. Note Mastodon's implementation without a to is suspect.
 
+I plan to implement file uploads as `multipart/form-encoded`. This means that there will be a single request to upload a post with a picture.
+
 ### Reading
 
 My current plan is to allow an authorized GET on the inbox, e.g.
@@ -134,10 +136,12 @@ or something similar.
 
 ### Fetching
 
-This will be a new endpoint of the form
+This is a new endpoint of the form
 
 ```
-GET https://mymath.rocks/activitypub/helge/fetch?query
+POST https://mymath.rocks/activitypub/helge/fetch
 ```
 
-which allows one to fetch remote resources. Examples for query strings would be `user=@munchingcow@mymath.rocks` or the url of an ActivityPub object, i.e. `object=https://...`.
+which allows one to fetch remote resources. Current support is for fetching an url. This means that I can copy the URL of a post on the Fediverse and reply to it using Buffalo. The current process still involves quite a bit of copy and pasting, but it works.
+
+Also still missing is a direct redirection to the just fetched entry.

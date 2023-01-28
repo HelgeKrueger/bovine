@@ -13,6 +13,7 @@ const transformEntry = (entry) => {
   const id = data?.id;
   const conversation = data?.conversation;
   const seen = 0;
+  const displayed = 0;
 
   let updated = data?.updated;
   if (!updated) {
@@ -25,6 +26,7 @@ const transformEntry = (entry) => {
     seen,
     updated,
     data,
+    displayed,
     remoteId,
   };
 };

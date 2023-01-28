@@ -1,5 +1,6 @@
 import React from "react";
 import { createHashRouter } from "react-router-dom";
+import Fetch from "./pages/Fetch";
 import Followers from "./pages/Followers";
 import Main from "./pages/Main";
 import Post from "./pages/Post";
@@ -26,6 +27,10 @@ const router = createHashRouter([
       {
         path: "/sketch",
         element: <Sketch />,
+      },
+      {
+        path: "/fetch",
+        element: <Fetch />,
       },
     ],
   },

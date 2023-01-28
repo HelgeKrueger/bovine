@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.7.0",
     "react-router-dom": "^6.7.0",
+    "react-swipeable": "^7.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

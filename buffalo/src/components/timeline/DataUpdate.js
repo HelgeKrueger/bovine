@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../database";
-import config from "../config";
+import { db } from "../../database";
+import config from "../../config";
+import { Button, IconButton } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
 
 const transformEntry = (entry) => {
   let data = entry[1];
@@ -29,6 +31,8 @@ const transformEntry = (entry) => {
 
 export const DataUpdate = () => {
   const [timeline, setTimeline] = useState([]);
+  const [intervalId, setIntervalId] = useState(null);
+
   const reloadTimeline = async () => {
     const minArrayList = await db.activity
       .orderBy("remoteId")
@@ -39,11 +43,6 @@ export const DataUpdate = () => {
     if (minArrayList.length > 0) {
       min_id = minArrayList[0].remoteId;
     }
-    // console.log(min_id);
-    // fetch(`/api/?min_id=${min_id}`)
-    //   .then((x) => x.json())
-    //   .then((x) => setTimeline(x));
-
     fetch(`https://mymath.rocks/activitypub/helge/inbox_tmp?min_id=${min_id}`, {
       headers: {
         Authorization: `Bearer ${config.accessToken}`,
@@ -64,8 +63,21 @@ export const DataUpdate = () => {
   }, [timeline]);
 
   useEffect(() => {
-    setInterval(reloadTimeline, 5 * 60 * 1000);
+    const id = setInterval(reloadTimeline, 5 * 60 * 1000);
+    setIntervalId(id);
   }, []);
 
-  return <></>;
+  const buttonClick = () => {
+    clearInterval(intervalId);
+    reloadTimeline();
+
+    const id = setInterval(reloadTimeline, 5 * 60 * 1000);
+    setIntervalId(id);
+  };
+
+  return (
+    <IconButton onClick={buttonClick} color="primary">
+      <Refresh />
+    </IconButton>
+  );
 };

@@ -1,5 +1,5 @@
 import { Expand, ExpandMore } from "@mui/icons-material";
-import { Divider, Link, Paper, Button, Box } from "@mui/material";
+import { Divider, Link, Paper, Button, Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Like from "./actions/Like";
 import Actor from "./Actor";
@@ -27,6 +27,11 @@ const CreateNote = ({ note, source, seen }) => {
     setCollapse(seen === 1);
   }, [note, seen]);
   if (collapse) {
+    const publishedDate = new Date(note.published);
+    const formattedDate = publishedDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     return (
       <Paper
         style={{
@@ -38,19 +43,21 @@ const CreateNote = ({ note, source, seen }) => {
         sx={{ backgroundColor: "lightgray", padding: 0, margin: 0 }}
         elevation={2}
       >
-        <Actor name={note.attributedTo} /> posted a{" "}
-        <Link href={note.id} target="_blank">
-          Status
-        </Link>{" "}
-        at {note.published}
-        <Button
-          variant="outlined"
-          onClick={() => setCollapse(false)}
-          startIcon={<ExpandMore />}
-          size="small"
-        >
-          Open
-        </Button>
+        <small>
+          <Actor name={note.attributedTo} short />
+          's
+          <Link href={note.id} target="_blank">
+            Status
+          </Link>{" "}
+          at {formattedDate}
+          <IconButton
+            onClick={() => setCollapse(false)}
+            color="primary"
+            sx={{ padding: 0 }}
+          >
+            <ExpandMore />
+          </IconButton>
+        </small>
       </Paper>
     );
   }

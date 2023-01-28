@@ -22,6 +22,14 @@ const Source = ({ entry }) => {
     setText(JSON.stringify(data, null, 2));
   }, [useContext]);
 
+  useEffect(() => {
+    let data = { ...entry };
+    if (!useContext) {
+      delete data["@context"];
+    }
+    setText(JSON.stringify(data, null, 2));
+  }, [entry]);
+
   if (!open) {
     return (
       <IconButton

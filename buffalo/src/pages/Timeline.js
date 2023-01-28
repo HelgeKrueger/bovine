@@ -1,14 +1,15 @@
-import { Box, Button, Container, Divider } from "@mui/material";
+import { Box, Button, Container, Divider, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddUrl from "../components/timeline/AddUrl";
 
 import { useNavigate } from "react-router-dom";
-
+import { useSwipeable } from "react-swipeable";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../database";
 import { DisplayConversation } from "../components/timeline/DisplayConversation";
 import TimelineEntry from "../components/timeline/TimelineEntry";
-import { Check, Create } from "@mui/icons-material";
+import { Check, Create, NavigateNext } from "@mui/icons-material";
+import { DataUpdate } from "../components/timeline/DataUpdate";
 
 const Timeline = () => {
   const [entry, setEntry] = useState({});
@@ -26,9 +27,9 @@ const Timeline = () => {
     // await db.activity.update(entry["id"], { seen: 1 });
     // }
     const newEntry = await db.activity
+      // .orderBy("updated")
       .where("seen")
       .equals(0)
-      // .orderBy("updated")
       .limit(1)
       .toArray();
 
@@ -74,8 +75,12 @@ const Timeline = () => {
       });
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: updateEntry,
+  });
+
   return (
-    <>
+    <div {...handlers}>
       <Box
         sx={{
           backgroundColor: "white",
@@ -85,33 +90,27 @@ const Timeline = () => {
           // maxWidth: "800px",
         }}
       >
-        <Button variant="contained" onClick={updateEntry} margin="normal">
-          Next
-        </Button>
-        <Button
-          variant="contained"
-          onClick={allRead}
-          margin="normal"
-          startIcon={<Check />}
-        >
-          All Read
-        </Button>
-        Number: {number}
-        <Button
-          variant="contained"
-          margin="normal"
-          startIcon={<Create />}
+        <IconButton onClick={updateEntry} color="primary">
+          <NavigateNext />
+        </IconButton>
+        <IconButton onClick={allRead} color="primary">
+          <Check />
+        </IconButton>
+        <IconButton
+          color="primary"
           onClick={() => {
             navigate("/post");
           }}
         >
-          Post
-        </Button>
+          <Create />
+        </IconButton>
+        <DataUpdate />
+        Number: {number}
       </Box>
-      <TimelineEntry entry={entry} seen={0} />
-      <Divider />
+      {/* <TimelineEntry entry={entry} seen={0} />
+      <Divider /> */}
       <DisplayConversation conversation={conversation} fallback={entry} />
-    </>
+    </div>
   );
 };
 

@@ -80,6 +80,6 @@ async def rewrite_activity_request():
         g.authorized_user = await retrieve_authorizated_user()
         logger.info(f"Obtained {g.signature_result} and {g.authorized_user}")
 
-    logger.info(f"Rewrote {request.path} to {new_request_path}")
-
-    request.path = new_request_path
+    if request.path != new_request_path:
+        logger.info(f"Rewrote {request.path} to {new_request_path}")
+        request.path = new_request_path

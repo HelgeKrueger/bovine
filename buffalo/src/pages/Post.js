@@ -9,12 +9,14 @@ import { buildNote, buildCreateForNote } from "../activitystreams/builders";
 const Post = () => {
   const [content, setContent] = useState("");
   const [hashtags, setHashtags] = useState("");
+  const [mentions, setMentions] = useState("");
 
   const navigate = useNavigate();
 
   const sendPost = () => {
     const note = buildNote(config.actor, content, {
       hashtags: hashtags.split(",").map((x) => x.trim()),
+      mentions: mentions.split(",").map((x) => x.trim()),
     });
     const data = buildCreateForNote(note);
 
@@ -38,6 +40,13 @@ const Post = () => {
         value={hashtags}
         onChange={(e) => setHashtags(e.target.value)}
         label="Hashtags"
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        value={mentions}
+        onChange={(e) => setMentions(e.target.value)}
+        label="Mentions"
         fullWidth
         margin="normal"
       />

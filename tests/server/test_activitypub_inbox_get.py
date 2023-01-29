@@ -9,7 +9,7 @@ from bovine.utils.test.in_memory_test_app import app
 async def test_activitypub_inbox_get_without_header() -> None:
     client = app.test_client()
 
-    response = await client.get("/activitypub/user/inbox_tmp")
+    response = await client.get("/activitypub/user/inbox")
 
     assert response.status_code == 401
 
@@ -17,7 +17,7 @@ async def test_activitypub_inbox_get_without_header() -> None:
         "accept": "application/activity+json",
     }
 
-    response = await client.get("/activitypub/user/inbox_tmp", headers=headers)
+    response = await client.get("/activitypub/user/inbox", headers=headers)
 
     assert response.status_code == 401
 
@@ -34,7 +34,7 @@ async def test_activitypub_inbox_get_with_header() -> None:
         "accept": "application/activity+json",
     }
 
-    response = await client.get("/activitypub/user/inbox_tmp", headers=headers)
+    response = await client.get("/activitypub/user/inbox", headers=headers)
 
     assert response.status_code == 200
 
@@ -53,7 +53,7 @@ async def test_activitypub_inbox_get_with_incorrect_header() -> None:
         "accept": "application/activity+json",
     }
 
-    response = await client.get("/activitypub/user/inbox_tmp", headers=headers)
+    response = await client.get("/activitypub/user/inbox", headers=headers)
 
     assert response.status_code == 401
 
@@ -70,6 +70,6 @@ async def test_activitypub_inbox_get_with_wrong_user() -> None:
         "accept": "application/activity+json",
     }
 
-    response = await client.get("/activitypub/user/inbox_tmp", headers=headers)
+    response = await client.get("/activitypub/user/inbox", headers=headers)
 
     assert response.status_code == 401

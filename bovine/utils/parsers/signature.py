@@ -1,5 +1,7 @@
 import logging
 
+logger = logging.getLogger("sig")
+
 
 class Signature:
     def __init__(self, key_id, algorithm, headers, signature):
@@ -9,17 +11,23 @@ class Signature:
         self.signature = signature
 
         if self.algorithm != "rsa-sha256":
-            logging.error(f"Unsupported algorithm {self.algorithm}")
+            logger.error(f"Unsupported algorithm {self.algorithm}")
 
     def fields(self):
         return self.headers.split(" ")
 
     @staticmethod
     def from_signature_header(header):
-        headers = header.split(",")
-        headers = [x.split('="', 1) for x in headers]
-        parsed = {x[0]: x[1].replace('"', "") for x in headers}
+        try:
+            headers = header.split(",")
+            headers = [x.split('="', 1) for x in headers]
+            parsed = {x[0]: x[1].replace('"', "") for x in headers}
 
-        return Signature(
-            parsed["keyId"], parsed["algorithm"], parsed["headers"], parsed["signature"]
-        )
+            return Signature(
+                parsed["keyId"],
+                parsed["algorithm"],
+                parsed["headers"],
+                parsed["signature"],
+            )
+        except Exception:
+            logger.error(f"failed to parse signature {header}")

@@ -1,9 +1,7 @@
 import logging
-import re
-from urllib.parse import urlparse
 
 import werkzeug
-from quart import Blueprint, current_app, redirect, request
+from quart import Blueprint, current_app, request, g
 
 from bovine.activitystreams import build_actor, build_outbox
 from bovine.types import InboxItem
@@ -14,27 +12,20 @@ activitypub = Blueprint("activitypub", __name__, url_prefix="/activitypub")
 logger = logging.getLogger("activitypub")
 
 
+def has_authorization() -> bool:
+    authorized_user = g.get("authorized_user")
+    used_public_key = g.get("signature_result")
+
+    return authorized_user or used_public_key
+
+
 @activitypub.get("/<account_name>")
 async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-    request_path = urlparse(request.url).path
-
-    if "Accept" not in request.headers:
-        return redirect(request_path.replace("/activitypub", ""))
-
-    if not re.match(r"application/.*json", request.headers["Accept"]):
-        new_path = request_path.replace("/activitypub", "")
-        print("redirecting", new_path)
-
-        return redirect(
-            request_path.replace("/activitypub", "")
-        )  # FIXME: Need a better way to redirect here
-
     user_info = await current_app.config["get_user"](account_name)
 
     if user_info and user_info.no_auth_fetch:
         logging.debug(f"Skipping signature check for user {account_name}")
-    elif not await current_app.config["validate_signature"](request, digest=None):
-        logger.warning("Invalid signature on get http request for account")
+    elif not has_authorization():
         return {"status": "http signature not valid"}, 401
 
     if not user_info:
@@ -74,17 +65,8 @@ async def handle_inbox(data) -> None:
 
 @activitypub.get("/<account_name>/outbox")
 async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-    request_path = urlparse(request.url).path
 
-    if "Accept" not in request.headers:
-        return redirect(request_path.replace("/activitypub", ""))
-
-    if not re.match(r"application/.*json", request.headers["Accept"]):
-        new_path = request_path.replace("/activitypub", "")
-        print("redirecting", new_path)
-        return redirect(request_path.replace("/activitypub", ""))
-
-    if not await current_app.config["validate_signature"](request, digest=None):
+    if not has_authorization():
         logger.warning("Invalid signature on get http request for outbox")
         return {"status": "request not signed"}, 401
 

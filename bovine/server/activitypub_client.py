@@ -18,7 +18,13 @@ logger = logging.getLogger("ap-c2s")
 def has_authorization(local_user) -> bool:
     authorized_user = g.get("authorized_user")
     used_public_key = g.get("signature_result")
-    account_name = local_user.name
+
+    if local_user is None:
+        account_name = None
+        public_key_url = None
+    else:
+        account_name = local_user.name
+        public_key_url = local_user.get_public_key_url()
 
     if authorized_user is None:
         if used_public_key is None:
@@ -33,7 +39,7 @@ def has_authorization(local_user) -> bool:
             )
             return False
 
-        if local_user.get_public_key_url() != used_public_key:
+        if public_key_url != used_public_key:
             logger.warning(
                 "Request for "
                 + str(account_name)

@@ -1,3 +1,4 @@
+from unittest.mock import AsyncMock
 import pytest
 
 from bovine.utils.test import remove_domain_from_url
@@ -6,6 +7,8 @@ from bovine.utils.test.in_memory_test_app import app
 
 async def test_activitypub_actor_unauthorized() -> None:
     client = app.test_client()
+    app.config["account_name_or_none_for_token"] = AsyncMock()
+    app.config["account_name_or_none_for_token"].return_value = "unknown"
 
     response = await client.get(
         "/activitypub/unknown",

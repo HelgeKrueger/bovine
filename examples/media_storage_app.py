@@ -1,12 +1,10 @@
 from quart import Quart, request
-from quart_cors import route_cors, cors
-
+from quart_cors import cors, route_cors
 from tortoise.contrib.quart import register_tortoise
 
+from bovine_blog import TORTOISE_ORM
 from bovine_tortoise.storage import storage_blueprint
 from bovine_tortoise.storage.storage import Storage
-
-from bovine_blog import TORTOISE_ORM
 
 app = Quart(__name__)
 app.config["object_storage"] = Storage()

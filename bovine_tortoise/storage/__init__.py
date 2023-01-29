@@ -1,5 +1,4 @@
-from quart import Blueprint, current_app, Response
-
+from quart import Blueprint, Response, current_app
 
 storage_blueprint = Blueprint("storage_blueprint", __name__, url_prefix="/storage")
 

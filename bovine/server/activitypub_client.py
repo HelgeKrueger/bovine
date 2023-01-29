@@ -8,6 +8,8 @@ from quart_cors import route_cors
 from bovine.clients.signed_http import signed_get
 from bovine.types import InboxItem
 
+from .activitypub import cors_properties
+
 activitypub_client = Blueprint(
     "activitypub_client", __name__, url_prefix="/activitypub"
 )
@@ -66,8 +68,8 @@ def has_authorization(local_user) -> bool:
     return True
 
 
-@activitypub_client.get("/<account_name>/inbox_tmp")
-@route_cors(allow_origin=["http://localhost:8000"], allow_methods=["GET"])
+@activitypub_client.get("/<account_name>/inbox")
+@route_cors(**cors_properties)
 async def inbox_get(account_name: str):
     local_user = await current_app.config["get_user"](account_name)
 
@@ -86,8 +88,7 @@ async def inbox_get(account_name: str):
 
 
 @activitypub_client.post("/<account_name>/outbox")
-@activitypub_client.post("/<account_name>/outbox_tmp")
-@route_cors(allow_origin=["http://localhost:8000"], allow_methods=["POST"])
+@route_cors(**cors_properties)
 async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     content_type = request.headers.get("content-type")
     if content_type and content_type.startswith("multipart"):

@@ -1,11 +1,18 @@
 import logging
 
 import werkzeug
-from quart import Blueprint, current_app, request, g
+from quart import Blueprint, current_app, g, request
+from quart_cors import route_cors
 
 from bovine.activitystreams import build_actor, build_outbox
 from bovine.types import InboxItem
 from bovine.utils.crypto import content_digest_sha256
+
+cors_properties = {
+    "allow_origin": ["http://localhost:8000"],
+    "allow_methods": ["GET", "POST"],
+    "allow_headers": ["Authorization", "Content-Type"],
+}
 
 activitypub = Blueprint("activitypub", __name__, url_prefix="/activitypub")
 
@@ -43,7 +50,7 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
 
 @activitypub.post("/<account_name>/inbox")
-# @route_cors(allow_origin="*")
+@route_cors(**cors_properties)
 async def inbox(account_name: str) -> tuple[dict, int]:
     current_app.add_background_task(handle_inbox, (account_name, request))
 
@@ -64,6 +71,7 @@ async def handle_inbox(data) -> None:
 
 
 @activitypub.get("/<account_name>/outbox")
+@route_cors(**cors_properties)
 async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
     if not has_authorization():

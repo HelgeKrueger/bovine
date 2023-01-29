@@ -45,7 +45,7 @@ export const DataUpdate = () => {
     if (minArrayList.length > 0) {
       min_id = minArrayList[0].remoteId;
     }
-    fetch(`https://mymath.rocks/activitypub/helge/inbox_tmp?min_id=${min_id}`, {
+    fetch(`${config.inbox}?min_id=${min_id}`, {
       headers: {
         Authorization: `Bearer ${config.accessToken}`,
         Accept: "application/activity+json",

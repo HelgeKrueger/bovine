@@ -2,6 +2,8 @@
 
 The ReactJS web frontend `buffalo` speaks with the python `bovine` running on a server using a "version" of [client to server activity pub](https://www.w3.org/TR/activitypub/#client-to-server-interactions). At least that is the goal.
 
+The python code behind the client to server only implementations is in `bovine.server.activitypub_client`. The code used by both client to server and server to server is in `bovine.server.activitypub`. Both are implemented as blueprints for quart, so if one doesn't want to support client to server, one simply not include the corresponding blueprint.
+
 ## Posting
 
 Posting is done pretty much as explained in the document. I'm still deciding what authentication is best. For the [munching cow](https://mymath.rocks/munchingcow), a version of http signatures is used. For the web frontend currently hard coded access tokens are used.
@@ -61,3 +63,7 @@ POST https://mymath.rocks/activitypub/helge/fetch
 which allows one to fetch remote resources. Current support is for fetching an url. This means that I can copy the URL of a post on the Fediverse and reply to it using Buffalo. The current process still involves quite a bit of copy and pasting, but it works.
 
 Also still missing is a direct redirection to the just fetched entry.
+
+## CORS
+
+The endpoints involved in ActivityPub Client to Server are all accessible from `http://localhost:8000/` in order to enable local development against the live version.

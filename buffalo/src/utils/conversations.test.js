@@ -27,3 +27,12 @@ test("buildTree fallback in conversation", () => {
 
   expect(result.id).toStrictEqual(1);
 });
+
+test("buildTree fallback is root of conversation", () => {
+  const conversation = [buildElement(1, null), buildElement(2, 1)];
+  const fallback = conversation[0];
+
+  const result = buildTree(conversation, fallback);
+
+  expect(result.id).toStrictEqual(1);
+});

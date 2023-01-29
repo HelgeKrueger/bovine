@@ -30,16 +30,16 @@ const buildTree = (conversation, fallback) => {
     nextAncestor = determineAncestor(currentAncestor, parents);
   }
 
-  if (currentAncestor === fallback.id) {
-    return;
-  }
-
   for (let parent of Object.keys(parents)) {
     if (!idToElement[parent]) {
       idToElement[parent] = {};
     }
     const childrenIds = Array.from(new Set(parents[parent]));
     idToElement[parent].children = childrenIds.map((id) => idToElement[id]);
+  }
+
+  if (!idToElement[currentAncestor]) {
+    return;
   }
 
   return idToElement[currentAncestor];

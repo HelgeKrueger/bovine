@@ -69,6 +69,9 @@ async def retrieve_authorizated_user() -> str | None:
 
 
 async def rewrite_activity_request():
+    if request.path == "/activitypub/bovine":
+        return
+
     new_request_path = request.path.removeprefix("/activitypub")
 
     if is_activity_pub():

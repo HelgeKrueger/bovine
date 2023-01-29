@@ -82,6 +82,8 @@ There are some `jest` tests. Code is formatted with `prettier`. Source can be li
 
 # Implementation notes
 
+- [HTTP Signatures](docs/http_signatures.md)
+
 ## ActivityPub Client 2 Server
 
 The ReactJS web frontend `buffalo` speaks with the python `bovine` running on a server using a "version" of [client to server activity pub](https://www.w3.org/TR/activitypub/#client-to-server-interactions). At least that is the goal.

@@ -18,7 +18,12 @@ async def get_public_key(
         session, local_user.get_public_key_url(), local_user.private_key, key_id
     )
     text = await response.text()
-    data = json.loads(text)
+
+    try:
+        data = json.loads(text)
+    except Exception:
+        logging.warning(f"Failed to decode json from {text}")
+        return None
 
     if "publicKey" not in data:
         logging.warning(f"Public key not found in data for {key_id}")

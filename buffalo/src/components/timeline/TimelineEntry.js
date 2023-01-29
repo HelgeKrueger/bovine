@@ -5,6 +5,7 @@ import Announce from "./Announce";
 import CreateNote from "./CreateNote";
 import UpdateQuestion from "./UpdateQuestion";
 import { db } from "../../database";
+import Like from "./Like";
 
 const TimelineEntry = ({ entry, seen }) => {
   useEffect(() => {
@@ -26,6 +27,10 @@ const TimelineEntry = ({ entry, seen }) => {
 
   if (entry?.type === "Announce") {
     return <Announce entry={entry} />;
+  }
+
+  if (entry?.type === "Like") {
+    return <Like entry={entry} />;
   }
 
   if (entry?.type === "Update" && entry?.object?.type === "Question") {

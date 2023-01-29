@@ -3,6 +3,7 @@ import { marked } from "marked";
 
 const defaults = {
   likeEmoji: "🐮",
+  public: "https://www.w3.org/ns/activitystreams#Public",
 };
 
 const currentDate = () => new Date().toISOString();
@@ -16,7 +17,8 @@ const buildLike = (actor, object) => {
     content: defaults.likeEmoji,
     object: object?.id,
     to: [object?.attributedTo],
-    // published: currentDate(),
+    cc: [defaults.public],
+    published: currentDate(),
   };
 };
 
@@ -50,7 +52,7 @@ const buildTag = (hashtags, mentions) => {
 const buildNote = (actor, content, properties) => {
   const id = actor + "/" + uuidv4();
   const formatted = marked.parse(content);
-  let to = ["https://www.w3.org/ns/activitystreams#Public"];
+  let to = [defaults.public];
   let cc = [actor + "/followers"];
   // if (properties?.to) {
   //   to = properties.to;
@@ -96,7 +98,7 @@ const buildNote = (actor, content, properties) => {
 
 const buildImage = (actor, imagePath, properties) => {
   const id = actor + "/" + uuidv4();
-  let to = ["https://www.w3.org/ns/activitystreams#Public"];
+  let to = [defaults.public];
   let cc = [actor + "/followers"];
   if (properties?.replyToActor) {
     cc.push(properties?.replyToActor);

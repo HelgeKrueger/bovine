@@ -1,35 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../../database";
-import config from "../../config";
+import { db } from "../database";
+import config from "../config";
 import { IconButton } from "@mui/material";
 import { Refresh } from "@mui/icons-material";
-
-const transformEntry = (entry) => {
-  let data = entry[1];
-  let remoteId = entry[0];
-  if (data.type === "Create" || data.type === "Update") {
-    data = data?.object;
-  }
-  const id = data?.id;
-  const conversation = data?.conversation;
-  const seen = 0;
-  const displayed = 0;
-
-  let updated = data?.updated;
-  if (!updated) {
-    updated = data?.published;
-  }
-
-  return {
-    id,
-    conversation,
-    seen,
-    updated,
-    data,
-    displayed,
-    remoteId,
-  };
-};
+import transformInboxEntry from "../utils/transformInboxEntry";
 
 export const DataUpdate = () => {
   const [timeline, setTimeline] = useState([]);
@@ -57,7 +31,7 @@ export const DataUpdate = () => {
   useEffect(() => {
     async function addActivity() {
       try {
-        await db.activity.bulkAdd(timeline.map(transformEntry));
+        await db.activity.bulkAdd(timeline.map(transformInboxEntry));
       } catch (error) {
         // console.error(error);
       }

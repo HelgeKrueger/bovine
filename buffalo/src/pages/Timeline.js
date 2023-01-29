@@ -13,7 +13,7 @@ import {
   NavigateNext,
   Search,
 } from "@mui/icons-material";
-import { DataUpdate } from "../components/timeline/DataUpdate";
+import { DataUpdate } from "../components/DataUpdate";
 
 const Timeline = () => {
   const [entry, setEntry] = useState({});

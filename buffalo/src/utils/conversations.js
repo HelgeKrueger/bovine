@@ -45,4 +45,21 @@ const buildTree = (conversation, fallback) => {
   return idToElement[currentAncestor];
 };
 
-export { buildTree };
+const getDateForEntry = (entry) => {
+  let maximal = new Date(entry?.updated);
+
+  const children = entry?.children;
+
+  if (children) {
+    for (let child of children) {
+      let childDate = getDateForEntry(child);
+      if (childDate > maximal) {
+        maximal = childDate;
+      }
+    }
+  }
+
+  return maximal;
+};
+
+export { buildTree, getDateForEntry };

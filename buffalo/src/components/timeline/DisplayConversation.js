@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import React from "react";
 import TimelineEntry from "./TimelineEntry";
 
-import { buildTree } from "../../utils/conversations";
+import { buildTree, getDateForEntry } from "../../utils/conversations";
 
 export const DisplayConversation = ({ conversation, fallback }) => {
   if (conversation.length === 0) {
@@ -18,7 +18,7 @@ export const DisplayConversation = ({ conversation, fallback }) => {
 const DisplayTreeItem = ({ entry }) => {
   const children = entry?.children;
   const sortedChildren = children?.sort((a, b) => {
-    return new Date(b?.updated) - new Date(a?.updated);
+    return getDateForEntry(b) - getDateForEntry(a);
   });
   const seen = entry?.seen;
   return (

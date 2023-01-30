@@ -7,6 +7,12 @@ import Source from "./Source";
 const Like = ({ entry }) => {
   const { actor, object } = entry;
 
+  let contentString = "";
+
+  if (entry?.content) {
+    contentString = " with " + entry.content;
+  }
+
   return (
     <Paper
       sx={{ backgroundColor: "white", padding: 2, margin: 2 }}
@@ -19,6 +25,7 @@ const Like = ({ entry }) => {
       <Link href={object} target="_blank">
         this post
       </Link>
+      {contentString}
       <Source entry={entry} />
     </Paper>
   );

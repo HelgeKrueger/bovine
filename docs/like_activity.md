@@ -17,16 +17,25 @@ Here, I discuss the implementation choices, I made when designing a like activit
 
 ```
 
+All properties exist in the [ActivityStreams Specification](https://www.w3.org/ns/activitystreams).
 Some of the background behind these choices can be found at [SocialHub](https://socialhub.activitypub.rocks/t/like-activity/2925).
 
-## Content
+## Display
+
+Display is handled by the Like component in `buffalo/src/components/timeline/Like.js`.
+
+## Properties
+
+### Content
 
 Following the choice made by MissKey / CalcKey, I use the content property to contain the emote. As bovine is bovine themed, the used emote is a cow face by default.
 
-## To property
+**FIXME**: Citation needed
+
+### To property
 
 As the activity is generated in the JavaScript code of `buffalo` and then send to the outbox, it is necessary to specify the `to` property of the like.
 
-## cc as public
+### cc as public
 
 This is mainly an indication that I am ok with my Like being displayed to the world, e.g. as an increased like count on the object.

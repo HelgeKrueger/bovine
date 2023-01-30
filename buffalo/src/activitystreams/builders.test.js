@@ -17,6 +17,18 @@ test("test buildNote", () => {
   expect(result.tag).toStrictEqual([]);
 });
 
+test("test buildNote which is broken", () => {
+  const note = buildNote("config.actor", "content", {
+    hashtags: "".split(",").map((x) => x.trim()),
+    mentions: "".split(",").map((x) => x.trim()),
+  });
+
+  expect(note.to).toStrictEqual([
+    "https://www.w3.org/ns/activitystreams#Public",
+  ]);
+  expect(note.cc).toStrictEqual(["config.actor/followers"]);
+});
+
 test("test buildNote with hashtags", () => {
   const result = buildNote("my_actor", "content", {
     hashtags: ["#tag1", "#tag2"],

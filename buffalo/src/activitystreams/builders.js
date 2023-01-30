@@ -33,41 +33,48 @@ const buildTag = (hashtags, mentions) => {
   let tags = [];
   if (hashtags) {
     tags = tags.concat(
-      hashtags?.map((x) => {
-        return { name: x, type: "Hashtag" };
-      })
+      hashtags
+        ?.filter((x) => x.length > 0)
+        ?.map((x) => {
+          return { name: x, type: "Hashtag" };
+        })
     );
   }
   if (mentions) {
     tags = tags.concat(
-      mentions?.map((x) => {
-        return { href: x, name: x, type: "Mention" };
-      })
+      mentions
+        ?.filter((x) => x.length > 0)
+        ?.map((x) => {
+          return { href: x, name: x, type: "Mention" };
+        })
     );
   }
 
   return tags;
 };
 
-const buildNote = (actor, content, properties) => {
-  const id = actor + "/" + uuidv4();
-  const formatted = marked.parse(content);
+const publicToCc = (actor, properties) => {
   let to = [defaults.public];
   let cc = [actor + "/followers"];
-  // if (properties?.to) {
-  //   to = properties.to;
-  // }
   if (properties?.replyToActor) {
     cc.push(properties?.replyToActor);
   }
-  // if (properties?.cc) {
-  //   cc = properties.cc;
-  // }
+
   if (properties?.mentions) {
-    cc = cc.concat(properties.mentions);
+    cc = cc.concat(properties.mentions.filter((x) => x.length > 0));
   }
   to = Array.from(new Set(to));
   cc = Array.from(new Set(cc));
+
+  return { to, cc };
+};
+
+const buildNote = (actor, content, properties) => {
+  const id = actor + "/" + uuidv4();
+  const formatted = marked.parse(content);
+
+  const { to, cc } = publicToCc(actor, properties);
+
   return {
     "@context": "https://www.w3.org/ns/activitystreams",
     atomUri: id,
@@ -98,21 +105,7 @@ const buildNote = (actor, content, properties) => {
 
 const buildImage = (actor, imagePath, properties) => {
   const id = actor + "/" + uuidv4();
-  let to = [defaults.public];
-  let cc = [actor + "/followers"];
-  if (properties?.replyToActor) {
-    cc.push(properties?.replyToActor);
-  }
-  if (properties?.mentions) {
-    cc = cc.concat(properties.mentions);
-  }
-  to = Array.from(new Set(to));
-  cc = Array.from(new Set(cc));
-  // let to = [
-  //   "https://mas.to/users/helgek",
-  //   "https://i.calckey.cloud/users/99is5hpneh",
-  // ];
-  // let cc = [];
+  const { to, cc } = publicToCc(actor, properties);
   return {
     "@context": "https://www.w3.org/ns/activitystreams",
     atomUri: id,

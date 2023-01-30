@@ -6,7 +6,8 @@ from bovine.types import InboxItem, LocalUser
 
 
 async def accept_follow_request(
-    local_user: LocalUser, item: InboxItem
+    item: InboxItem,
+    local_user: LocalUser,
 ) -> InboxItem | None:
     data = item.get_data()
 

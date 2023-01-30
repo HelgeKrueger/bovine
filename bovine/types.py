@@ -1,11 +1,12 @@
 import json
 import logging
-import traceback
+
+from bovine.processors.processor_list import ProcessorList
 
 
 class InboxItem:
-    def __init__(self, headers, body):
-        self.headers = headers
+    def __init__(self, body, authorization={}):
+        self.authorization = authorization
         self.body = body
         self.data = None
 
@@ -24,14 +25,10 @@ class InboxItem:
 
     def dump(self):
         logging.info("###########################################################")
-        logging.info("---HEADERS----")
-        logging.info(json.dumps(self.headers))
+        logging.info("---AUTHORIZATION----")
+        logging.info(json.dumps(self.authorization))
         logging.info("---BODY----")
         logging.info(self.body.decode("utf-8"))
-
-
-async def dummy(*args):
-    return
 
 
 class LocalUser:
@@ -51,13 +48,18 @@ class LocalUser:
         self.actor_type = actor_type
         self.no_auth_fetch = no_auth_fetch
 
-        self.processors = []
+        self.inbox_processors = ProcessorList()
+        self.outbox_processors = ProcessorList()
+
         self.outbox_count_coroutine = None
         self.outbox_items_coroutine = None
-        self.add_outbox_item_coroutine = dummy
 
     def add_inbox_processor(self, processor):
-        self.processors.append(processor)
+        self.inbox_processors.add(processor)
+        return self
+
+    def add_outbox_processor(self, processor):
+        self.outbox_processors.add(processor)
         return self
 
     def set_outbox(self, item_count, items):
@@ -83,17 +85,10 @@ class LocalUser:
         logging.info(f"type: {self.actor_type}")
 
     async def process_inbox_item(self, inbox_item: InboxItem):
-        working = inbox_item
-        try:
-            for processor in self.processors:
-                working = await processor(self, working)
-                if not working:
-                    return
-        except Exception as ex:
-            logging.error(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
-            logging.error(ex)
-            traceback.print_exception(type(ex), ex, ex.__traceback__)
-            inbox_item.dump()
+        await self.inbox_processors.apply(inbox_item, self)
+
+    async def process_outbox_item(self, activity, session):
+        await self.outbox_processors.apply(activity, self, session)
 
     async def outbox_item_count(self):
         if self.outbox_count_coroutine:
@@ -106,9 +101,3 @@ class LocalUser:
             return await self.outbox_items_coroutine(self, start, limit)
 
         return []
-
-    async def add_outbox_item(self, session, activity):
-        if self.add_outbox_item_coroutine:
-            return await self.add_outbox_item_coroutine(self, session, activity)
-
-        return None

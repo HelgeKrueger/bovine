@@ -25,8 +25,8 @@ async def test_accept_follow_request(
 
         local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
 
-        item = InboxItem({}, json.dumps({"type": "Follow", "actor": "url"}))
-        result = await accept_follow_request(local_user, item)
+        item = InboxItem(json.dumps({"type": "Follow", "actor": "url"}))
+        result = await accept_follow_request(item, local_user)
 
         assert result
 
@@ -51,7 +51,6 @@ async def test_store_in_database(db_url):  # noqa: F811
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
 
     item = InboxItem(
-        {},
         json.dumps(
             {
                 "type": "Create",
@@ -61,7 +60,7 @@ async def test_store_in_database(db_url):  # noqa: F811
         ),
     )
 
-    result = await store_in_database(local_user, item)
+    result = await store_in_database(item, local_user)
 
     assert result == item
 
@@ -82,11 +81,10 @@ async def test_store_in_database_no_conversation(db_url):  # noqa: F811
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
 
     item = InboxItem(
-        {},
         json.dumps({"type": "Follow", "actor": "url", "object": "proto://url"}),
     )
 
-    result = await store_in_database(local_user, item)
+    result = await store_in_database(item, local_user)
 
     assert result == item
 

@@ -3,7 +3,8 @@ from bovine.types import InboxItem, LocalUser
 
 def dismiss_delete(callback):
     async def on_delete_perform(
-        local_user: LocalUser, item: InboxItem
+        item: InboxItem,
+        local_user: LocalUser,
     ) -> InboxItem | None:
         data = item.get_data()
 

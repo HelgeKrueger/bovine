@@ -57,5 +57,5 @@ async def fetch_post(
     )
     text = await response.text()
 
-    inbox_item = InboxItem(response.headers, text)
+    inbox_item = InboxItem(text)
     await local_user.process_inbox_item(inbox_item)

@@ -107,13 +107,11 @@ async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response
             await current_app.config["object_storage"].add_object(
                 key, files[key].read()
             )
-        await local_user.add_outbox_item(
-            current_app.config["session"], json.loads(form["activity"])
-        )
+        activity = json.loads(form["activity"])
     else:
-        await local_user.add_outbox_item(
-            current_app.config["session"], await request.get_json()
-        )
+        activity = await request.get_json()
+
+    await local_user.process_outbox_item(activity, current_app.config["session"])
 
     return {"status": "success"}, 200
 

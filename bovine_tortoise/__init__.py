@@ -64,7 +64,7 @@ class ManagedDataStore:
             local_user = local_user.set_outbox(*self.outbox_handlers)
 
         if self.outbox_inserter:
-            local_user.add_outbox_item_coroutine = self.outbox_inserter
+            local_user.add_outbox_processor(self.outbox_inserter)
 
         return local_user
 

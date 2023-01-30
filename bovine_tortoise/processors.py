@@ -13,7 +13,7 @@ from .models import Actor, Follower, InboxEntry
 logger = logging.getLogger("tortoise")
 
 
-async def store_in_database(local_user: LocalUser, item: InboxItem) -> InboxItem | None:
+async def store_in_database(item: InboxItem, local_user: LocalUser) -> InboxItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)
 
@@ -44,7 +44,7 @@ async def store_in_database(local_user: LocalUser, item: InboxItem) -> InboxItem
 
 
 async def accept_follow_request(
-    local_user: LocalUser, item: InboxItem
+    item: InboxItem, local_user: LocalUser
 ) -> InboxItem | None:
     data = item.get_data()
 
@@ -72,7 +72,7 @@ async def accept_follow_request(
 
 
 async def store_host_as_peer(
-    local_user: LocalUser, item: InboxItem
+    item: InboxItem, local_user: LocalUser
 ) -> InboxItem | None:
     # FIXME
     return item

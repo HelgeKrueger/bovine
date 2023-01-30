@@ -34,7 +34,9 @@ async def outbox_items(local_user: LocalUser, start: int, limit: int) -> list | 
 
 
 async def send_activity_no_local_path(
-    local_user: LocalUser, session: aiohttp.ClientSession, activity: dict
+    activity: dict,
+    local_user: LocalUser,
+    session: aiohttp.ClientSession,
 ):
     local_path = activity["id"]
     local_path = local_path.removesuffix("/activity")

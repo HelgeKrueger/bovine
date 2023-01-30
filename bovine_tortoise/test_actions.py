@@ -8,7 +8,7 @@ from bovine.utils.test import get_user_keys
 from . import ManagedDataStore
 from .actions import fetch_post, follow
 from .models import Following, InboxEntry
-from .processors import store_in_database
+from .processors.inbox import store_in_database
 from .test_database import db_url  # noqa: F401
 
 

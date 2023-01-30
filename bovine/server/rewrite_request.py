@@ -2,7 +2,7 @@ import logging
 import os
 import re
 
-from quart import current_app, g, request, redirect
+from quart import current_app, g, redirect, request
 
 from bovine.utils.crypto import content_digest_sha256
 from bovine.utils.parsers.accept_header import is_activity_request

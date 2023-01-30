@@ -7,8 +7,7 @@ from quart import current_app
 import bovine.clients
 from bovine.activitystreams.activities import build_accept
 from bovine.types import InboxItem, LocalUser
-
-from .models import Actor, Follower, InboxEntry, Following
+from bovine_tortoise.models import Actor, Follower, Following, InboxEntry
 
 logger = logging.getLogger("tor-proc")
 

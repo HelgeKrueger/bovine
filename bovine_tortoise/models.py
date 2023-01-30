@@ -40,6 +40,7 @@ class InboxEntry(Model):
 
     conversation = fields.CharField(max_length=255, null=True)
     read = fields.BooleanField(default=True)
+    content_id = fields.CharField(max_length=255, null=True)
 
 
 class OutboxEntry(Model):
@@ -48,6 +49,7 @@ class OutboxEntry(Model):
     local_path = fields.CharField(max_length=255)
     created = fields.DatetimeField()
     content = fields.JSONField()
+    content_id = fields.CharField(max_length=255, null=True)
 
 
 class Peer(Model):

@@ -1,9 +1,13 @@
+from .common import build_context
+
+
 class ActorBuilder:
     def __init__(self, name: str, actor_type: str = "Person"):
         self.name = name
         self.actor_type = actor_type
         self.account_url = None
         self.public_key = None
+        self.context_builder = build_context()
 
     def with_account_url(self, account_url: str):
         self.account_url = account_url
@@ -11,11 +15,12 @@ class ActorBuilder:
 
     def with_public_key(self, public_key: str):
         self.public_key = public_key
+        self.context_builder.add("https://w3id.org/security/v1")
         return self
 
     def build(self):
         return {
-            "@context": self._build_context(),
+            "@context": self.context_builder.build(),
             "name": self.name,
             "preferredUsername": self.name,
             "type": self.actor_type,

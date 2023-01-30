@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { marked } from "marked";
 import config from "../config";
+import { format } from "./convertContent";
 
 const defaults = {
   likeEmoji: "🐮",
@@ -72,7 +72,7 @@ const publicToCc = (actor, properties) => {
 
 const buildNote = (actor, content, properties) => {
   const id = actor + "/" + uuidv4();
-  const formatted = marked.parse(content);
+  const formatted = format(content);
 
   const { to, cc } = publicToCc(actor, properties);
 

@@ -3,10 +3,10 @@ from unittest.mock import patch
 
 from bovine.types import InboxItem, LocalUser
 from bovine.utils.test.in_memory_test_app import app
+from bovine_tortoise.models import Actor, Follower, Following, InboxEntry
+from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from .models import Actor, Follower, InboxEntry, Following
-from .processors import accept_follow_request, store_in_database, record_accept_follow
-from .test_database import db_url  # noqa: F401
+from .inbox import accept_follow_request, record_accept_follow, store_in_database
 
 
 @patch("bovine.clients.send_activitypub_request")

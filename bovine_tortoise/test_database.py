@@ -1,7 +1,7 @@
 from bovine.types import InboxItem, LocalUser
 
 from . import ManagedDataStore
-from .processors import store_in_database
+from .processors.inbox import store_in_database
 from .utils import db_url  # noqa: F401
 
 

@@ -4,7 +4,6 @@ from bovine.types import LocalUser as LocalUserObject
 
 from .models import Actor
 from .outbox import outbox_item_count, outbox_items
-from .processors import accept_follow_request, store_in_database, record_accept_follow
 
 
 async def init(db_url: str = "sqlite://db.sqlite3") -> None:
@@ -17,11 +16,6 @@ async def init(db_url: str = "sqlite://db.sqlite3") -> None:
     return None
 
 
-default_inbox_processors = [
-    accept_follow_request,
-    store_in_database,
-    record_accept_follow,
-]
 default_outbox = (outbox_item_count, outbox_items)
 
 
@@ -31,12 +25,13 @@ class ManagedDataStore:
         db_url="sqlite://db.sqlite3",
         inbox_processors=[],
         outbox_handlers=None,
-        outbox_inserter=None,
+        outbox_processors=[],
     ):
         self.db_url = db_url
         self.inbox_processors = inbox_processors
+        self.outbox_processors = outbox_processors
+
         self.outbox_handlers = outbox_handlers
-        self.outbox_inserter = outbox_inserter
 
     async def connect(self):
         await Tortoise.init(
@@ -60,12 +55,11 @@ class ManagedDataStore:
         )
         for p in self.inbox_processors:
             local_user = local_user.add_inbox_processor(p)
+        for p in self.outbox_processors:
+            local_user = local_user.add_outbox_processor(p)
 
         if self.outbox_handlers:
             local_user = local_user.set_outbox(*self.outbox_handlers)
-
-        if self.outbox_inserter:
-            local_user.add_outbox_processor(self.outbox_inserter)
 
         return local_user
 

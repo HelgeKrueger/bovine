@@ -136,7 +136,7 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         data["url"],
     )
 
-    inbox_item = InboxItem(response.headers, await response.text())
+    inbox_item = InboxItem(await response.text())
 
     await local_user.process_inbox_item(inbox_item)
 

@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class CreateBuilder:
-    def __init__(self, obj):
+    def __init__(self, obj: dict):
         self.obj = obj
         self.account = self.obj.get("attributedTo", None)
         self.url = self.obj.get("id", None)
@@ -10,7 +10,7 @@ class CreateBuilder:
         self.cc = self.obj.get("cc", [])
         self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
 
-    def with_account(self, account):
+    def with_account(self, account: str):
         self.account = account
         return self
 
@@ -24,7 +24,7 @@ class CreateBuilder:
         self.cc.append("https://www.w3.org/ns/activitystreams#Public")
         return self
 
-    def build(self):
+    def build(self) -> dict:
         return {
             "@context": [
                 "https://www.w3.org/ns/activitystreams",

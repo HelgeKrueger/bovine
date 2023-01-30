@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class NoteBuilder:
-    def __init__(self, account, url, content):
+    def __init__(self, account: str, url: str, content: str):
         self.account = account
         self.content = content
         self.url = url
@@ -21,11 +21,11 @@ class NoteBuilder:
         self.cc.add(f"{self.account}/followers")
         return self
 
-    def add_cc(self, recipient):
+    def add_cc(self, recipient: str):
         self.cc.add(recipient)
         return self
 
-    def add_to(self, recipient):
+    def add_to(self, recipient: str):
         self.to.add(recipient)
         return self
 
@@ -34,32 +34,32 @@ class NoteBuilder:
         self.cc.add("https://www.w3.org/ns/activitystreams#Public")
         return self
 
-    def with_hashtag(self, hashtag):
+    def with_hashtag(self, hashtag: str):
         self.hashtags.add(hashtag)
         return self
 
-    def with_mention(self, mention):
+    def with_mention(self, mention: str):
         self.mentions.add(mention)
         self.cc.add(mention)
         return self
 
-    def with_conversation(self, conversation):
+    def with_conversation(self, conversation: str):
         self.conversation = conversation
         return self
 
-    def with_reply(self, rid):
+    def with_reply(self, rid: str):
         self.reply_to_id = rid
         return self
 
-    def with_reply_to_atom_uri(self, uri):
+    def with_reply_to_atom_uri(self, uri: str):
         self.reply_to_atom_uri = uri
         return self
 
-    def with_source(self, content, media_type):
+    def with_source(self, content: str, media_type: str):
         self.source = {"content": content, "mediaType": media_type}
         return self
 
-    def build(self):
+    def build(self) -> dict:
         result = {
             "@context": "https://www.w3.org/ns/activitystreams",
             "id": self.url,

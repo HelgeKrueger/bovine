@@ -66,7 +66,7 @@ async def handle_inbox(data) -> None:
         logger.warning("Incorrect http signature on post")
         return
     local_user = await current_app.config["get_user"](account_name)
-    inbox_item = InboxItem(dict(request.headers), raw_data)
+    inbox_item = InboxItem(raw_data)
     await local_user.process_inbox_item(inbox_item)
 
 

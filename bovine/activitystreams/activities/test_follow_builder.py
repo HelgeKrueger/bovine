@@ -1,7 +1,7 @@
 from .follow_builder import FollowBuilder
 
 
-def test_follow_builder():
+def test_follow_builder() -> None:
     data = FollowBuilder("domain", "actor", "tofollow").build()
 
     assert data["@context"] == "https://www.w3.org/ns/activitystreams"

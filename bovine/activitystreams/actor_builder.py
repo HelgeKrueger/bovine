@@ -1,15 +1,15 @@
 class ActorBuilder:
-    def __init__(self, name, actor_type="Person"):
+    def __init__(self, name: str, actor_type: str = "Person"):
         self.name = name
         self.actor_type = actor_type
         self.account_url = None
         self.public_key = None
 
-    def with_account_url(self, account_url):
+    def with_account_url(self, account_url: str):
         self.account_url = account_url
         return self
 
-    def with_public_key(self, public_key):
+    def with_public_key(self, public_key: str):
         self.public_key = public_key
         return self
 

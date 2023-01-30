@@ -2,7 +2,7 @@ import logging
 import os
 import re
 
-from quart import current_app, g, request
+from quart import current_app, g, request, redirect
 
 from bovine.utils.crypto import content_digest_sha256
 from bovine.utils.parsers.accept_header import is_activity_request
@@ -83,3 +83,4 @@ async def rewrite_activity_request():
     if request.path != new_request_path:
         logger.info(f"Rewrote {request.path} to {new_request_path}")
         request.path = new_request_path
+        return redirect(new_request_path)

@@ -90,8 +90,8 @@ class LocalUser:
                 if not working:
                     return
         except Exception as ex:
-            logging.warning(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
-            logging.warning(ex)
+            logging.error(">>>>> SOMETHING WENT WRONG IN INBOX PROCESSING <<<<<<")
+            logging.error(ex)
             traceback.print_exception(type(ex), ex, ex.__traceback__)
             inbox_item.dump()
 

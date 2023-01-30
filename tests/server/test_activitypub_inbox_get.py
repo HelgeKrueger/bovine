@@ -11,7 +11,7 @@ async def test_activitypub_inbox_get_without_header() -> None:
 
     response = await client.get("/activitypub/user/inbox")
 
-    assert response.status_code == 401
+    assert response.status_code == 302
 
     headers = {
         "accept": "application/activity+json",

@@ -6,6 +6,7 @@ import CreateNote from "./CreateNote";
 import UpdateQuestion from "./UpdateQuestion";
 import { db } from "../../database";
 import Like from "./Like";
+import Person from "./Person";
 
 const TimelineEntry = ({ entry, seen }) => {
   useEffect(() => {
@@ -31,6 +32,10 @@ const TimelineEntry = ({ entry, seen }) => {
 
   if (entry?.type === "Like") {
     return <Like entry={entry} />;
+  }
+
+  if (entry?.type === "Person") {
+    return <Person entry={entry} />;
   }
 
   if (entry?.type === "Update" && entry?.object?.type === "Question") {

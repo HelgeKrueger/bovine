@@ -8,9 +8,9 @@ import bovine.clients
 from bovine.activitystreams.activities import build_accept
 from bovine.types import InboxItem, LocalUser
 
-from .models import Actor, Follower, InboxEntry
+from .models import Actor, Follower, InboxEntry, Following
 
-logger = logging.getLogger("tortoise")
+logger = logging.getLogger("tor-proc")
 
 
 async def store_in_database(item: InboxItem, local_user: LocalUser) -> InboxItem | None:
@@ -75,4 +75,36 @@ async def store_host_as_peer(
     item: InboxItem, local_user: LocalUser
 ) -> InboxItem | None:
     # FIXME
+    return item
+
+
+async def record_accept_follow(
+    item: InboxItem, local_user: LocalUser
+) -> InboxItem | None:
+    try:
+        data = item.get_data()
+
+        if data["type"] != "Accept":
+            return item
+
+        obj = data["object"]
+
+        if obj["type"] != "Follow":
+            return item
+            actor = await Actor.get_or_none(account=local_user.name)
+        actor = await Actor.get_or_none(account=local_user.name)
+        if actor is None:
+            logging.error(f"Actor not found!!! {local_user.name}")
+            return item
+
+        await Following.create(
+            actor=actor, account=data["actor"], followed_on=datetime.now()
+        )
+
+    except Exception as ex:
+        logger.error("Something went wrong when recording accept follow")
+        logger.error(ex)
+        traceback.print_exception(type(ex), ex, ex.__traceback__)
+        return item
+
     return item

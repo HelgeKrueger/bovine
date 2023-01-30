@@ -4,7 +4,7 @@ from bovine.types import LocalUser as LocalUserObject
 
 from .models import Actor
 from .outbox import outbox_item_count, outbox_items
-from .processors import accept_follow_request, store_in_database
+from .processors import accept_follow_request, store_in_database, record_accept_follow
 
 
 async def init(db_url: str = "sqlite://db.sqlite3") -> None:
@@ -20,6 +20,7 @@ async def init(db_url: str = "sqlite://db.sqlite3") -> None:
 default_inbox_processors = [
     accept_follow_request,
     store_in_database,
+    record_accept_follow,
 ]
 default_outbox = (outbox_item_count, outbox_items)
 

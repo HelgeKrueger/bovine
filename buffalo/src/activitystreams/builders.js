@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { marked } from "marked";
+import config from "../config";
 
 const defaults = {
   likeEmoji: "🐮",
@@ -161,4 +162,15 @@ const buildCreateForNote = (note) => {
   };
 };
 
-export { buildLike, buildCreateForNote, buildNote, buildImage };
+const buildFollow = (other) => {
+  return {
+    "@context": "https://www.w3.org/ns/activitystreams",
+    id: config.actor + "/follows+" + uuidv4(),
+    type: "Follow",
+    actor: config.actor,
+    object: other,
+    to: [other],
+  };
+};
+
+export { buildLike, buildCreateForNote, buildFollow, buildNote, buildImage };

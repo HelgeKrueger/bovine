@@ -7,7 +7,7 @@ from . import init
 
 
 @pytest.fixture
-async def db_url():
+async def db_url() -> str:
     db_file = "test_db.sqlite3"
     db_url = f"sqlite://{db_file}"
 

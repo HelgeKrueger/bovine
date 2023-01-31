@@ -7,10 +7,10 @@ from bovine.types import LocalUser
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from .outbox import send_activity, create_outbox_entry
+from .outbox import create_outbox_entry, send_activity
 
 
-async def test_send_create_outbox_entry(db_url):  # noqa: F811
+async def test_send_create_outbox_entry(db_url: str) -> None:  # noqa: F811
     actor = await Actor.create(
         account="name",
         url="url",
@@ -44,7 +44,9 @@ async def test_send_create_outbox_entry(db_url):  # noqa: F811
 
 
 @patch("bovine.clients.send_activitypub_request")
-async def test_send_activity(mock_send_activitypub_request, db_url):  # noqa: F811
+async def test_send_activity(
+    mock_send_activitypub_request, db_url: str  # noqa: F811
+) -> None:
     actor = await Actor.create(
         account="name",
         url="url",
@@ -81,8 +83,8 @@ async def test_send_activity(mock_send_activitypub_request, db_url):  # noqa: F8
 @patch("bovine.clients.get_inbox", return_value="other_inbox")
 @patch("bovine.clients.send_activitypub_request")
 async def test_send_activity_with_additional_user(
-    mock_send_activitypub_request, mock_get_inbox, db_url  # noqa: F811
-):
+    mock_send_activitypub_request, mock_get_inbox, db_url: str  # noqa: F811
+) -> None:
     actor = await Actor.create(
         account="name",
         url="url",

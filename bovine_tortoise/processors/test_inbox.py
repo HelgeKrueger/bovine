@@ -13,7 +13,7 @@ from .inbox import accept_follow_request, record_accept_follow, store_in_databas
 async def test_accept_follow_request(
     mock_send_activitypub_request,
     db_url,  # noqa: F811
-):
+) -> None:
     async with app.app_context():
         actor = await Actor.create(
             account="name",
@@ -94,7 +94,7 @@ async def test_store_in_database_no_conversation(db_url):  # noqa: F811
     assert entry.conversation is None
 
 
-async def test_accepted_follow_request(db_url):  # noqa: F811
+async def test_accepted_follow_request(db_url) -> None:  # noqa: F811
     actor = await Actor.create(
         account="name",
         url="url",

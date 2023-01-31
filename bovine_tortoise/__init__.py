@@ -23,13 +23,13 @@ class ManagedDataStore:
     def __init__(
         self,
         db_url="sqlite://db.sqlite3",
-        inbox_processors=[],
+        inbox_process=None,
         outbox_handlers=None,
-        outbox_processors=[],
+        outbox_process=None,
     ):
         self.db_url = db_url
-        self.inbox_processors = inbox_processors
-        self.outbox_processors = outbox_processors
+        self.inbox_process = inbox_process
+        self.outbox_process = outbox_process
 
         self.outbox_handlers = outbox_handlers
 
@@ -53,11 +53,9 @@ class ManagedDataStore:
             result.private_key,
             result.actor_type,
         )
-        for p in self.inbox_processors:
-            local_user = local_user.add_inbox_processor(p)
-        for p in self.outbox_processors:
-            local_user = local_user.add_outbox_processor(p)
-
+        local_user = local_user.set_inbox_process(
+            self.inbox_process
+        ).set_outbox_process(self.outbox_process)
         if self.outbox_handlers:
             local_user = local_user.set_outbox(*self.outbox_handlers)
 

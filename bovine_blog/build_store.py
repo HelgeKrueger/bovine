@@ -2,8 +2,8 @@ from bovine import get_bovine_user
 from bovine.utils.in_memory_store import InMemoryUserStore
 from bovine_tortoise import ManagedDataStore, default_outbox
 from bovine_tortoise.processors import (
-    default_inbox_processors,
-    default_outbox_processors,
+    default_inbox_process,
+    default_outbox_process,
 )
 
 
@@ -27,9 +27,9 @@ def build_get_user(domain: str):
     bovine_store.add_user(bovine_user)
 
     data_store = ManagedDataStore(
-        inbox_processors=default_inbox_processors,
+        inbox_process=default_inbox_process,
         outbox_handlers=default_outbox,
-        outbox_processors=default_outbox_processors,
+        outbox_process=default_outbox_process,
     )
 
     return bovine_user, Chain(bovine_store.get_user, data_store.get_user).execute

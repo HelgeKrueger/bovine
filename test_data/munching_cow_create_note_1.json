@@ -1,0 +1,24 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "actor": "https://my_domain/activitypub/munchingcow",
+  "cc": ["https://my_domain/activitypub/munchingcow/followers"],
+  "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac",
+  "object": {
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "attributedTo": "https://my_domain/activitypub/munchingcow",
+    "cc": ["https://my_domain/activitypub/munchingcow/followers"],
+    "content": "<p>TEST</p>",
+    "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac",
+    "inReplyTo": null,
+    "published": "2023-01-25T16:00:39Z",
+    "source": {
+      "content": "TEST ",
+      "mediaType": "text/markdown"
+    },
+    "to": ["https://www.w3.org/ns/activitystreams#Public"],
+    "type": "Note"
+  },
+  "published": "2023-01-25T16:00:39Z",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "type": "Create"
+}

@@ -52,6 +52,8 @@ async def accept_follow_request(
 
     try:
         actor = await Actor.get_or_none(account=local_user.name)
+
+        # FIXME: This is broken
         inbox = data["actor"] + "/inbox"
 
         await Follower.create(
@@ -90,7 +92,7 @@ async def record_accept_follow(
 
         if obj["type"] != "Follow":
             return item
-            actor = await Actor.get_or_none(account=local_user.name)
+
         actor = await Actor.get_or_none(account=local_user.name)
         if actor is None:
             logging.error(f"Actor not found!!! {local_user.name}")

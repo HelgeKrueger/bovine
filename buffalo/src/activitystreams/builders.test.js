@@ -10,6 +10,8 @@ test("test buildNote", () => {
   const result = buildNote("my_actor", "content");
 
   expect(result.content).toBe("<p>content</p>\n");
+  expect(result.contentMap.en).toBe(result.content);
+
   expect(result.source).toStrictEqual({
     content: "content",
     mediaType: "text/markdown",

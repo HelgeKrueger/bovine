@@ -5,7 +5,7 @@ import aiohttp
 
 from bovine.types import LocalUser
 
-from .signed_http import signed_get, signed_post
+import bovine.clients.signed_http
 
 
 async def get_public_key(
@@ -14,7 +14,7 @@ async def get_public_key(
 
     logging.info(f"getting public key for {key_id}")
 
-    response = await signed_get(
+    response = await bovine.clients.signed_http.signed_get(
         session, local_user.get_public_key_url(), local_user.private_key, key_id
     )
     text = await response.text()
@@ -41,7 +41,7 @@ async def get_public_key(
 async def get_inbox(
     session: aiohttp.ClientSession, local_user: LocalUser, account: str
 ) -> str:
-    response = await signed_get(
+    response = await bovine.clients.signed_http.signed_get(
         session, local_user.get_public_key_url(), local_user.private_key, account
     )
     text = await response.text()
@@ -55,7 +55,7 @@ async def send_activitypub_request(
 ) -> tuple[str, int]:
     body = json.dumps(data)
 
-    response = await signed_post(
+    response = await bovine.clients.signed_http.signed_post(
         session, user.get_public_key_url(), user.private_key, inbox, body
     )
     logging.info(f"Send activity pub request to {inbox}")

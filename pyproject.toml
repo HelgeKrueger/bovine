@@ -54,3 +54,4 @@ env = [
     "ACCESS_TOKEN=test_token"
 ]
 asyncio_mode="auto"
+log_cli= 1

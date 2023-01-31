@@ -1,8 +1,6 @@
 import json
 import logging
 
-from bovine.processors.processor_list import ProcessorList
-
 
 class InboxItem:
     def __init__(self, body, authorization={}):
@@ -48,18 +46,18 @@ class LocalUser:
         self.actor_type = actor_type
         self.no_auth_fetch = no_auth_fetch
 
-        self.inbox_processors = ProcessorList()
-        self.outbox_processors = ProcessorList()
+        self.inbox_process = None
+        self.outbox_process = None
 
         self.outbox_count_coroutine = None
         self.outbox_items_coroutine = None
 
-    def add_inbox_processor(self, processor):
-        self.inbox_processors.add(processor)
+    def set_inbox_process(self, process):
+        self.inbox_process = process
         return self
 
-    def add_outbox_processor(self, processor):
-        self.outbox_processors.add(processor)
+    def set_outbox_process(self, process):
+        self.outbox_process = process
         return self
 
     def set_outbox(self, item_count, items):
@@ -85,10 +83,12 @@ class LocalUser:
         logging.info(f"type: {self.actor_type}")
 
     async def process_inbox_item(self, inbox_item: InboxItem):
-        await self.inbox_processors.apply(inbox_item, self)
+        if self.inbox_process:
+            await self.inbox_process(inbox_item, self)
 
     async def process_outbox_item(self, activity, session):
-        await self.outbox_processors.apply(activity, self, session)
+        if self.outbox_process:
+            await self.outbox_process(activity, self, session)
 
     async def outbox_item_count(self):
         if self.outbox_count_coroutine:

@@ -33,7 +33,7 @@ local_user = LocalUser(
     public_key,
     private_key,
     "Person",
-).add_inbox_processor(dump_incoming_inbox_to_stdout)
+).set_inbox_process(dump_incoming_inbox_to_stdout)
 
 data_store = InMemoryUserStore()
 data_store.add_user(local_user)

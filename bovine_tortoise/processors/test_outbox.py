@@ -7,10 +7,10 @@ from bovine.types import LocalUser
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from .outbox import create_outbox_entry, send_activity
+from .outbox import create_outbox_entry, send_activity, delete_outbox_entry
 
 
-async def test_send_create_outbox_entry(db_url: str) -> None:  # noqa: F811
+async def test_create_outbox_entry(db_url: str) -> None:  # noqa: F811
     actor = await Actor.create(
         account="name",
         url="url",
@@ -41,6 +41,45 @@ async def test_send_create_outbox_entry(db_url: str) -> None:  # noqa: F811
 
     assert element.content == activity_to_send
     assert element.local_path == "name/uuid"
+
+
+async def test_delete_outbox_entry(db_url: str) -> None:  # noqa: F811
+    actor = await Actor.create(
+        account="name",
+        url="url",
+        actor_type="type",
+        private_key="private_key",
+        public_key="public_key",
+    )
+
+    activity_to_delete = {
+        "id": "https://domain/something/name/uuid/delete",
+        "to": ["somebody/followers"],
+        "object": {
+            "id": "https://domain/something/name/uuid",
+        },
+    }
+
+    await OutboxEntry.create(
+        actor=actor,
+        created=datetime.now(),
+        content=activity_to_delete,
+        local_path="name/uuid",
+    )
+
+    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+
+    async with aiohttp.ClientSession() as session:
+        result = await delete_outbox_entry(
+            activity_to_delete,
+            local_user,
+            session,
+        )
+
+    assert result == activity_to_delete
+
+    outbox_elements = OutboxEntry.filter(actor=actor)
+    assert await outbox_elements.count() == 0
 
 
 @patch("bovine.clients.send_activitypub_request")

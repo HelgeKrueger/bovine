@@ -1,0 +1,15 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    { "ostatus": "http://ostatus.org#", "atomUri": "ostatus:atomUri" }
+  ],
+  "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac/delete",
+  "type": "Delete",
+  "actor": "https://my_domain/activitypub/munchingcow",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "object": {
+    "type": "Tombstone",
+    "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac",
+    "atomUri": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac"
+  }
+}

@@ -32,10 +32,35 @@ async def create_outbox_entry(
         return
 
     await OutboxEntry.create(
-        actor=actor, created=datetime.now(), content=activity, local_path=local_path
+        actor=actor,
+        created=datetime.now(),
+        content=activity,
+        local_path=local_path,
     )
 
     logger.info(f"Created outbox entry for {local_path}")
+
+    return activity
+
+
+async def delete_outbox_entry(
+    activity: dict,
+    local_user: LocalUser,
+    session: aiohttp.ClientSession,
+):
+    local_path = determine_local_path_from_activity_id(activity["object"]["id"])
+    actor = await Actor.get_or_none(account=local_user.name)
+    if actor is None:
+        logger.warn("Failed to fetch actor")
+        return
+
+    entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
+
+    if entry is None:
+        logger.warning("Failed to find outbox entry")
+    else:
+        await entry.delete()
+        logger.info(f"Deleted outbox entry for {local_path}")
 
     return activity
 

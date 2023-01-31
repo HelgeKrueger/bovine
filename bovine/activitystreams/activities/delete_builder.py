@@ -18,5 +18,6 @@ class DeleteBuilder:
             "type": "Delete",
             "actor": self.actor,
             "to": [as_public],
+            "cc": [self.actor + "/followers"],
             "object": my_tombstone,
         }

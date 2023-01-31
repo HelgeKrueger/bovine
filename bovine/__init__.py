@@ -16,6 +16,6 @@ def get_bovine_user(
         server_private_key,
         "Application",
         no_auth_fetch=True,
-    ).add_inbox_processor(dump_incoming_inbox_to_stdout)
+    ).set_inbox_process(dump_incoming_inbox_to_stdout)
 
     return bovine_user

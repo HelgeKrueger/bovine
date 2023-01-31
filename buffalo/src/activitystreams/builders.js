@@ -84,7 +84,7 @@ const buildNote = (actor, content, properties) => {
     cc: cc,
     content: formatted,
     contentMap: {
-      en: content,
+      en: formatted,
     },
     conversation: properties?.conversation,
     id: id,

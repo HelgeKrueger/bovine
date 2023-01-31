@@ -27,11 +27,13 @@ async def test_send_create_outbox_entry(db_url):  # noqa: F811
     }
 
     async with aiohttp.ClientSession() as session:
-        await create_outbox_entry(
+        result = await create_outbox_entry(
             activity_to_send,
             local_user,
             session,
         )
+
+    assert result == activity_to_send
 
     outbox_elements = OutboxEntry.filter(actor=actor)
     assert await outbox_elements.count() == 1

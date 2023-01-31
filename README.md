@@ -7,6 +7,7 @@ Bovine is attempt at creating a modular ActivityPub server.
 - [HTTP Signatures](docs/http_signatures.md)
 - [Client2Server ActivityPub](docs/client_to_server_activitypub.md)
 - [Like Activity](docs/like_activity.md)
+- [Deployment](docs/deployment.md)
 
 ## Development
 

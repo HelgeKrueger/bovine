@@ -5,7 +5,7 @@ import werkzeug
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
-from bovine.clients.signed_http import signed_get
+from bovine_core.clients.signed_http import signed_get
 from bovine.types import InboxItem
 
 from .activitypub import cors_properties

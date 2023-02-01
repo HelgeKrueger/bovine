@@ -9,7 +9,7 @@ from bovine_tortoise.models import Follower
 from tests.utils import create_actor_and_local_user, build_inbox_item_from_json
 
 
-@patch("bovine.clients.signed_http.signed_post")
+@patch("bovine_core.clients.signed_http.signed_post")
 async def test_mastodon_follow_request_is_accepted(
     mock_signed_post, db_url  # noqa F811
 ):

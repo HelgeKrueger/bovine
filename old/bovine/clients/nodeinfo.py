@@ -4,7 +4,7 @@ import traceback
 
 import aiohttp
 
-from .consts import BOVINE_CLIENT_NAME
+from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
 logger = logging.getLogger("nodeinfo")
 

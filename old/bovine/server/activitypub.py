@@ -4,9 +4,9 @@ import werkzeug
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
-from bovine.activitystreams import build_actor, build_outbox
+from bovine_core.activitystreams import build_actor, build_outbox
 from bovine.types import InboxItem
-from bovine.utils.crypto import content_digest_sha256
+from bovine_core.utils.crypto import content_digest_sha256
 
 cors_properties = {
     "allow_origin": ["http://localhost:8000"],

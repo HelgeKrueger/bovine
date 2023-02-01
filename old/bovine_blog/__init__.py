@@ -6,7 +6,7 @@ from quart import Quart
 from tortoise.contrib.quart import register_tortoise
 
 from bovine.server import default_configuration
-from bovine.utils.http_signature import SignatureChecker
+from bovine_core.utils.http_signature import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.inbox import inbox_content_starting_from
 from bovine_tortoise.outbox_blueprint import outbox_blueprint

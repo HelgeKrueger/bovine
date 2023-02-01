@@ -6,9 +6,9 @@ from urllib.parse import urlparse
 import aiohttp
 
 import bovine.clients
-from bovine.activitystreams.activities import build_follow
+from bovine_core.activitystreams.activities import build_follow
 from bovine.clients.lookup_account import lookup_account_with_webfinger
-from bovine.clients.signed_http import signed_get
+from bovine_core.clients.signed_http import signed_get
 from bovine.types import InboxItem, LocalUser
 
 from .models import Actor, Following

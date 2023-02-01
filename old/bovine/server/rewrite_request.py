@@ -4,7 +4,7 @@ import re
 
 from quart import current_app, g, redirect, request
 
-from bovine.utils.crypto import content_digest_sha256
+from bovine_core.utils.crypto import content_digest_sha256
 from bovine.utils.parsers.accept_header import is_activity_request
 
 logger = logging.getLogger("rewrite")

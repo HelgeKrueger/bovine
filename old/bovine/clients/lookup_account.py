@@ -5,7 +5,7 @@ import aiohttp
 
 from bovine.utils.parsers import parse_account_name
 
-from .consts import BOVINE_CLIENT_NAME
+from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
 
 async def lookup_account_with_webfinger(

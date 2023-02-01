@@ -268,6 +268,25 @@ files = [
 ]
 
 [[package]]
+name = "bovine-core"
+version = "0.1.0"
+description = "Core functionality of bovine needed to build client to server applications"
+category = "main"
+optional = false
+python-versions = "^3.10"
+files = []
+develop = false
+
+[package.dependencies]
+aiohttp = "^3.8.3"
+cryptography = "^39.0.0"
+python-dateutil = "^2.8.2"
+
+[package.source]
+type = "directory"
+url = "../bovine_core"
+
+[[package]]
 name = "cffi"
 version = "1.15.1"
 description = "Foreign Function Interface for Python calling C code."
@@ -1881,4 +1900,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "667b420fe1fc905327297dc86ac09b47194428c3f38272225f21654c0390de59"
+content-hash = "de0f68117771648100f33ebd8163dc8ffe1163729eaf197b51f5d1863e33c566"

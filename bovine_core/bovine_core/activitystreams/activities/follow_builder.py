@@ -8,7 +8,6 @@ class FollowBuilder:
         self.tofollow = tofollow
 
     def build(self) -> dict:
-
         uuid_string = str(uuid.uuid4())
 
         return {

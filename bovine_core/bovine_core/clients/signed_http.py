@@ -2,9 +2,9 @@ from urllib.parse import urlparse
 
 import aiohttp
 
-from bovine.utils import build_signature
-from bovine.utils.crypto import content_digest_sha256
-from bovine.utils.date import get_gmt_now
+from bovine_core.utils import build_signature
+from bovine_core.utils.crypto import content_digest_sha256
+from bovine_core.utils.date import get_gmt_now
 
 from .consts import BOVINE_CLIENT_NAME
 

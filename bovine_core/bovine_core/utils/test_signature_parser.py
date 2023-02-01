@@ -1,4 +1,4 @@
-from .signature import Signature
+from .signature_parser import Signature
 
 
 def test_signature_header_parsing():

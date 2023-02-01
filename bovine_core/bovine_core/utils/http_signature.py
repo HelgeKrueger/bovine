@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from .crypto import sign_message, verify_signature
 from .date import check_max_offset_now, parse_gmt
-from .parsers import parse_signature_header
+from .signature_parser import parse_signature_header
 
 logger = logging.getLogger("http-sig")
 

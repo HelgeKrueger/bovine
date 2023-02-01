@@ -1,4 +1,4 @@
-from bovine.activitystreams.common import build_context
+from bovine_core.activitystreams.common import build_context
 
 
 class TombstoneBuilder:

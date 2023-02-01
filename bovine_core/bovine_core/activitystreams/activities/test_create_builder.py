@@ -1,6 +1,6 @@
 import re
 
-from bovine.activitystreams.objects import build_note
+from bovine_core.activitystreams.objects import build_note
 
 from .create_builder import CreateBuilder
 

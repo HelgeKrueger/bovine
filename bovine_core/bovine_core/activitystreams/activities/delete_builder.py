@@ -1,5 +1,5 @@
-from bovine.activitystreams.common import as_public, build_context
-from bovine.activitystreams.objects import tombstone
+from bovine_core.activitystreams.common import as_public, build_context
+from bovine_core.activitystreams.objects import tombstone
 
 
 class DeleteBuilder:

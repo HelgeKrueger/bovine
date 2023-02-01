@@ -8,7 +8,9 @@ class CreateBuilder:
         self.url = self.obj.get("id", None)
         self.to = self.obj.get("to", [])
         self.cc = self.obj.get("cc", [])
-        self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        self.published = self.obj.get(
+            "published", datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        )
 
     def with_account(self, account: str):
         self.account = account

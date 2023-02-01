@@ -98,3 +98,7 @@ class NoteBuilder:
             result["source"] = self.source
 
         return result
+
+    def with_published(self, published: datetime):
+        self.published = published.replace(microsecond=0).isoformat() + "Z"
+        return self

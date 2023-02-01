@@ -7,9 +7,9 @@ import aiohttp
 import cowsay
 from markdown import Markdown
 
-from bovine.activitystreams.activities import build_create
-from bovine.activitystreams.objects import build_note
-from bovine.clients.signed_http import signed_post
+from bovine_core.activitystreams.activities import build_create
+from bovine_core.activitystreams.objects import build_note
+from bovine_core.clients.signed_http import signed_post
 
 
 def create_note_activity(account_url):
@@ -66,18 +66,14 @@ Then contact your instance admin, and tell him to support the code tag.
 async def post_status(note, public_key_url, private_key, outbox_url):
     body = json.dumps(note)
     async with aiohttp.ClientSession() as session:
-        result, status = await signed_post(
-            session, public_key_url, private_key, outbox_url, body
-        )
-        print(result)
-        print(status)
+        await signed_post(session, public_key_url, private_key, outbox_url, body)
 
 
 account_url = "https://mymath.rocks/activitypub/munchingcow"
 public_key_url = f"{account_url}#main-key"
 outbox_url = f"{account_url}/outbox"
 
-with open(".files/cow_private.pem", "r") as f:
+with open("../../.files/cow_private.pem", "r") as f:
     private_key = f.read()
 
 note = create_note_activity(account_url)

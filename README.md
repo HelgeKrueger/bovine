@@ -16,7 +16,25 @@ Code is tested with `pytest`. Linted with `flake8`. Formatted with `black`. Furt
 
 ## Structure
 
-The current code base is split into a few parts contained in the subpackages.
+The current code base is split into packages with more and more complicated use cases.
+
+### bovine_core
+
+This package contains the basic code necessary to build an activity pub client application.
+A big caveat here is that currently authentication is assumed to be done through HTTP
+signatures. It considers essentially of two parts:
+
+`bovine_core.clients.signed_http` provides the functions `signed_get` and `signed_post`,
+which are used to communicate with the webserver. The package `bovine_core.activitystreams`
+contains builder used to construct the necessary [ActivityStreams objects](https://www.w3.org/ns/activitystreams).
+
+### Examples
+
+Two examples are included in the `examples` folder:
+
+- Munching cow demonstrates how to post simple content in `munching_cow.py` and then clean it back up in `munching_cow_cleanup.py`.
+
+- Cow Resisa provides a sample RSS to ActivityPub bridge.
 
 ### bovine
 

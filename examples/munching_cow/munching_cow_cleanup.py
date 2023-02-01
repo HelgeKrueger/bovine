@@ -5,10 +5,8 @@ import aiohttp
 from dateutil.parser import parse
 from datetime import datetime, timedelta, timezone
 
-from bovine.clients.signed_http import signed_get, signed_post
-from bovine.activitystreams.activities import build_delete
-
-from rich import print
+from bovine_core.clients.signed_http import signed_get, signed_post
+from bovine_core.activitystreams.activities import build_delete
 
 
 account_url = "https://mymath.rocks/activitypub/munchingcow"
@@ -22,8 +20,6 @@ async def cleanup_outbox(public_key_url, private_key, outbox_url):
         response = await signed_get(session, public_key_url, private_key, outbox_url)
         data = json.loads(await response.text())
 
-        print(data)
-
         for item in data["orderedItems"]:
             if parse(item["published"]) < cut_off:
                 object_id = item["object"]["id"]
@@ -35,7 +31,7 @@ async def cleanup_outbox(public_key_url, private_key, outbox_url):
                 )
 
 
-with open(".files/cow_private.pem", "r") as f:
+with open("../../.files/cow_private.pem", "r") as f:
     private_key = f.read()
 
 asyncio.run(cleanup_outbox(public_key_url, private_key, outbox_url))

@@ -1,0 +1,22 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "actor": "https://the_domain/users/john",
+  "id": "https://the_domain/users/john#announces/8765/undo",
+  "object": {
+    "actor": "https://the_domain/users/john",
+    "cc": ["https://the_domain/users/john/followers"],
+    "id": "https://the_domain/users/john/statuses/8765/activity",
+    "object": "https://other_domain/users/alice/statuses/5432",
+    "published": "2023-01-01T23:11:56Z",
+    "to": ["https://www.w3.org/ns/activitystreams#Public"],
+    "type": "Announce"
+  },
+  "signature": {
+    "created": "2023-02-01T09:41:09Z",
+    "creator": "https://the_domain/users/john#main-key",
+    "signatureValue": "invalid==",
+    "type": "RsaSignature2017"
+  },
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "type": "Undo"
+}

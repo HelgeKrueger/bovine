@@ -1,7 +1,7 @@
 class OutboxBuilder:
     def __init__(self, url: str):
         self.url = url
-        self.items = []
+        self.items: list = []
         self.count = 0
 
     def with_items(self, items: list):

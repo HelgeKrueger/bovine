@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Set
 
 
 class NoteBuilder:
@@ -6,15 +7,15 @@ class NoteBuilder:
         self.account = account
         self.content = content
         self.url = url
-        self.to = set()
-        self.cc = set()
+        self.to: Set[str] = set()
+        self.cc: Set[str] = set()
         self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-        self.hashtags = set()
-        self.mentions = set()
-        self.conversation = None
-        self.reply_to_id = None
-        self.reply_to_atom_uri = None
-        self.source = None
+        self.hashtags: Set[str] = set()
+        self.mentions: Set[str] = set()
+        self.conversation: str | None = None
+        self.reply_to_id: str | None = None
+        self.reply_to_atom_uri: str | None = None
+        self.source: dict | None = None
 
     def as_public(self):
         self.to.add("https://www.w3.org/ns/activitystreams#Public")
@@ -60,7 +61,7 @@ class NoteBuilder:
         return self
 
     def build(self) -> dict:
-        result = {
+        result: dict = {
             "@context": "https://www.w3.org/ns/activitystreams",
             "id": self.url,
             "attributedTo": self.account,
@@ -72,18 +73,7 @@ class NoteBuilder:
             "cc": list(self.cc - self.to),
         }
 
-        if len(self.hashtags) > 0:
-            if "tag" not in result:
-                result["tag"] = []
-            result["tag"] += [{"name": tag, "type": "Hashtag"} for tag in self.hashtags]
-
-        if len(self.mentions) > 0:
-            if "tag" not in result:
-                result["tag"] = []
-            result["tag"] += [
-                {"href": mention, "name": mention, "type": "Mention"}
-                for mention in self.mentions
-            ]
+        result = self._add_tag(result)
 
         if self.reply_to_id:
             result["inReplyTo"] = self.reply_to_id
@@ -96,6 +86,17 @@ class NoteBuilder:
 
         if self.source:
             result["source"] = self.source
+
+        return result
+
+    def _add_tag(self, result):
+        tag_list = [{"name": tag, "type": "Hashtag"} for tag in self.hashtags] + [
+            {"href": mention, "name": mention, "type": "Mention"}
+            for mention in self.mentions
+        ]
+
+        if len(tag_list) > 0:
+            result["tag"] = tag_list
 
         return result
 

@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "munching-cow"
+version = "0.1.0"
+description = ""
+authors = ["Helge <helge.krueger@gmail.com>"]
+readme = "README.md"
+packages = [{include = "munching_cow"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bovine-core = {path = "../../bovine_core"}
+cowsay = "^5.0"
+markdown = "^3.4.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

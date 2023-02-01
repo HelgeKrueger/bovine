@@ -44,7 +44,7 @@ class SignatureChecker:
     def __init__(self, key_retriever):
         self.key_retriever = key_retriever
 
-    async def validate_signature(self, request, digest=None) -> str | None:
+    async def validate_signature(self, request, digest=None):
         if "signature" not in request.headers:
             logger.warning("Signature not present")
             return None

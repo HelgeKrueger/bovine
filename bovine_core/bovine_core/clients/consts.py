@@ -1,1 +1,3 @@
-BOVINE_CLIENT_NAME = "bovine-client / 0.0.2"
+import bovine_core
+
+BOVINE_CLIENT_NAME = f"bovine/{bovine_core.__version__}"

@@ -5,8 +5,8 @@ class ActorBuilder:
     def __init__(self, name: str, actor_type: str = "Person"):
         self.name = name
         self.actor_type = actor_type
-        self.account_url = None
-        self.public_key = None
+        self.account_url: str | None = None
+        self.public_key: str | None = None
         self.context_builder = build_context()
 
     def with_account_url(self, account_url: str):

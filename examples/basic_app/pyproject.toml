@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "basicapp"
+version = "0.0.1"
+description = ""
+authors = ["Helge <helge.krueger@gmail.com>"]
+readme = "../../README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bovine = {path = "../../bovine"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

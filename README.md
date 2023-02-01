@@ -38,18 +38,23 @@ Two examples are included in the `examples` folder:
 
 ### bovine
 
-Contains the server / client code to interact with ActivityPub. It uses asyncio using Quart and aiohttp. A basic server implementation using it is available at `examples/basic_app.py`. It should be noted that this example application does the absolute minimum. It only exposes what is needed to interact with activitypub. Also the user `test` is hard coded in it.
+Contains the server / client code to interact with ActivityPub. It uses asyncio using Quart and aiohttp.
+
+#### Examples
+
+A basic server implementation using it is available at `examples/basic_app/basic_app.py`. It should be noted that this example application does the absolute minimum. It only exposes what is needed to interact with activitypub. Also the user `test` is hard coded in it.
 
 You can run it with
 
 ```
-poetry run python examples/basic_app.py
+cd examples/basicapp
+poetry run python basic_app.py
 ```
 
 alternatively you can run it using hypercorn via
 
 ```
-poetry run hypercorn examples.basic_app:app
+poetry run hypercorn basic_app:app
 ```
 
 and then querying using

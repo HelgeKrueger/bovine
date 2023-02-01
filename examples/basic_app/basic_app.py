@@ -9,6 +9,7 @@ from bovine.types import LocalUser
 from bovine.utils import dump_incoming_inbox_to_stdout
 from bovine.utils.in_memory_store import InMemoryUserStore
 from bovine.utils.test import get_user_keys
+from bovine.processors.processor_list import ProcessorList
 
 
 async def return_true(*args, **kwargs):
@@ -18,16 +19,14 @@ async def return_true(*args, **kwargs):
 domain = os.environ.get("DOMAIN", "my_domain")
 
 public_key, private_key = get_user_keys()
-local_user = (
-    LocalUser(
-        "test",
-        f"https://{domain}/activitypub/test",
-        public_key,
-        private_key,
-        "Person",
-    )
-    .add_inbox_processor(accept_follow_request)
-    .add_inbox_processor(dump_incoming_inbox_to_stdout)
+local_user = LocalUser(
+    "test",
+    f"https://{domain}/activitypub/test",
+    public_key,
+    private_key,
+    "Person",
+).set_inbox_process(
+    ProcessorList().add(accept_follow_request).add(dump_incoming_inbox_to_stdout).apply
 )
 data_store = InMemoryUserStore()
 data_store.add_user(local_user)

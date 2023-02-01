@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "bovine-blog"
+version = "0.1.0"
+description = ""
+authors = ["Helge <helge.krueger@gmail.com>"]
+readme = "../README.md"
+packages = [{include = "bovine_blog"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiohttp = "^3.8.3"
+bovine = {path = "../bovine"}
+bovine-tortoise = {path = "../bovine_tortoise"}
+markdown = "^3.4.1"
+python-markdown-math = "^0.8"
+aerich = "^0.7.1"
+
+[tool.aerich]
+tortoise_orm = "bovine_blog.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+pytest-asyncio = "^0.20.3"
+flake8 = "^6.0.0"
+flake8-black = "^0.3.6"
+isort = "^5.12.0"
+black = "^23.1.0"
+
+
+[tool.pytest.ini_options]
+asyncio_mode="auto"
+log_cli= 1

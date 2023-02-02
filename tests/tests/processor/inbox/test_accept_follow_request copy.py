@@ -1,12 +1,12 @@
-from unittest.mock import patch
 import json
+from unittest.mock import patch
 
 from bovine.utils.test.in_memory_test_app import app
 from bovine_blog.processors import default_inbox_process
-from bovine_tortoise.test_database import db_url  # noqa: F401
 from bovine_tortoise.models import Follower
+from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from tests.utils import create_actor_and_local_user, build_inbox_item_from_json
+from tests.utils import build_inbox_item_from_json, create_actor_and_local_user
 
 
 @patch("bovine_core.clients.signed_http.signed_post")
@@ -17,7 +17,7 @@ async def test_mastodon_follow_request_is_accepted(
         actor, local_user = await create_actor_and_local_user()
         item = build_inbox_item_from_json("test_data/mastodon_follow_1.json")
 
-        await default_inbox_process(item, local_user)
+        await default_inbox_process(item, local_user, None)
 
         mock_signed_post.assert_awaited_once()
 

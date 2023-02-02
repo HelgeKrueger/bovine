@@ -3,7 +3,6 @@ import logging
 import traceback
 
 import aiohttp
-
 from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
 logger = logging.getLogger("nodeinfo")

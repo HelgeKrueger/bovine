@@ -3,6 +3,7 @@ import sys
 from unittest.mock import AsyncMock
 
 import aiohttp
+from bovine_core.utils.http_signature import SignatureChecker
 from quart import Quart
 
 from bovine import get_bovine_user
@@ -10,7 +11,6 @@ from bovine.clients import get_public_key
 from bovine.server import default_configuration
 from bovine.types import LocalUser
 from bovine.utils import dump_incoming_inbox_to_stdout
-from bovine_core.utils.http_signature import SignatureChecker
 from bovine.utils.in_memory_store import InMemoryUserStore
 
 from . import get_user_keys

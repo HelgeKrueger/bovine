@@ -82,9 +82,9 @@ class LocalUser:
         logging.info(f"name: {self.name}")
         logging.info(f"type: {self.actor_type}")
 
-    async def process_inbox_item(self, inbox_item: InboxItem):
+    async def process_inbox_item(self, inbox_item: InboxItem, session):
         if self.inbox_process:
-            await self.inbox_process(inbox_item, self)
+            await self.inbox_process(inbox_item, self, session)
 
     async def process_outbox_item(self, activity, session):
         if self.outbox_process:

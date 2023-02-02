@@ -1,9 +1,9 @@
 from unittest.mock import AsyncMock
 
 import pytest
+from bovine_core.utils.date import get_gmt_now
 from quart import g, request
 
-from bovine_core.utils.date import get_gmt_now
 from bovine.utils.test.in_memory_test_app import app
 
 from .rewrite_request import rewrite_activity_request

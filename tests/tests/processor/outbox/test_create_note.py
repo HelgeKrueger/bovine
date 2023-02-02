@@ -1,9 +1,9 @@
 from unittest.mock import patch
-import aiohttp
 
+import aiohttp
 from bovine_blog.processors import default_outbox_process
-from bovine_tortoise.test_database import db_url  # noqa: F401
 from bovine_tortoise.models import OutboxEntry
+from bovine_tortoise.test_database import db_url  # noqa: F401
 
 from tests.utils import create_actor_and_local_user, get_activity_from_json
 

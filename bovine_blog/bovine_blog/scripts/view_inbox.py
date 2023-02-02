@@ -1,10 +1,9 @@
 import asyncio
 from argparse import ArgumentParser
 
-from rich import print as pprint
-
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.models import Actor, InboxEntry
+from rich import print as pprint
 
 
 async def store_user(username):

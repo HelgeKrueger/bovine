@@ -7,7 +7,7 @@ readme = "../README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bovine-core = {path = "../bovine_core"}
+bovine-core = {path = "../bovine_core", develop=true}
 quart = "^0.18.3"
 quart-cors = "^0.6.0"
 

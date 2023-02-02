@@ -1,12 +1,12 @@
 import logging
 
 import werkzeug
+from bovine_core.activitystreams import build_actor, build_outbox
+from bovine_core.utils.crypto import content_digest_sha256
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
-from bovine_core.activitystreams import build_actor, build_outbox
 from bovine.types import InboxItem
-from bovine_core.utils.crypto import content_digest_sha256
 
 cors_properties = {
     "allow_origin": ["http://localhost:8000"],
@@ -67,13 +67,12 @@ async def handle_inbox(data) -> None:
         return
     local_user = await current_app.config["get_user"](account_name)
     inbox_item = InboxItem(raw_data)
-    await local_user.process_inbox_item(inbox_item)
+    await local_user.process_inbox_item(inbox_item, current_app.config["session"])
 
 
 @activitypub.get("/<account_name>/outbox")
 @route_cors(**cors_properties)
 async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-
     if not has_authorization():
         logger.warning("Invalid signature on get http request for outbox")
         return {"status": "request not signed"}, 401

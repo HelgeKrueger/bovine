@@ -4,8 +4,7 @@ from .nodeinfo import fetch_nodeinfo
 
 
 async def test_fetch_nodeinfo():
-    session = aiohttp.ClientSession()
+    async with aiohttp.ClientSession() as session:
+        result = await fetch_nodeinfo(session, "mymath.rocks")
 
-    result = await fetch_nodeinfo(session, "mymath.rocks")
-
-    assert result["software"] == {"name": "bovine", "version": "0.0.1"}
+        assert result["software"] == {"name": "bovine", "version": "0.0.1"}

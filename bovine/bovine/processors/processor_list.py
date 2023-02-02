@@ -1,9 +1,9 @@
 import logging
 import traceback
 
-logger = logging.getLogger("pro-list")
-
 from . import build_do_for_types
+
+logger = logging.getLogger("pro-list")
 
 
 class ProcessorList:

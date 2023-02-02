@@ -2,10 +2,9 @@ import json
 import logging
 
 import aiohttp
+from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
 from bovine.utils.parsers import parse_account_name
-
-from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
 
 async def lookup_account_with_webfinger(

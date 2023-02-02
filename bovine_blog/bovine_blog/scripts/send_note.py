@@ -2,12 +2,11 @@ import asyncio
 import uuid
 from argparse import ArgumentParser
 
-from rich.prompt import Prompt
-
 from bovine.activitystreams.activities import build_create
 from bovine.activitystreams.objects import build_note
 from bovine_tortoise import ManagedDataStore
 from bovine_tortoise.outbox import send_activity
+from rich.prompt import Prompt
 
 
 async def publish_message(username, message):

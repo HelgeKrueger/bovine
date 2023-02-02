@@ -1,7 +1,7 @@
+from bovine_core.activitystreams.activities import build_accept
 from quart import current_app
 
 import bovine.clients
-from bovine_core.activitystreams.activities import build_accept
 from bovine.types import InboxItem, LocalUser
 
 

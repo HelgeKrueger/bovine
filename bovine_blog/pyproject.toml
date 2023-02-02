@@ -9,8 +9,8 @@ packages = [{include = "bovine_blog"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "^3.8.3"
-bovine = {path = "../bovine"}
-bovine-tortoise = {path = "../bovine_tortoise"}
+bovine = {path = "../bovine", develop=true}
+bovine-tortoise = {path = "../bovine_tortoise", develop=true}
 markdown = "^3.4.1"
 python-markdown-math = "^0.8"
 aerich = "^0.7.1"

@@ -28,6 +28,6 @@ async def test_store_in_database(db_url):  # noqa: F811
 
     await store.add_user(local_user)
 
-    item = InboxItem({}, {})
+    item = InboxItem("{}")
 
-    await store_in_database(local_user, item)
+    await store_in_database(item, local_user, None)

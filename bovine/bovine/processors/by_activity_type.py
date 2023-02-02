@@ -38,8 +38,40 @@ activity_streams_activities = [
     "View",
 ]
 
-do_nothing_for_all_activities = {
-    activity: do_nothing for activity in activity_streams_activities
+activity_streams_objects = [
+    "Activity",
+    "Application",
+    "Article",
+    "Audio",
+    "Collection",
+    "CollectionPage",
+    "Relationship",
+    "Document",
+    "Event",
+    "Group",
+    "Image",
+    "IntransitiveActivity",
+    "Note",
+    "Object",
+    "OrderedCollection",
+    "OrderedCollectionPage",
+    "Organization",
+    "Page",
+    "Person",
+    "Place",
+    "Profile",
+    "Question",
+    "Service",
+    "Tombstone",
+    "Video",
+]
+
+activity_streams_activities_or_objects = (
+    activity_streams_activities + activity_streams_objects
+)
+
+do_nothing_for_all_activities_or_objects = {
+    activity: do_nothing for activity in activity_streams_activities_or_objects
 }
 
 

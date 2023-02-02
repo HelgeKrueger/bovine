@@ -75,10 +75,11 @@ By itself the bovine server does not do much. It mostly just writes things to st
 This provides an actual webserver on top of bovine + bovine_tortoise. It's look is still firmly basic. The HTML layouting and content presentation of the blog application can be developped independent of the rest of `bovine` by running
 
 ```
-poetry run hypercorn examples.local_test_blog:app
+cd examples/local_test_blog
+poetry run hypercorn local_test_blog:app
 ```
 
-The provided content is hard coded in `examples/local_test_blog.py`. Due to the nature of http signatures. The ids of posts correspond to the ActivityPub objects, e.g. `https://my_domain/activitypub/test/1234-5678`. The current implementation redirects requests to these urls not having the accept type matching `application/.*json` to `https://my_domain/test/1234-5678`.
+The provided content is hard coded in `examples/local_test_blog/local_test_blog.py`. Due to the nature of http signatures. The ids of posts correspond to the ActivityPub objects, e.g. `https://my_domain/activitypub/test/1234-5678`. The current implementation redirects requests to these urls not having the accept type matching `application/.*json` to `https://my_domain/test/1234-5678`.
 
 `bovine_blog/scripts` contains some scripts that were useful during testing and development. In particular
 

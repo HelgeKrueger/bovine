@@ -2,12 +2,12 @@ from datetime import datetime
 from unittest.mock import patch
 
 import aiohttp
-
 from bovine.types import LocalUser
+
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from .outbox import create_outbox_entry, send_activity, delete_outbox_entry
+from .outbox import create_outbox_entry, delete_outbox_entry, send_activity
 
 
 async def test_create_outbox_entry(db_url: str) -> None:  # noqa: F811

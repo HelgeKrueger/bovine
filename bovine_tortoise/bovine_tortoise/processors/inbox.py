@@ -2,11 +2,11 @@ import logging
 import traceback
 from datetime import datetime
 
+import bovine.clients
+from bovine.types import InboxItem, LocalUser
+from bovine_core.activitystreams.activities import build_accept
 from quart import current_app
 
-import bovine.clients
-from bovine_core.activitystreams.activities import build_accept
-from bovine.types import InboxItem, LocalUser
 from bovine_tortoise.models import Actor, Follower, Following, InboxEntry
 
 logger = logging.getLogger("tor-proc")

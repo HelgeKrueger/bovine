@@ -1,6 +1,5 @@
-from tortoise import Tortoise
-
 from bovine.types import LocalUser as LocalUserObject
+from tortoise import Tortoise
 
 from .models import Actor
 from .outbox import outbox_item_count, outbox_items

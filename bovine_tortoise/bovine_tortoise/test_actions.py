@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 import aiohttp
-
 from bovine.types import LocalUser
 from bovine.utils.test import get_user_keys
 

@@ -1,5 +1,4 @@
 import aiohttp
-
 from bovine.clients import get_public_key
 from bovine.types import LocalUser
 

@@ -7,13 +7,13 @@ from bovine.types import InboxItem, LocalUser
 from .inbox import (
     accept_follow_request,
     record_accept_follow,
-    store_in_database,
     remove_from_database,
+    store_in_database,
 )
 from .outbox import (
     create_outbox_entry,
-    send_activity_no_local_path,
     delete_outbox_entry,
+    send_activity_no_local_path,
 )
 
 logger = logging.getLogger("proc")
@@ -27,11 +27,6 @@ async def on_delete(
     logger.info(item.body)
 
 
-async def log(item: InboxItem, local_user: LocalUser):
-    logger.warning("TEST!!!!")
-    return item
-
-
 default_inbox_process = (
     ProcessorList()
     .add_for_types(
@@ -39,7 +34,7 @@ default_inbox_process = (
         Delete=dismiss_delete(on_delete),
         Follow=accept_follow_request,
         Undo=ProcessorList(on_object=True)
-        .add_for_types(Like=remove_from_database)
+        .add_for_types(Like=remove_from_database, Announce=remove_from_database)
         .apply,
     )
     .add(store_in_database)

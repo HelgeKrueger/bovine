@@ -4,9 +4,9 @@ import traceback
 from datetime import datetime
 
 import aiohttp
-
 import bovine.clients
 from bovine.types import LocalUser
+
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 
 logger = logging.getLogger("outbox-proc")
@@ -70,7 +70,6 @@ async def send_activity_no_local_path(
     local_user: LocalUser,
     session: aiohttp.ClientSession,
 ):
-
     local_path = determine_local_path_from_activity_id(activity["id"])
     return await send_activity(session, local_user, activity, local_path)
 

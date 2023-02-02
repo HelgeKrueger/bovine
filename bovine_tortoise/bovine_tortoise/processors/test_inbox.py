@@ -3,14 +3,15 @@ from unittest.mock import patch
 
 from bovine.types import InboxItem, LocalUser
 from bovine.utils.test.in_memory_test_app import app
+
 from bovine_tortoise.models import Actor, Follower, Following, InboxEntry
 from bovine_tortoise.test_database import db_url  # noqa: F401
 
 from .inbox import (
     accept_follow_request,
     record_accept_follow,
-    store_in_database,
     remove_from_database,
+    store_in_database,
 )
 
 

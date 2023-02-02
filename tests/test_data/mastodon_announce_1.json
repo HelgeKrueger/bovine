@@ -5,7 +5,7 @@
     "https://first_domain/users/first/followers"
   ],
   "id": "https://first_domain/users/first/statuses/1097854/activity",
-  "object": "https://second_domain/users/second/statuses/1097853",
+  "object": "https://second_domain/users/second/statuses/109724234853",
   "published": "2023-01-31T19:11:46Z",
   "to": ["https://www.w3.org/ns/activitystreams#Public"],
   "type": "Announce"

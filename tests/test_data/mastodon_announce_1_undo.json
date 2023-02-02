@@ -1,0 +1,25 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "actor": "https://first_domain/users/first",
+  "id": "https://first_domain/users/first/statuses/1097854/activity/undo",
+  "object": {
+    "actor": "https://first_domain/users/john",
+    "cc": [
+      "https://first_domain/users/john/followers",
+      "https://second_domain/users/second"
+    ],
+    "id": "https://first_domain/users/first/statuses/1097854/activity",
+    "object": "https://second_domain/users/second/statuses/109724234853",
+    "published": "2023-01-31T19:11:46Z",
+    "to": ["https://www.w3.org/ns/activitystreams#Public"],
+    "type": "Announce"
+  },
+  "signature": {
+    "created": "2023-02-01T09:41:09Z",
+    "creator": "https://first_domain/users/first#main-key",
+    "signatureValue": "invalid==",
+    "type": "RsaSignature2017"
+  },
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "type": "Undo"
+}

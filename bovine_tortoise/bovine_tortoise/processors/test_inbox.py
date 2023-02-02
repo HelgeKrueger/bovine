@@ -6,7 +6,12 @@ from bovine.utils.test.in_memory_test_app import app
 from bovine_tortoise.models import Actor, Follower, Following, InboxEntry
 from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from .inbox import accept_follow_request, record_accept_follow, store_in_database
+from .inbox import (
+    accept_follow_request,
+    record_accept_follow,
+    store_in_database,
+    remove_from_database,
+)
 
 
 @patch("bovine.clients.send_activitypub_request")
@@ -92,6 +97,34 @@ async def test_store_in_database_no_conversation(db_url):  # noqa: F811
 
     assert entry.content["type"] == "Follow"
     assert entry.conversation is None
+
+
+async def test_store_and_remove_from_database(db_url):  # noqa: F811
+    actor = await Actor.create(
+        account="name",
+        url="url",
+        actor_type="type",
+        private_key="private_key",
+        public_key="public_key",
+    )
+    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+
+    item = InboxItem(
+        json.dumps(
+            {"type": "Follow", "actor": "url", "object": "proto://url", "id": "my_id"}
+        ),
+    )
+
+    assert await InboxEntry.filter(actor=actor).count() == 0
+
+    result = await store_in_database(item, local_user)
+    assert await InboxEntry.filter(actor=actor).count() == 1
+
+    result = await remove_from_database(item, local_user)
+    assert await InboxEntry.filter(actor=actor).count() == 0
+
+    result = await remove_from_database(item, local_user)
+    assert await InboxEntry.filter(actor=actor).count() == 0
 
 
 async def test_accepted_follow_request(db_url) -> None:  # noqa: F811

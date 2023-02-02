@@ -251,7 +251,7 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 bovine-core = {path = "../bovine_core"}
@@ -270,7 +270,7 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 aiohttp = "^3.8.3"
@@ -289,10 +289,10 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
-bovine = {path = "../bovine"}
+bovine = {path = "../bovine", develop = true}
 tortoise-orm = "^0.19.3"
 
 [package.source]
@@ -1409,4 +1409,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c8c072d1580798f3d6ddd208a12222a608ab6b5ccd12cb862901fd267c704fa7"
+content-hash = "68c97c2063babe62112e2841cebbbcc7891d8a29eb1aa160cacb39d270aa0cf2"

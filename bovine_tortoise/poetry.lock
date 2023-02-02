@@ -251,7 +251,7 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 bovine-core = {path = "../bovine_core"}
@@ -1334,4 +1334,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "23ec6ce176357fdc400d5f3c7f677f10d6f3235412df69ba5e0133b31184fe70"
+content-hash = "758f42f3485c2516dea178c5b80942be54a01261a01fe2208756b44f06d8cbd5"

@@ -17,7 +17,7 @@ async def store_in_database(item: InboxItem, local_user: LocalUser) -> InboxItem
         actor = await Actor.get_or_none(account=local_user.name)
 
         if actor is None:
-            logging.error(f"Actor not found!!! {local_user.name}")
+            logger.error(f"Actor not found!!! {local_user.name}")
             return item
 
         obj = item.get_data().get("object", {})
@@ -26,11 +26,17 @@ async def store_in_database(item: InboxItem, local_user: LocalUser) -> InboxItem
         else:
             conversation = None
 
+        content_id = item.get_data().get("id", None)
+
+        if not content_id:
+            logger.warning("Received item without id")
+
         await InboxEntry.create(
             actor=actor,
             created=datetime.now(),
             content=item.body,
             conversation=conversation,
+            content_id=content_id,
         )
 
         return item
@@ -109,3 +115,43 @@ async def record_accept_follow(
         return item
 
     return item
+
+
+async def remove_from_database(
+    item: InboxItem, local_user: LocalUser
+) -> InboxItem | None:
+    try:
+        actor = await Actor.get_or_none(account=local_user.name)
+
+        if actor is None:
+            logger.error(f"Actor not found!!! {local_user.name}")
+            return item
+
+        if isinstance(item, dict):
+            content_id = item["id"]
+        else:
+            content_id = item.get_data().get("id", None)
+
+        if not content_id:
+            logger.error("Cannot delete item without id")
+            return item
+
+        entry = await InboxEntry.get_or_none(
+            content_id=content_id,
+        )
+
+        if not entry:
+            logger.warning("Item not found")
+            return item
+
+        await entry.delete()
+
+        logger.info(f"Deleted item with id {content_id}")
+
+        return
+    except Exception as ex:
+        logger.error(f"{str(ex)} happened when storing into database")
+        for log_line in traceback.format_exc().splitlines():
+            logger.error(log_line)
+
+        return item

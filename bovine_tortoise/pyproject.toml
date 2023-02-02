@@ -9,7 +9,7 @@ packages = [{include = "bovine_tortoise"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 tortoise-orm = "^0.19.3"
-bovine = {path = "../bovine"}
+bovine = {path = "../bovine", develop=true}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"

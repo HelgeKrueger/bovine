@@ -1,0 +1,6 @@
+{
+  "actor": "https://other_domain/users/phoenix",
+  "id": "https://other_domain/users/phoenix#likes/557",
+  "object": "https://my_domain/activitypub/helge/id567",
+  "type": "Like"
+}

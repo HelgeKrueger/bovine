@@ -12,6 +12,9 @@ import ToPost from "../components/navigation/ToPost";
 import ToSketch from "../components/navigation/ToSketch";
 import ToFetch from "../components/navigation/ToFetch";
 
+import PullToRefresh from "react-simple-pull-to-refresh";
+import { reloadTimeline } from "../utils/reloadTimeline";
+
 const Timeline = () => {
   const [entry, setEntry] = useState({});
   const [conversationId, setConversationId] = useState(null);
@@ -80,7 +83,9 @@ const Timeline = () => {
           </UnreadCountBadge>
         </IconButton>
       </Box>
-      <DisplayConversation conversation={conversation} fallback={entry} />
+      <PullToRefresh onRefresh={reloadTimeline}>
+        <DisplayConversation conversation={conversation} fallback={entry} />
+      </PullToRefresh>
     </div>
   );
 };

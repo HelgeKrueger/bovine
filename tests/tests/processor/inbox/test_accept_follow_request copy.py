@@ -2,7 +2,7 @@ from unittest.mock import patch
 import json
 
 from bovine.utils.test.in_memory_test_app import app
-from bovine_tortoise.processors import default_inbox_process
+from bovine_blog.processors import default_inbox_process
 from bovine_tortoise.test_database import db_url  # noqa: F401
 from bovine_tortoise.models import Follower
 

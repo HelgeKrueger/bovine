@@ -1,7 +1,7 @@
 from bovine import get_bovine_user
 from bovine.utils.in_memory_store import InMemoryUserStore
 from bovine_tortoise import ManagedDataStore, default_outbox
-from bovine_tortoise.processors import (
+from .processors import (
     default_inbox_process,
     default_outbox_process,
 )

@@ -6,8 +6,12 @@ const transformInboxEntry = (entry) => {
   }
   const id = data?.id;
   const conversation = data?.conversation;
-  const seen = 0;
+  let seen = 0;
   const displayed = 0;
+
+  if (data.type === "Announce") {
+    seen = 1;
+  }
 
   let updated = data?.updated;
   if (!updated) {

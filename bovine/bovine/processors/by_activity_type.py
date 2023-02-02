@@ -89,5 +89,10 @@ class ByActivityType:
             return await self.actions[item_type](item, *args)
         except Exception as ex:
             logger.error(f"Something went wrong with {ex} during procession")
+            if isinstance(item, dict):
+                logger.error(item.get)
+            else:
+                logger.error(item.get_data())
+
             for log_line in traceback.format_exc().splitlines():
                 logger.error(log_line)

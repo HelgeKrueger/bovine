@@ -13,8 +13,8 @@ from tests.utils import build_inbox_item_from_json, create_actor_and_local_user
 async def test_mastodon_like_then_undo(mock_signed_post, db_url):  # noqa F811
     async with app.app_context():
         actor, local_user = await create_actor_and_local_user()
-        like_item = build_inbox_item_from_json("test_data/mastodon_like_1.json")
-        undo_item = build_inbox_item_from_json("test_data/mastodon_like_1_undo.json")
+        like_item = build_inbox_item_from_json("data/mastodon_like_1.json")
+        undo_item = build_inbox_item_from_json("data/mastodon_like_1_undo.json")
 
         like_item_id = like_item.get_data()["id"]
 

@@ -1,0 +1,14 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "id": "https://mastodon/users/Alice#delete",
+  "type": "Delete",
+  "actor": "https://mastodon/users/Alice",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "object": "https://mastodon/users/Alice",
+  "signature": {
+    "type": "RsaSignature2017",
+    "creator": "https://mastodon/users/Alice#main-key",
+    "created": "2023-01-29T12:46:36Z",
+    "signatureValue": "unreadable=="
+  }
+}

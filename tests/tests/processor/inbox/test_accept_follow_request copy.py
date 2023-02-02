@@ -15,7 +15,7 @@ async def test_mastodon_follow_request_is_accepted(
 ):
     async with app.app_context():
         actor, local_user = await create_actor_and_local_user()
-        item = build_inbox_item_from_json("test_data/mastodon_follow_1.json")
+        item = build_inbox_item_from_json("data/mastodon_follow_1.json")
 
         await default_inbox_process(item, local_user, None)
 

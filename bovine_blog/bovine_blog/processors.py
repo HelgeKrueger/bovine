@@ -18,12 +18,9 @@ from bovine_tortoise.processors.outbox import (
 logger = logging.getLogger("proc")
 
 
-async def on_delete(
-    local_user: LocalUser,
-    item: InboxItem,
-):
+async def on_delete(local_user: LocalUser, item: InboxItem, session):
     logger.warning(f"Delete happened of {item.get_body_id()}")
-    logger.info(item.body)
+    logger.debug(item.body)
 
 
 default_inbox_process = (

@@ -13,7 +13,7 @@ async def test_buffalo_create_note(mock_signed_post, db_url):  # noqa F811
     async with aiohttp.ClientSession() as session:
         actor, local_user = await create_actor_and_local_user()
 
-        item = get_activity_from_json("test_data/buffalo_create_note_1.json")
+        item = get_activity_from_json("data/buffalo_create_note_1.json")
 
         await default_outbox_process(item, local_user, session)
 

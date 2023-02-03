@@ -2,7 +2,7 @@
   "@context": "https://www.w3.org/ns/activitystreams",
   "actor": "https://my_domain/activitypub/munchingcow",
   "cc": ["https://my_domain/activitypub/munchingcow/followers"],
-  "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac",
+  "id": "https://my_domain/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac/activity",
   "object": {
     "@context": "https://www.w3.org/ns/activitystreams",
     "attributedTo": "https://my_domain/activitypub/munchingcow",

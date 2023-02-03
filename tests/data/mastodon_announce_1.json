@@ -1,4 +1,5 @@
 {
+  "@context": "https://www.w3.org/ns/activitystreams",
   "actor": "https://first_domain/users/first",
   "cc": [
     "https://second_domain/users/second",

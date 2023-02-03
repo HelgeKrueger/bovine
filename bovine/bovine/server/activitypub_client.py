@@ -41,6 +41,9 @@ def has_authorization(local_user) -> bool:
             )
             return False
 
+        logging.info(public_key_url)
+        logging.info(used_public_key)
+
         if public_key_url != used_public_key:
             logger.warning(
                 "Request for "
@@ -113,7 +116,7 @@ async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response
 
     await local_user.process_outbox_item(activity, current_app.config["session"])
 
-    return {"status": "success"}, 200
+    return {"status": "success"}, 202
 
 
 @activitypub_client.post("/<account_name>/fetch")

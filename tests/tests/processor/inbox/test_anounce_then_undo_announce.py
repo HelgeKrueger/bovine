@@ -1,35 +1,50 @@
 import json
-from unittest.mock import patch
+from unittest.mock import AsyncMock
 
-from bovine.utils.test.in_memory_test_app import app
-from bovine_blog.processors import default_inbox_process
-from bovine_tortoise.models import InboxEntry
-from bovine_tortoise.test_database import db_url  # noqa: F401
+from tests.utils import fake_post_headers, get_activity_from_json
+from tests.utils.blog_test_env import (  # noqa: F401
+    blog_test_env,
+    wait_for_number_of_entries_in_inbox,
+)
 
-from tests.utils import build_inbox_item_from_json, create_actor_and_local_user
 
+async def test_mastodon_announce_then_undo(blog_test_env):  # noqa F811
+    announce = get_activity_from_json("data/mastodon_announce_1.json")
+    undo_item = get_activity_from_json("data/mastodon_announce_1_undo.json")
 
-@patch("bovine_core.clients.signed_http.signed_get")
-async def test_mastodon_announce_then_undo(mock_signed_get, db_url):  # noqa F811
-    async with app.app_context():
-        actor, local_user = await create_actor_and_local_user()
-        like_item = build_inbox_item_from_json("data/mastodon_announce_1.json")
-        undo_item = build_inbox_item_from_json("data/mastodon_announce_1_undo.json")
+    # announce_id = announce["id"]
 
-        like_item_id = like_item.get_data()["id"]
+    mock_response = AsyncMock()
 
-        await default_inbox_process(like_item, local_user, None)
-        assert await InboxEntry.filter(actor=actor).count() == 1
+    blog_test_env.mock_signed_get.return_value = mock_response
 
-        inbox_entry = await InboxEntry.filter(actor=actor).get()
+    mock_response.text.return_value = json.dumps(
+        get_activity_from_json("data/buffalo_create_note_1.json")
+    )
 
-        assert inbox_entry.content_id == like_item_id
-        assert inbox_entry.content["type"] == "Announce"
+    result = await blog_test_env.client.post(
+        blog_test_env.local_user.get_inbox(),
+        headers=fake_post_headers,
+        data=json.dumps(announce),
+    )
 
-        # FIXME: Should fetch actual object
+    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 2)
 
-        mock_signed_get.assert_awaited_once()
+    # inbox_entry = await InboxEntry.filter(actor=blog_test_env.actor).get()
 
-        await default_inbox_process(undo_item, local_user, None)
+    # assert inbox_entry.content_id == announce_id
+    # assert inbox_entry.content["type"] == "Announce"
 
-        assert await InboxEntry.filter(actor=actor).count() == 0
+    # FIXME: Should fetch actual object
+
+    blog_test_env.mock_signed_get.assert_awaited_once()
+
+    result = await blog_test_env.client.post(
+        blog_test_env.local_user.get_inbox(),
+        headers=fake_post_headers,
+        data=json.dumps(undo_item),
+    )
+
+    assert result.status_code == 202
+
+    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)

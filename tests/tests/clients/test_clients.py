@@ -1,11 +1,8 @@
 import aiohttp
-
-# import pytest
 from bovine import get_bovine_user
 from bovine.clients import get_inbox, get_public_key
 
 
-# @pytest.mark.skip
 async def test_get_public_key():
     bovine_user = get_bovine_user("test_domain")
     async with aiohttp.ClientSession() as session:
@@ -17,7 +14,6 @@ async def test_get_public_key():
     assert key.endswith("\n-----END PUBLIC KEY-----\n")
 
 
-# @pytest.mark.skip
 async def test_get_inbox():
     bovine_user = get_bovine_user("test_domain")
     async with aiohttp.ClientSession() as session:

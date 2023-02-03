@@ -52,6 +52,7 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 @activitypub.post("/<account_name>/inbox")
 @route_cors(**cors_properties)
 async def inbox(account_name: str) -> tuple[dict, int]:
+    logger.debug("RECEIVED POST")
     current_app.add_background_task(handle_inbox, (account_name, request))
 
     return {"status": "processing"}, 202

@@ -41,4 +41,8 @@ class ProcessorList:
             logger.error(">>>>> SOMETHING WENT WRONG IN PROCESSING <<<<<<")
             logger.error(ex)
             traceback.print_exception(type(ex), ex, ex.__traceback__)
-            item.dump()
+
+            if isinstance(item, dict):
+                logger.info(item)
+            else:
+                item.dump()

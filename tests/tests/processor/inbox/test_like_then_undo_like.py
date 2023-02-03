@@ -1,30 +1,38 @@
 import json
-from unittest.mock import patch
 
-from bovine.utils.test.in_memory_test_app import app
-from bovine_blog.processors import default_inbox_process
 from bovine_tortoise.models import InboxEntry
-from bovine_tortoise.test_database import db_url  # noqa: F401
 
-from tests.utils import build_inbox_item_from_json, create_actor_and_local_user
+from tests.utils import fake_post_headers, get_activity_from_json
+from tests.utils.blog_test_env import (  # noqa F401
+    blog_test_env,
+    wait_for_number_of_entries_in_inbox,
+)
 
 
-@patch("bovine_core.clients.signed_http.signed_post")
-async def test_mastodon_like_then_undo(mock_signed_post, db_url):  # noqa F811
-    async with app.app_context():
-        actor, local_user = await create_actor_and_local_user()
-        like_item = build_inbox_item_from_json("data/mastodon_like_1.json")
-        undo_item = build_inbox_item_from_json("data/mastodon_like_1_undo.json")
+async def test_mastodon_like_then_undo(blog_test_env):  # noqa F811
+    like_item = get_activity_from_json("data/mastodon_like_1.json")
+    undo_item = get_activity_from_json("data/mastodon_like_1_undo.json")
 
-        like_item_id = like_item.get_data()["id"]
+    like_item_id = like_item["id"]
 
-        await default_inbox_process(like_item, local_user, None)
-        assert await InboxEntry.filter(actor=actor).count() == 1
+    result = await blog_test_env.client.post(
+        blog_test_env.local_user.get_inbox(),
+        headers=fake_post_headers,
+        data=json.dumps(like_item),
+    )
+    assert result.status_code == 202
+    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)
 
-        inbox_entry = await InboxEntry.filter(actor=actor).get()
+    inbox_entry = await InboxEntry.filter(actor=blog_test_env.actor).get()
 
-        assert inbox_entry.content_id == like_item_id
+    assert inbox_entry.content_id == like_item_id
 
-        await default_inbox_process(undo_item, local_user, None)
+    result = await blog_test_env.client.post(
+        blog_test_env.local_user.get_inbox(),
+        headers=fake_post_headers,
+        data=json.dumps(undo_item),
+    )
 
-        assert await InboxEntry.filter(actor=actor).count() == 0
+    assert result.status_code == 202
+
+    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 0)

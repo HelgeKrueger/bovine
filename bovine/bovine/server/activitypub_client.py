@@ -138,6 +138,6 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
     inbox_item = InboxItem(await response.text())
 
-    await local_user.process_inbox_item(inbox_item)
+    await local_user.process_inbox_item(inbox_item, current_app.config["session"])
 
     return {"status": "success"}, 200

@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 import pytest
 from tortoise import Tortoise
@@ -18,3 +19,8 @@ async def db_url() -> str:
     await Tortoise.close_connections()
 
     os.unlink(db_file)
+
+
+def determine_local_path_from_activity_id(activity_id):
+    local_path = urlparse(activity_id).path
+    return local_path

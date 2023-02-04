@@ -99,8 +99,8 @@ class LocalUser:
 
         return 0
 
-    async def outbox_items(self, start=0, limit=10):
+    async def outbox_items(self, **kwargs):
         if self.outbox_items_coroutine:
-            return await self.outbox_items_coroutine(self, start, limit)
+            return await self.outbox_items_coroutine(self, **kwargs)
 
-        return []
+        return {"items": []}

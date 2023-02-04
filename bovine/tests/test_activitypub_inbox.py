@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+
 from bovine.utils.test.in_memory_test_app import app
 
 

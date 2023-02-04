@@ -10,7 +10,7 @@ poetry run flake8 .
 
 cd ../bovine
 poetry run pytest
-poetry run isort .
+# poetry run isort .
 poetry run black .
 poetry run flake8 .
 

@@ -1,13 +1,13 @@
-import pytest
 from bovine.utils.test import remove_domain_from_url
-from bovine.utils.test.in_memory_test_app import app
+from bovine.utils.test.in_memory_test_app import (  # noqa F401
+    test_client_with_authorization,
+)
 
 
-@pytest.mark.asyncio
-async def test_get_user() -> None:
-    client = app.test_client()
-
-    response = await client.get("/.well-known/webfinger?resource=acct:user")
+async def test_get_user(test_client_with_authorization) -> None:  # noqa F811
+    response = await test_client_with_authorization.get(
+        "/.well-known/webfinger?resource=acct:user"
+    )
 
     assert response.status_code == 200
 
@@ -28,7 +28,7 @@ async def test_get_user() -> None:
 
     self_url = self_element["href"]
 
-    response = await client.get(
+    response = await test_client_with_authorization.get(
         remove_domain_from_url(self_url),
         headers={"Accept": "application/activity+json"},
     )

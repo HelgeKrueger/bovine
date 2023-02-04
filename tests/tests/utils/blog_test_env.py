@@ -40,11 +40,7 @@ class BlogTestEnv:
         return result
 
     async def get_from_inbox(self):
-        result_get = await self.client.get(
-            self.local_user.get_inbox(),
-            headers=fake_get_headers,
-        )
-        return result_get
+        return await self.get(self.local_user.get_inbox())
 
     async def send_to_outbox(self, activity):
         result = await self.client.post(
@@ -54,12 +50,15 @@ class BlogTestEnv:
         )
         return result
 
-    async def get_from_outbox(self):
+    async def get(self, url):
         result_get = await self.client.get(
-            self.local_user.get_outbox(),
+            url,
             headers=fake_get_headers,
         )
         return result_get
+
+    async def get_from_outbox(self):
+        return await self.get(self.local_user.get_outbox())
 
 
 @pytest.fixture

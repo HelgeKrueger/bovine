@@ -40,7 +40,7 @@ async def test_create_outbox_entry(db_url: str) -> None:  # noqa: F811
     element = await outbox_elements.get()
 
     assert element.content == activity_to_send
-    assert element.local_path == "name/uuid"
+    assert element.local_path == "/something/name/uuid"
 
 
 async def test_delete_outbox_entry(db_url: str) -> None:  # noqa: F811
@@ -64,7 +64,7 @@ async def test_delete_outbox_entry(db_url: str) -> None:  # noqa: F811
         actor=actor,
         created=datetime.now(),
         content=activity_to_delete,
-        local_path="name/uuid",
+        local_path="/something/name/uuid/activity",
     )
 
     local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")

@@ -8,16 +8,9 @@ import bovine.clients
 from bovine.types import LocalUser
 
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
+from bovine_tortoise.utils import determine_local_path_from_activity_id
 
 logger = logging.getLogger("outbox-proc")
-
-
-# FIXME this is horrible
-def determine_local_path_from_activity_id(activity_id):
-    local_path = activity_id
-    local_path = local_path.removesuffix("/activity")
-    local_path = "/".join(local_path.split("/")[-2:])
-    return local_path
 
 
 async def create_outbox_entry(
@@ -55,6 +48,11 @@ async def delete_outbox_entry(
         return
 
     entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
+
+    if entry is None:
+        entry = await OutboxEntry.get_or_none(
+            actor=actor, local_path=local_path + "/activity"
+        )
 
     if entry is None:
         logger.warning("Failed to find outbox entry")

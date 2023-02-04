@@ -1,7 +1,12 @@
 import logging
+from urllib.parse import urlencode
 
 import werkzeug
-from bovine_core.activitystreams import build_actor, build_outbox
+from bovine_core.activitystreams import (
+    build_actor,
+    build_ordered_collection,
+    build_ordered_collection_page,
+)
 from bovine_core.utils.crypto import content_digest_sha256
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
@@ -22,6 +27,9 @@ logger = logging.getLogger("activitypub")
 def has_authorization() -> bool:
     authorized_user = g.get("authorized_user")
     used_public_key = g.get("signature_result")
+
+    logger.warning(authorized_user)
+    logger.warning(used_public_key)
 
     return authorized_user or used_public_key
 
@@ -78,11 +86,48 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         logger.warning("Invalid signature on get http request for outbox")
         return {"status": "request not signed"}, 401
 
-    domain = current_app.config["DOMAIN"]
-    outbox_url = f"https://{domain}/activitypub/{account_name}/outbox"
     local_user = await current_app.config["get_user"](account_name)
 
-    count = await local_user.outbox_item_count()
-    items = await local_user.outbox_items()
+    if any(
+        request.args.get(name) is not None
+        for name in ["first", "last", "min_id", "max_id"]
+    ):
+        return await ordered_collection_page(
+            local_user,
+            **{
+                name: request.args.get(name)
+                for name in ["first", "last", "min_id", "max_id"]
+                if request.args.get(name) is not None
+            },
+        )
 
-    return build_outbox(outbox_url).with_count(count).with_items(items).build()
+    count = await local_user.outbox_item_count()
+
+    builder = build_ordered_collection(local_user.get_outbox()).with_count(count)
+
+    if count < 10:
+        data = await local_user.outbox_items()
+        builder = builder.with_items(data["items"])
+    else:
+        builder = builder.with_first_and_last(
+            local_user.get_outbox() + "?first=1", local_user.get_outbox() + "?last=1"
+        )
+
+    return builder.build()
+
+
+async def ordered_collection_page(local_user, **kwargs):
+    url = local_user.get_outbox()
+    builder = build_ordered_collection_page(url + "?" + urlencode(kwargs), url)
+
+    data = await local_user.outbox_items(**kwargs)
+
+    if "prev" in data:
+        builder = builder.with_prev(f"{url}?{data['prev']}")
+
+    if "next" in data:
+        builder = builder.with_next(f"{url}?{data['next']}")
+
+    builder = builder.with_items(data["items"])
+
+    return builder.build()

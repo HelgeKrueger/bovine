@@ -3,6 +3,7 @@ import sys
 from unittest.mock import AsyncMock
 
 import aiohttp
+import pytest
 from bovine_core.utils.http_signature import SignatureChecker
 from quart import Quart
 
@@ -50,3 +51,35 @@ app.config.update(
     }
 )
 app.register_blueprint(default_configuration)
+
+
+@pytest.fixture
+def test_client_with_authorization():
+    app.config["validate_signature"] = AsyncMock()
+    app.config["validate_signature"].return_value = "public_key"
+
+    client = app.test_client()
+
+    return client
+
+
+@pytest.fixture
+def test_client_with_bearer_authorization():
+    app.config["account_name_or_none_for_token"] = AsyncMock()
+    app.config["account_name_or_none_for_token"].return_value = "user"
+    app.config["validate_signature"] = AsyncMock()
+    app.config["validate_signature"].return_value = None
+
+    client = app.test_client()
+
+    return client
+
+
+@pytest.fixture
+def test_client_without_authorization():
+    app.config["validate_signature"] = AsyncMock()
+    app.config["validate_signature"].return_value = "public_key"
+
+    client = app.test_client()
+
+    return client

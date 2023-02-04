@@ -1,12 +1,15 @@
 import json
-from unittest.mock import AsyncMock
 
-from bovine.utils.test.in_memory_test_app import app
+from bovine.utils.test.in_memory_test_app import (  # noqa F401
+    test_client_with_bearer_authorization,
+    test_client_without_authorization,
+)
 
 
-async def test_activitypub_post_to_outbox() -> None:
-    client = app.test_client()
-    response = await client.post(
+async def test_activitypub_post_to_outbox(
+    test_client_without_authorization,  # noqa F811
+) -> None:
+    response = await test_client_without_authorization.post(
         "/activitypub/user/outbox",
         data=json.dumps({"test": "xxx"}),
         headers={"Accept": "application/activity+json"},
@@ -18,12 +21,10 @@ async def test_activitypub_post_to_outbox() -> None:
     assert data == {"status": "access denied"}
 
 
-async def test_activitypub_post_with_token() -> None:
-    app.config["account_name_or_none_for_token"] = AsyncMock()
-    app.config["account_name_or_none_for_token"].return_value = "user"
-
-    client = app.test_client()
-    response = await client.post(
+async def test_activitypub_post_with_token(
+    test_client_with_bearer_authorization,  # noqa F811
+) -> None:
+    response = await test_client_with_bearer_authorization.post(
         "/activitypub/user/outbox",
         data=json.dumps({"test": "xxx"}),
         headers={

@@ -26,7 +26,10 @@ class InboxItem:
         logging.info("---AUTHORIZATION----")
         logging.info(json.dumps(self.authorization))
         logging.info("---BODY----")
-        logging.info(self.body.decode("utf-8"))
+        if isinstance(self.body, str):
+            logging.info(self.body)
+        else:
+            logging.info(self.body.decode("utf-8"))
 
 
 class LocalUser:

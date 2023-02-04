@@ -5,7 +5,6 @@ from bovine_core.activitystreams.activities import build_create
 from bovine_core.activitystreams.objects import build_note
 from bovine_tortoise.models import Follower
 
-from tests.utils import fake_get_headers, fake_post_headers
 from tests.utils.blog_test_env import blog_test_env  # noqa: F401
 
 
@@ -26,18 +25,11 @@ async def test_create_note_is_send_to_user(blog_test_env):  # noqa F811
 
     create = build_create(note).build()
 
-    result = await blog_test_env.client.post(
-        blog_test_env.local_user.get_outbox(),
-        headers=fake_post_headers,
-        data=json.dumps(create),
-    )
+    result = await blog_test_env.send_to_outbox(create)
 
     assert result.status_code == 202
 
-    result = await blog_test_env.client.get(
-        blog_test_env.local_user.get_outbox(),
-        headers=fake_get_headers,
-    )
+    result = await blog_test_env.get_from_outbox()
 
     assert result.status_code == 200
 

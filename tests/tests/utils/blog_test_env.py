@@ -1,5 +1,6 @@
 import asyncio
 import os
+import json
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -8,7 +9,7 @@ from bovine_tortoise import init
 from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
 
-from . import create_actor_and_local_user
+from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
 
 
 class BlogTestEnv:
@@ -29,6 +30,36 @@ class BlogTestEnv:
         self.actor = actor
         self.local_user = local_user
         return self
+
+    async def send_to_inbox(self, activity):
+        result = await self.client.post(
+            self.local_user.get_inbox(),
+            headers=fake_post_headers,
+            data=json.dumps(activity),
+        )
+        return result
+
+    async def get_from_inbox(self):
+        result_get = await self.client.get(
+            self.local_user.get_inbox(),
+            headers=fake_get_headers,
+        )
+        return result_get
+
+    async def send_to_outbox(self, activity):
+        result = await self.client.post(
+            self.local_user.get_outbox(),
+            headers=fake_post_headers,
+            data=json.dumps(activity),
+        )
+        return result
+
+    async def get_from_outbox(self):
+        result_get = await self.client.get(
+            self.local_user.get_outbox(),
+            headers=fake_get_headers,
+        )
+        return result_get
 
 
 @pytest.fixture

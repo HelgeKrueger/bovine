@@ -1,0 +1,58 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    {
+      "atomUri": "ostatus:atomUri",
+      "conversation": "ostatus:conversation",
+      "inReplyToAtomUri": "ostatus:inReplyToAtomUri",
+      "ostatus": "http://ostatus.org#",
+      "sensitive": "as:sensitive",
+      "toot": "http://joinmastodon.org/ns#",
+      "votersCount": "toot:votersCount"
+    }
+  ],
+  "actor": "https://mastodon/users/john",
+  "cc": ["https://mastodon/users/john/followers"],
+  "id": "https://mastodon/users/john/statuses/9876#updates/1675500855",
+  "object": {
+    "atomUri": "https://mastodon/users/john/statuses/9876",
+    "attachment": [],
+    "attributedTo": "https://mastodon/users/john",
+    "cc": ["https://mastodon/users/john/followers"],
+    "content": "<p>Creating Test Data!!! :)</p><p>By updating it 🆕</p>",
+    "contentMap": {
+      "en": "<p>Creating Test Data!!! :)</p><p>By updating it 🆕</p>"
+    },
+    "conversation": "tag:mas.to,2023-02-04:objectId=8765:objectType=Conversation",
+    "id": "https://mastodon/users/john/statuses/9876",
+    "inReplyTo": null,
+    "inReplyToAtomUri": null,
+    "published": "2023-02-04T08:52:55Z",
+    "replies": {
+      "first": {
+        "items": [],
+        "next": "https://mastodon/users/john/statuses/9876/replies?only_other_accounts=true&page=true",
+        "partOf": "https://mastodon/users/john/statuses/9876/replies",
+        "type": "CollectionPage"
+      },
+      "id": "https://mastodon/users/john/statuses/9876/replies",
+      "type": "Collection"
+    },
+    "sensitive": false,
+    "summary": null,
+    "tag": [],
+    "to": ["https://www.w3.org/ns/activitystreams#Public"],
+    "type": "Note",
+    "updated": "2023-02-04T08:54:15Z",
+    "url": "https://mastodon/@john/9876"
+  },
+  "published": "2023-02-04T08:54:15Z",
+  "signature": {
+    "created": "2023-02-04T08:54:15Z",
+    "creator": "https://mastodon/users/john#main-key",
+    "signatureValue": "boob==",
+    "type": "RsaSignature2017"
+  },
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "type": "Update"
+}

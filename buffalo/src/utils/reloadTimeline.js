@@ -27,7 +27,15 @@ const reloadTimeline = async () => {
     },
   })
     .then((x) => x.json())
-    .then((x) => addActivity(x));
+    .then((x) => addActivity(x))
+    .then(async () => {
+      let threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      await db.activity
+        .where("updated")
+        .below(threeDaysAgo.toISOString())
+        .delete();
+    });
 };
 
 export { reloadTimeline };

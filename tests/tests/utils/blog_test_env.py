@@ -58,7 +58,9 @@ async def blog_test_env() -> str:
 
 
 async def wait_for_number_of_entries_in_inbox(actor, entry_number):
-    while await InboxEntry.filter(actor=actor).count() != entry_number:
+    for _ in range(100):
+        if await InboxEntry.filter(actor=actor).count() == entry_number:
+            break
         await asyncio.sleep(0.01)
 
     assert await InboxEntry.filter(actor=actor).count() == entry_number

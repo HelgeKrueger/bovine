@@ -8,3 +8,4 @@ debug.log
 .coverage
 *.pem
 resisa.toml
+.ipynb_checkpoints

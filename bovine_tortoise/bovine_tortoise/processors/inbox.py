@@ -55,7 +55,7 @@ async def remove_from_database(
 
         if actor is None:
             logger.error(f"Actor not found!!! {local_user.name}")
-            return item
+            return
 
         if isinstance(item, dict):
             content_id = item["id"]
@@ -64,7 +64,7 @@ async def remove_from_database(
 
         if not content_id:
             logger.error("Cannot delete item without id")
-            return item
+            return
 
         entry = await InboxEntry.get_or_none(
             content_id=content_id,
@@ -72,7 +72,7 @@ async def remove_from_database(
 
         if not entry:
             logger.warning("Item not found")
-            return item
+            return
 
         await entry.delete()
 
@@ -84,4 +84,4 @@ async def remove_from_database(
         for log_line in traceback.format_exc().splitlines():
             logger.error(log_line)
 
-        return item
+        return

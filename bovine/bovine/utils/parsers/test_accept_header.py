@@ -9,7 +9,8 @@ from .accept_header import is_activity_request
         'application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
         "application/activity+json",
         "application/activity+json, application/ld+json",
-        'application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"',
+        "application/activity+json, application/ld+json;"
+        + 'profile="https://www.w3.org/ns/activitystreams"',
     ],
 )
 def test_is_activity_request(header):

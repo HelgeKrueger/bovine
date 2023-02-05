@@ -6,7 +6,7 @@ from .crypto import sign_message, verify_signature
 from .date import check_max_offset_now, parse_gmt
 from .signature_parser import parse_signature_header
 
-logger = logging.getLogger("http-sig")
+logger = logging.getLogger(__name__)
 
 
 class HttpSignature:

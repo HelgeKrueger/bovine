@@ -5,11 +5,10 @@ description = "A RSS to ActivityPub bridge"
 authors = ["Helge <helge.krueger@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "cow_resisa"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-bovine_core = {path = "../../bovine_core"}
+bovine_core = {path = "../../bovine_core", develop=true}
 feedparser = "^6.0.10"
 tomli = "^2.0.1"
 

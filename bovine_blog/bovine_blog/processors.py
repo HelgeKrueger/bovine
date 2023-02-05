@@ -3,7 +3,7 @@ import logging
 from bovine.processors.dismiss_delete import dismiss_delete
 from bovine.processors.fetch_object_and_process import fetch_object_and_process
 from bovine.processors.processor_list import ProcessorList
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 from bovine_tortoise.processors.inbox import remove_from_database, store_in_database
 from bovine_tortoise.processors.inbox_follow import (
     accept_follow_request,
@@ -18,7 +18,7 @@ from bovine_tortoise.processors.outbox import (
 logger = logging.getLogger("proc")
 
 
-async def on_delete(local_user: LocalUser, item: InboxItem, session):
+async def on_delete(local_user: LocalActor, item: ProcessingItem, session):
     logger.warning(f"Delete happened of {item.get_body_id()}")
     logger.debug(item.body)
 

@@ -1,26 +1,26 @@
 import logging
 
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 
 from bovine_tortoise.models import Actor
 
-logger = logging.getLogger("outbox")
+logger = logging.getLogger(__name__)
 
 
 class CountAndItems:
     def __init__(self, obj):
         self.obj = obj
 
-    async def item_count(self, local_user: LocalUser) -> int:
-        actor = await Actor.get_or_none(account=local_user.name)
+    async def item_count(self, local_actor: LocalActor) -> int:
+        actor = await Actor.get_or_none(account=local_actor.name)
         if actor is None:
             logger.error("Failed to fetch actor")
             return 0
 
         return await self.obj.filter(actor=actor).count()
 
-    async def items(self, local_user: LocalUser, **kwargs) -> dict | None:
-        actor = await Actor.get_or_none(account=local_user.name)
+    async def items(self, local_actor: LocalActor, **kwargs) -> dict | None:
+        actor = await Actor.get_or_none(account=local_actor.name)
         if actor is None:
             logger.error("Failed to fetch actor")
             return None

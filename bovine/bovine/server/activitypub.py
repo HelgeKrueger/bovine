@@ -8,7 +8,7 @@ from bovine_core.utils.crypto import content_digest_sha256
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
-from bovine.types import InboxItem
+from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
 
 cors_properties = {
@@ -72,9 +72,9 @@ async def handle_inbox(data) -> None:
     if not await current_app.config["validate_signature"](request, digest=digest):
         logger.warning("Incorrect http signature on post")
         return
-    local_user = await current_app.config["get_user"](account_name)
-    inbox_item = InboxItem(raw_data)
-    await local_user.process_inbox_item(inbox_item, current_app.config["session"])
+    local_actor = await current_app.config["get_user"](account_name)
+    inbox_item = ProcessingItem(raw_data)
+    await local_actor.process_inbox_item(inbox_item, current_app.config["session"])
 
 
 @activitypub.get("/<account_name>/outbox")
@@ -84,12 +84,12 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         logger.warning("Invalid signature on get http request for outbox")
         return {"status": "request not signed"}, 401
 
-    local_user = await current_app.config["get_user"](account_name)
+    local_actor = await current_app.config["get_user"](account_name)
 
     return await ordered_collection_responder(
-        local_user.get_outbox(),
-        local_user.outbox_item_count,
-        local_user.outbox_items,
+        local_actor.get_outbox(),
+        local_actor.item_count_for("outbox"),
+        local_actor.items_for("outbox"),
         **{
             name: request.args.get(name)
             for name in ["first", "last", "min_id", "max_id"]

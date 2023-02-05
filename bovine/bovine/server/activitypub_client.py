@@ -6,7 +6,8 @@ from bovine_core.clients.signed_http import signed_get
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
-from bovine.types import InboxItem
+from bovine.types import ProcessingItem
+from bovine.utils.server import ordered_collection_responder
 
 from .activitypub import cors_properties
 
@@ -74,20 +75,21 @@ def has_authorization(local_user) -> bool:
 @activitypub_client.get("/<account_name>/inbox")
 @route_cors(**cors_properties)
 async def inbox_get(account_name: str):
-    local_user = await current_app.config["get_user"](account_name)
+    local_actor = await current_app.config["get_user"](account_name)
 
-    if not has_authorization(local_user):
+    if not has_authorization(local_actor):
         return {"status": "access denied"}, 401
 
-    logger.info("Fetching inbox with GET")
-    minimal_id = int(request.args.get("min_id", 0))
-
-    result = await current_app.config["inbox_getter"](account_name, minimal_id)
-
-    if result is None:
-        result = {}
-
-    return result, 200
+    return await ordered_collection_responder(
+        local_actor.get_inbox(),
+        local_actor.item_count_for("inbox"),
+        local_actor.items_for("inbox"),
+        **{
+            name: request.args.get(name)
+            for name in ["first", "last", "min_id", "max_id"]
+            if request.args.get(name) is not None
+        },
+    )
 
 
 @activitypub_client.post("/<account_name>/outbox")
@@ -139,7 +141,7 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         data["url"],
     )
 
-    inbox_item = InboxItem(await response.text())
+    inbox_item = ProcessingItem(await response.text())
 
     await local_user.process_inbox_item(inbox_item, current_app.config["session"])
 

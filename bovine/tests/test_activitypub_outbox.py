@@ -1,3 +1,7 @@
+from unittest.mock import AsyncMock, MagicMock
+
+from bovine.types.base_count_and_items import BaseCountAndItems
+
 from bovine.utils.test.in_memory_test_app import (  # noqa F401
     data_store,
     test_client_with_authorization,
@@ -7,13 +11,13 @@ from bovine.utils.test.in_memory_test_app import (  # noqa F401
 async def test_activitypub_outbox_with_configured_coroutines(
     test_client_with_authorization,  # noqa F811
 ) -> None:
-    async def item_count(local_user):
-        return 1
+    count_and_items = MagicMock(BaseCountAndItems)
+    count_and_items.item_count = AsyncMock()
+    count_and_items.item_count.return_value = 1
+    count_and_items.items = AsyncMock()
+    count_and_items.items.return_value = {"items": [{"a": "b"}]}
 
-    async def items(local_user, **kwargs):
-        return {"items": [{"a": "b"}]}
-
-    data_store.users["user"].set_outbox(item_count, items)
+    data_store.users["user"].set_stream("outbox", count_and_items)
 
     response = await test_client_with_authorization.get(
         "/activitypub/user/outbox",
@@ -32,13 +36,13 @@ async def test_activitypub_outbox_with_configured_coroutines(
 async def test_activitypub_outbox_with_many_items(
     test_client_with_authorization,  # noqa F811
 ) -> None:
-    async def item_count(local_user):
-        return 100
+    count_and_items = MagicMock(BaseCountAndItems)
+    count_and_items.item_count = AsyncMock()
+    count_and_items.item_count.return_value = 100
+    count_and_items.items = AsyncMock()
+    count_and_items.items.return_value = {"items": [{"a": "b"}]}
 
-    async def items(local_user, *args, **kwargs):
-        return {"args": args, "kwargs": kwargs, "items": ["a"]}
-
-    data_store.users["user"].set_outbox(item_count, items)
+    data_store.users["user"].set_stream("outbox", count_and_items)
 
     response = await test_client_with_authorization.get(
         "/activitypub/user/outbox",

@@ -22,7 +22,7 @@ const TimelineEntry = ({ entry, seen }) => {
   if (entry?.type === "Create" && entry?.object?.type === "Note") {
     return <CreateNote note={entry?.object} source={entry} seen={seen} />;
   }
-  if (entry?.type === "Note") {
+  if (["Note", "Article", "Question"].indexOf(entry?.type) > -1) {
     return <CreateNote note={entry} source={entry} seen={seen} />;
   }
 

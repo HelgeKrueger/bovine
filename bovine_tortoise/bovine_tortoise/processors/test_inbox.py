@@ -1,6 +1,6 @@
 import json
 
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 
 from bovine_tortoise.models import Actor, InboxEntry
 from bovine_tortoise.utils.test import db_url  # noqa: F401
@@ -16,9 +16,9 @@ async def test_store_in_database(db_url):  # noqa: F811
         private_key="private_key",
         public_key="public_key",
     )
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
-    item = InboxItem(
+    item = ProcessingItem(
         json.dumps(
             {
                 "type": "Create",
@@ -46,9 +46,9 @@ async def test_store_in_database_no_conversation(db_url):  # noqa: F811
         private_key="private_key",
         public_key="public_key",
     )
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
-    item = InboxItem(
+    item = ProcessingItem(
         json.dumps({"type": "Follow", "actor": "url", "object": "proto://url"}),
     )
 
@@ -70,9 +70,9 @@ async def test_store_and_remove_from_database(db_url):  # noqa: F811
         private_key="private_key",
         public_key="public_key",
     )
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
-    item = InboxItem(
+    item = ProcessingItem(
         json.dumps(
             {"type": "Follow", "actor": "url", "object": "proto://url", "id": "my_id"}
         ),

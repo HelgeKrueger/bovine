@@ -72,7 +72,6 @@ class SignatureChecker:
 
             http_date = parse_gmt(request.headers["date"])
             if not check_max_offset_now(http_date):
-                print("DATAE")
                 logger.warning(
                     f"Encountered invalid http date {request.headers['date']}"
                 )
@@ -97,6 +96,7 @@ class SignatureChecker:
                 return parsed_signature.key_id
         except Exception as e:
             logger.error(str(e))
+            logger.error(request.headers)
             for log_line in traceback.format_exc().splitlines():
                 logger.error(log_line)
             return None

@@ -1,41 +1,46 @@
 import { db } from "../database";
-import transformInboxEntry from "./transformInboxEntry";
+import { transformActivity } from "./transformInboxEntry";
 
 import config from "../config";
-async function addActivity(timeline) {
-  try {
-    await db.activity.bulkAdd(timeline.map(transformInboxEntry));
-  } catch (error) {
-    // console.error(error);
-  }
-}
 
-const reloadTimeline = async () => {
-  const minArrayList = await db.activity
-    .orderBy("remoteId")
-    .reverse()
-    .limit(1)
-    .toArray();
-  let min_id = 0;
-  if (minArrayList.length > 0) {
-    min_id = minArrayList[0].remoteId;
-  }
-  fetch(`${config.inbox}?min_id=${min_id}`, {
+const fetchFromResult = async (url) => {
+  fetch(url, {
     headers: {
       Authorization: `Bearer ${config.accessToken}`,
       Accept: "application/activity+json",
     },
   })
     .then((x) => x.json())
-    .then((x) => addActivity(x))
-    .then(async () => {
-      let threeDaysAgo = new Date();
-      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      await db.activity
-        .where("updated")
-        .below(threeDaysAgo.toISOString())
-        .delete();
+    .then(async (result) => {
+      if (result?.next && result?.orderedItems?.length > 0) {
+        try {
+          await db.activity.bulkAdd(result.orderedItems.map(transformActivity));
+          await fetchFromResult(result.next);
+        } catch (error) {
+          return false;
+        }
+      }
     });
+};
+
+const updateFrom = async (url) => {
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${config.accessToken}`,
+      Accept: "application/activity+json",
+    },
+  })
+    .then((x) => x.json())
+    .then(async (result) => {
+      if (result.first) {
+        await fetchFromResult(result.first);
+      }
+    });
+};
+
+const reloadTimeline = async () => {
+  await updateFrom(config.inbox);
+  await updateFrom(config.outbox);
 };
 
 export { reloadTimeline };

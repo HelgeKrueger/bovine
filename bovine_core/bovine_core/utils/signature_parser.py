@@ -12,6 +12,11 @@ class Signature:
 
         if self.algorithm != "rsa-sha256":
             logger.error(f"Unsupported algorithm {self.algorithm}")
+            logger.error(self.signature)
+            logger.error(self.headers)
+            logger.error(self.key_id)
+
+            raise Exception(f"Unsupported algorithm {self.algorithm}")
 
     def fields(self):
         return self.headers.split(" ")

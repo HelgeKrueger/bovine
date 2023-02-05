@@ -1,4 +1,4 @@
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 
 from . import ManagedDataStore
 from .processors.inbox import store_in_database
@@ -8,7 +8,7 @@ from .utils.test import db_url  # noqa: F401
 async def test_basic_data_store(db_url):  # noqa: F811
     store = ManagedDataStore(db_url=db_url)
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     await store.add_user(local_user)
 
@@ -24,10 +24,10 @@ async def test_basic_data_store(db_url):  # noqa: F811
 async def test_store_in_database(db_url):  # noqa: F811
     store = ManagedDataStore(db_url=db_url)
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     await store.add_user(local_user)
 
-    item = InboxItem("{}")
+    item = ProcessingItem("{}")
 
     await store_in_database(item, local_user, None)

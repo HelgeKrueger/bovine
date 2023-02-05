@@ -2,7 +2,7 @@ import logging
 import traceback
 from datetime import datetime
 
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 
 from bovine_tortoise.models import Actor, InboxEntry
 
@@ -10,8 +10,8 @@ logger = logging.getLogger("tor-proc")
 
 
 async def store_in_database(
-    item: InboxItem, local_user: LocalUser, session
-) -> InboxItem | None:
+    item: ProcessingItem, local_user: LocalActor, session
+) -> ProcessingItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)
 
@@ -48,8 +48,8 @@ async def store_in_database(
 
 
 async def remove_from_database(
-    item: InboxItem, local_user: LocalUser, session
-) -> InboxItem | None:
+    item: ProcessingItem, local_user: LocalActor, session
+) -> ProcessingItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)
 

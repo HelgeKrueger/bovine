@@ -5,7 +5,6 @@ import aiohttp
 from bovine.server import default_configuration
 from bovine_core.utils.http_signature import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
-from bovine_tortoise.inbox import inbox_content_starting_from
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine_tortoise.storage import storage_blueprint
 from bovine_tortoise.storage.storage import Storage
@@ -52,7 +51,6 @@ app.config.update(
         "get_user": get_user,
         "data_store": TortoiseStore(),
         "domain_name": "mymath.rocks",
-        "inbox_getter": inbox_content_starting_from,
         "account_name_or_none_for_token": account_name_or_none_for_token,
         "object_storage": Storage(),
     }

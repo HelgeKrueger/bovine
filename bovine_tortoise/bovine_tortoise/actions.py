@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import aiohttp
 import bovine.clients
 from bovine.clients.lookup_account import lookup_account_with_webfinger
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 from bovine_core.activitystreams.activities import build_follow
 from bovine_core.clients.signed_http import signed_get
 
@@ -15,7 +15,7 @@ from .models import Actor, Following
 logger = logging.getLogger("bovine_torroise")
 
 
-async def follow(session: aiohttp.ClientSession, local_user: LocalUser, account: str):
+async def follow(session: aiohttp.ClientSession, local_user: LocalActor, account: str):
     actor = await Actor.get_or_none(account=local_user.name)
 
     if actor is None:
@@ -49,12 +49,12 @@ async def follow(session: aiohttp.ClientSession, local_user: LocalUser, account:
 
 
 async def fetch_post(
-    session: aiohttp.ClientSession, local_user: LocalUser, post_url: str
+    session: aiohttp.ClientSession, local_user: LocalActor, post_url: str
 ):
     response = await signed_get(
         session, local_user.get_public_key_url(), local_user.private_key, post_url
     )
     text = await response.text()
 
-    inbox_item = InboxItem(text)
+    inbox_item = ProcessingItem(text)
     await local_user.process_inbox_item(inbox_item, session)

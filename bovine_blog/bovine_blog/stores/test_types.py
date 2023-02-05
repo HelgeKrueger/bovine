@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from bovine_tortoise.models import Actor, OutboxEntry
-from bovine_tortoise.utils import db_url  # noqa F401
+from bovine_tortoise.utils.test import db_url  # noqa F401
 
 from .types import PostEntry
 

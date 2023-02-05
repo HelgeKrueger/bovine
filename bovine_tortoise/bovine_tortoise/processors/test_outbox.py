@@ -2,7 +2,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 import aiohttp
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.utils.test import db_url  # noqa: F401
@@ -19,7 +19,7 @@ async def test_create_outbox_entry(db_url: str) -> None:  # noqa: F811
         public_key="public_key",
     )
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     activity_to_send = {
         "id": "https://domain/something/name/uuid",
@@ -67,7 +67,7 @@ async def test_delete_outbox_entry(db_url: str) -> None:  # noqa: F811
         local_path="/something/name/uuid/activity",
     )
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     async with aiohttp.ClientSession() as session:
         result = await delete_outbox_entry(
@@ -101,7 +101,7 @@ async def test_send_activity(
         followed_on=datetime.utcnow(),
     )
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     activity_to_send = {
         "id": "https://domain/something/name/uuid",
@@ -139,7 +139,7 @@ async def test_send_activity_with_additional_user(
         followed_on=datetime.utcnow(),
     )
 
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     activity_to_send = {
         "id": "https://domain/something/name/uuid",

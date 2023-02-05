@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 
 from bovine_tortoise.models import Actor, OutboxEntry
 
@@ -16,7 +16,7 @@ async def actor_and_local_user():
         private_key="private_key",
         public_key="public_key",
     )
-    local_user = LocalUser("name", "url", "public_key", "private_key", "actor_type")
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     return actor, local_user
 

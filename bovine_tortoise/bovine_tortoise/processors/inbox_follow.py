@@ -3,7 +3,7 @@ import traceback
 from datetime import datetime
 
 import bovine.clients
-from bovine.types import InboxItem, LocalUser
+from bovine.types import LocalActor, ProcessingItem
 from bovine_core.activitystreams.activities import build_accept
 
 from bovine_tortoise.models import Actor, Follower, Following
@@ -12,8 +12,8 @@ logger = logging.getLogger("tor-proc")
 
 
 async def accept_follow_request(
-    item: InboxItem, local_user: LocalUser, session
-) -> InboxItem | None:
+    item: ProcessingItem, local_user: LocalActor, session
+) -> ProcessingItem | None:
     data = item.get_data()
 
     if data["type"] != "Follow":
@@ -42,15 +42,15 @@ async def accept_follow_request(
 
 
 async def store_host_as_peer(
-    item: InboxItem, local_user: LocalUser
-) -> InboxItem | None:
+    item: ProcessingItem, local_user: LocalActor
+) -> ProcessingItem | None:
     # FIXME
     return item
 
 
 async def record_accept_follow(
-    item: InboxItem, local_user: LocalUser, session
-) -> InboxItem | None:
+    item: ProcessingItem, local_user: LocalActor, session
+) -> ProcessingItem | None:
     try:
         data = item.get_data()
 

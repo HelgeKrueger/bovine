@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 import aiohttp
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 from bovine.utils.test import get_user_keys
 
 from . import ManagedDataStore
@@ -17,7 +17,7 @@ async def test_follow(
     db_url,  # noqa: F811
 ):
     public_key, private_key = get_user_keys()
-    local_user = LocalUser("name", "url", public_key, private_key, "actor_type")
+    local_user = LocalActor("name", "url", public_key, private_key, "actor_type")
     store = ManagedDataStore(db_url=db_url)
 
     await store.add_user(local_user)
@@ -35,7 +35,7 @@ async def test_fetch_post(
     db_url,  # noqa: F811
 ):
     public_key, private_key = get_user_keys()
-    local_user = LocalUser(
+    local_user = LocalActor(
         "name", "url", public_key, private_key, "actor_type"
     ).set_inbox_process(store_in_database)
     store = ManagedDataStore(db_url=db_url)

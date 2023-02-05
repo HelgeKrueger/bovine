@@ -17,6 +17,5 @@ async def test_mastodon_delete_actor(blog_test_env):  # noqa F811
     assert result_get.status_code == 200
 
     data = await result_get.get_json()
-
-    # FIXME This has the wrong format; should be an ordered collection
-    assert len(data) == 0
+    assert data["type"] == "OrderedCollection"
+    assert data["totalItems"] == 0

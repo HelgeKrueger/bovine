@@ -10,7 +10,7 @@ from quart import Quart
 from bovine import get_bovine_user
 from bovine.clients import get_public_key
 from bovine.server import default_configuration
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 from bovine.utils import dump_incoming_inbox_to_stdout
 from bovine.utils.in_memory_store import InMemoryUserStore
 
@@ -28,7 +28,7 @@ async def silly(*args):
 signature_checker = SignatureChecker(get_public_key)
 
 public_key, private_key = get_user_keys()
-local_user = LocalUser(
+local_actor = LocalActor(
     "user",
     "https://my_domain/activitypub/user",
     public_key,
@@ -37,7 +37,7 @@ local_user = LocalUser(
 ).set_inbox_process(dump_incoming_inbox_to_stdout)
 
 data_store = InMemoryUserStore()
-data_store.add_user(local_user)
+data_store.add_user(local_actor)
 data_store.add_user(get_bovine_user("my_domain"))
 
 app = Quart(__name__)

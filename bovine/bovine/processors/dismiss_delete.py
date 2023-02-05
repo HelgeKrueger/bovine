@@ -1,14 +1,14 @@
-from bovine.types import InboxItem, LocalUser
+from bovine.types import ProcessingItem, LocalActor
 
 
 def dismiss_delete(callback):
     async def on_delete_perform(
-        item: InboxItem, local_user: LocalUser, session
-    ) -> InboxItem | None:
+        item: ProcessingItem, local_actor: LocalActor, session
+    ) -> ProcessingItem | None:
         data = item.get_data()
 
         if data["type"] == "Delete":
-            await callback(local_user, item, session)
+            await callback(local_actor, item, session)
             return None
 
         return item

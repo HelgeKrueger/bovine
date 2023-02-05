@@ -4,16 +4,16 @@ import logging
 import aiohttp
 import bovine_core.clients.signed_http
 
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 
 
 async def get_public_key(
-    session: aiohttp.ClientSession, local_user: LocalUser, key_id: str
+    session: aiohttp.ClientSession, local_actor: LocalActor, key_id: str
 ) -> str | None:
     logging.info(f"getting public key for {key_id}")
 
     response = await bovine_core.clients.signed_http.signed_get(
-        session, local_user.get_public_key_url(), local_user.private_key, key_id
+        session, local_actor.get_public_key_url(), local_actor.private_key, key_id
     )
     text = await response.text()
 
@@ -37,10 +37,10 @@ async def get_public_key(
 
 
 async def get_inbox(
-    session: aiohttp.ClientSession, local_user: LocalUser, account: str
+    session: aiohttp.ClientSession, local_actor: LocalActor, account: str
 ) -> str:
     response = await bovine_core.clients.signed_http.signed_get(
-        session, local_user.get_public_key_url(), local_user.private_key, account
+        session, local_actor.get_public_key_url(), local_actor.private_key, account
     )
     text = await response.text()
     data = json.loads(text)
@@ -49,7 +49,7 @@ async def get_inbox(
 
 
 async def send_activitypub_request(
-    session: aiohttp.ClientSession, user: LocalUser, inbox, data
+    session: aiohttp.ClientSession, user: LocalActor, inbox, data
 ) -> tuple[str, int]:
     body = json.dumps(data)
 

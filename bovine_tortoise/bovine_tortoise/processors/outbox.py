@@ -5,7 +5,7 @@ from datetime import datetime
 
 import aiohttp
 import bovine.clients
-from bovine.types import LocalUser
+from bovine.types import LocalActor
 
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.utils import determine_local_path_from_activity_id
@@ -15,7 +15,7 @@ logger = logging.getLogger("outbox-proc")
 
 async def create_outbox_entry(
     activity: dict,
-    local_user: LocalUser,
+    local_user: LocalActor,
     session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["id"])
@@ -38,7 +38,7 @@ async def create_outbox_entry(
 
 async def delete_outbox_entry(
     activity: dict,
-    local_user: LocalUser,
+    local_user: LocalActor,
     session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["object"]["id"])
@@ -65,7 +65,7 @@ async def delete_outbox_entry(
 
 async def send_activity_no_local_path(
     activity: dict,
-    local_user: LocalUser,
+    local_user: LocalActor,
     session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["id"])
@@ -74,7 +74,7 @@ async def send_activity_no_local_path(
 
 async def send_activity(
     session: aiohttp.ClientSession,
-    local_user: LocalUser,
+    local_user: LocalActor,
     activity: dict,
     local_path: str,
 ):

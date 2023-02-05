@@ -3,7 +3,7 @@ import os
 
 import aiohttp
 from bovine.server import default_configuration
-from bovine_core.utils.http_signature import SignatureChecker
+from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine_tortoise.storage import storage_blueprint

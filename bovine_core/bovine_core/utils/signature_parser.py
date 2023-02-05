@@ -10,7 +10,7 @@ class Signature:
         self.headers = headers
         self.signature = signature
 
-        if self.algorithm != "rsa-sha256":
+        if self.algorithm not in ["rsa-sha256", "hs2019"]:
             logger.error(f"Unsupported algorithm {self.algorithm}")
             logger.error(self.signature)
             logger.error(self.headers)

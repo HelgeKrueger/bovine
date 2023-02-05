@@ -9,7 +9,7 @@ const UnreadCountBadge = ({ children }) => {
   );
 
   return (
-    <Badge badgeContent={number} color="secondary">
+    <Badge badgeContent={number} color="secondary" max={999}>
       {children}
     </Badge>
   );

@@ -26,7 +26,7 @@ async def ordered_collection_responder(url, count_coroutine, items_coroutine, **
     else:
         builder = builder.with_first_and_last(f"{url}?first=1", f"{url}?last=1")
 
-    return builder.build()
+    return builder.build(), 200, {"content-type": "application/activity+json"}
 
 
 async def ordered_collection_page(url, count_coroutine, items_coroutine, **kwargs):
@@ -42,4 +42,4 @@ async def ordered_collection_page(url, count_coroutine, items_coroutine, **kwarg
 
     builder = builder.with_items(data["items"])
 
-    return builder.build()
+    return builder.build(), 200, {"content-type": "application/activity+json"}

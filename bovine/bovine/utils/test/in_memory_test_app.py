@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import aiohttp
 import pytest
-from bovine_core.utils.http_signature import SignatureChecker
+from bovine_core.utils.signature_checker import SignatureChecker
 from quart import Quart
 
 from bovine import get_bovine_user

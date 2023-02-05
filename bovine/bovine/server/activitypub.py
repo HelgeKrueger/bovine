@@ -85,14 +85,17 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
         return {"status": "request not signed"}, 401
 
     local_actor = await current_app.config["get_user"](account_name)
+    arguments = {
+        name: request.args.get(name)
+        for name in ["first", "last", "min_id", "max_id"]
+        if request.args.get(name) is not None
+    }
+
+    logger.debug(f"fetching outbox with arguments {arguments}")
 
     return await ordered_collection_responder(
         local_actor.get_outbox(),
         local_actor.item_count_for("outbox"),
         local_actor.items_for("outbox"),
-        **{
-            name: request.args.get(name)
-            for name in ["first", "last", "min_id", "max_id"]
-            if request.args.get(name) is not None
-        },
+        **arguments,
     )

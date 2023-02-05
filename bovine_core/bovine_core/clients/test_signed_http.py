@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 
-from bovine_core.utils.http_signature import SignatureChecker
+from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_core.utils.test import get_user_keys
 
 from .signed_http import signed_get

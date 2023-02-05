@@ -17,7 +17,7 @@ const fetchFromResult = async (url) => {
           await db.activity.bulkAdd(result.orderedItems.map(transformActivity));
           await fetchFromResult(result.next);
         } catch (error) {
-          return false;
+          // await fetchFromResult(result.next);
         }
       }
     });

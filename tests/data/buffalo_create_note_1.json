@@ -8,17 +8,17 @@
       "ostatus": "http://ostatus.org#"
     }
   ],
-  "actor": "https://my_domain/activitypub/user",
-  "cc": ["https://my_domain/activitypub/user/followers"],
-  "id": "https://my_domain/activitypub/user/3c0281b7-bede-460a-a49b-3b6d7d4eb32f/activity",
+  "actor": "https://my_domain/activitypub/name",
+  "cc": ["https://my_domain/activitypub/name/followers"],
+  "id": "https://my_domain/activitypub/name/3c0281b7-bede-460a-a49b-3b6d7d4eb32f/activity",
   "object": {
-    "atomUri": "https://my_domain/activitypub/user/3c0281b7-bede-460a-a49b-3b6d7d4eb32f",
+    "atomUri": "https://my_domain/activitypub/name/3c0281b7-bede-460a-a49b-3b6d7d4eb32f",
     "attachment": [],
-    "attributedTo": "https://my_domain/activitypub/user",
-    "cc": ["https://my_domain/activitypub/user/followers"],
+    "attributedTo": "https://my_domain/activitypub/name",
+    "cc": ["https://my_domain/activitypub/name/followers"],
     "content": "<p>I&#39;m literally creating test data.</p>\n",
     "contentMap": { "en": "<p>I&#39;m literally creating test data.</p>\n" },
-    "id": "https://my_domain/activitypub/user/3c0281b7-bede-460a-a49b-3b6d7d4eb32f",
+    "id": "https://my_domain/activitypub/name/3c0281b7-bede-460a-a49b-3b6d7d4eb32f",
     "published": "2023-01-31T17:23:44.772Z",
     "tag": [],
     "replies": { "type": "Collection", "totalItems": 0, "items": [] },
@@ -28,7 +28,7 @@
     },
     "to": ["https://www.w3.org/ns/activitystreams#Public"],
     "type": "Note",
-    "url": "https://my_domain/user/3c0281b7-bede-460a-a49b-3b6d7d4eb32f"
+    "url": "https://my_domain/name/3c0281b7-bede-460a-a49b-3b6d7d4eb32f"
   },
   "published": "2023-01-31T17:23:44.772Z",
   "to": ["https://www.w3.org/ns/activitystreams#Public"],

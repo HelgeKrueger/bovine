@@ -1,6 +1,7 @@
 import asyncio
 import os
 import json
+from urllib.parse import urlparse
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -10,6 +11,10 @@ from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
 
 from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BlogTestEnv:
@@ -39,9 +44,6 @@ class BlogTestEnv:
         )
         return result
 
-    async def get_from_inbox(self):
-        return await self.get(self.local_user.get_inbox())
-
     async def send_to_outbox(self, activity):
         result = await self.client.post(
             self.local_user.get_outbox(),
@@ -50,15 +52,28 @@ class BlogTestEnv:
         )
         return result
 
-    async def get(self, url):
+    async def get_activity(self, url):
+        parsed_url = urlparse(url)
+        path = parsed_url.path
+        if parsed_url.query:
+            path += f"?{parsed_url.query}"
+        logger.debug(f"Getting path {path} for url {url}")
         result_get = await self.client.get(
-            url,
+            path,
             headers=fake_get_headers,
         )
+
+        # label fedi-objects-are-accessible-via-id-content-type
+        assert result_get.status_code == 200
+        assert result_get.headers["content-type"] == "application/activity+json"
+
         return result_get
 
+    async def get_from_inbox(self):
+        return await self.get_activity(self.local_user.get_inbox())
+
     async def get_from_outbox(self):
-        return await self.get(self.local_user.get_outbox())
+        return await self.get_activity(self.local_user.get_outbox())
 
 
 @pytest.fixture

@@ -1,4 +1,4 @@
-from .utils import determine_local_path_from_activity_id
+from . import determine_local_path_from_activity_id
 
 
 def test_determine_local_path():

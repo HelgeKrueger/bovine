@@ -1,21 +1,12 @@
 from bovine.types import LocalUser as LocalUserObject
 from tortoise import Tortoise
 
-from .models import Actor
-from .outbox import outbox_item_count, outbox_items
+from bovine_tortoise.models import Actor, OutboxEntry
 
+from .utils.count_and_items import CountAndItems
 
-async def init(db_url: str = "sqlite://db.sqlite3") -> None:
-    await Tortoise.init(
-        db_url=db_url,
-        modules={"models": ["bovine_tortoise.models"]},
-    )
-    await Tortoise.generate_schemas()
-
-    return None
-
-
-default_outbox = (outbox_item_count, outbox_items)
+outbox = CountAndItems(OutboxEntry)
+default_outbox = (outbox.item_count, outbox.items)
 
 
 class ManagedDataStore:

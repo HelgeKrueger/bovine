@@ -8,7 +8,7 @@ from . import ManagedDataStore
 from .actions import fetch_post, follow
 from .models import Following, InboxEntry
 from .processors.inbox import store_in_database
-from .test_database import db_url  # noqa: F401
+from .utils.test import db_url  # noqa: F401
 
 
 @patch("bovine.clients.send_activitypub_request")

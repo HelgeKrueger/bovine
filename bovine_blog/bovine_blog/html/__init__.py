@@ -1,6 +1,8 @@
 from quart import Blueprint, current_app, render_template, send_from_directory
 
-html_blueprint = Blueprint("html_blueprint", __name__, template_folder="./templates/")
+html_blueprint = Blueprint(
+    "html_blueprint", __name__, template_folder="../../templates/"
+)
 
 
 @html_blueprint.get("/")

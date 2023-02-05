@@ -1,17 +1,15 @@
 import logging
-from urllib.parse import urlencode
 
 import werkzeug
 from bovine_core.activitystreams import (
     build_actor,
-    build_ordered_collection,
-    build_ordered_collection_page,
 )
 from bovine_core.utils.crypto import content_digest_sha256
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
 from bovine.types import InboxItem
+from bovine.utils.server import ordered_collection_responder
 
 cors_properties = {
     "allow_origin": ["http://localhost:8000"],
@@ -88,46 +86,13 @@ async def outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response:
 
     local_user = await current_app.config["get_user"](account_name)
 
-    if any(
-        request.args.get(name) is not None
-        for name in ["first", "last", "min_id", "max_id"]
-    ):
-        return await ordered_collection_page(
-            local_user,
-            **{
-                name: request.args.get(name)
-                for name in ["first", "last", "min_id", "max_id"]
-                if request.args.get(name) is not None
-            },
-        )
-
-    count = await local_user.outbox_item_count()
-
-    builder = build_ordered_collection(local_user.get_outbox()).with_count(count)
-
-    if count < 10:
-        data = await local_user.outbox_items()
-        builder = builder.with_items(data["items"])
-    else:
-        builder = builder.with_first_and_last(
-            local_user.get_outbox() + "?first=1", local_user.get_outbox() + "?last=1"
-        )
-
-    return builder.build()
-
-
-async def ordered_collection_page(local_user, **kwargs):
-    url = local_user.get_outbox()
-    builder = build_ordered_collection_page(url + "?" + urlencode(kwargs), url)
-
-    data = await local_user.outbox_items(**kwargs)
-
-    if "prev" in data:
-        builder = builder.with_prev(f"{url}?{data['prev']}")
-
-    if "next" in data:
-        builder = builder.with_next(f"{url}?{data['next']}")
-
-    builder = builder.with_items(data["items"])
-
-    return builder.build()
+    return await ordered_collection_responder(
+        local_user.get_outbox(),
+        local_user.outbox_item_count,
+        local_user.outbox_items,
+        **{
+            name: request.args.get(name)
+            for name in ["first", "last", "min_id", "max_id"]
+            if request.args.get(name) is not None
+        },
+    )

@@ -5,7 +5,7 @@ import aiohttp
 from bovine.types import LocalUser
 
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
-from bovine_tortoise.test_database import db_url  # noqa: F401
+from bovine_tortoise.utils.test import db_url  # noqa: F401
 
 from .outbox import create_outbox_entry, delete_outbox_entry, send_activity
 

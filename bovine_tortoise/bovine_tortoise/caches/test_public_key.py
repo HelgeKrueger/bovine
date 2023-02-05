@@ -1,7 +1,7 @@
 from unittest.mock import AsyncMock
 
 from bovine_tortoise.models import PublicKey
-from bovine_tortoise.utils import db_url  # noqa: F401
+from bovine_tortoise.utils.test import db_url  # noqa: F401
 
 from .public_key import PublicKeyCache
 

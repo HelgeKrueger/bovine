@@ -1,4 +1,4 @@
-from bovine_tortoise.test_database import db_url  # noqa: F401
+from bovine_tortoise.utils.test import db_url  # noqa: F401
 
 from .storage import Storage
 

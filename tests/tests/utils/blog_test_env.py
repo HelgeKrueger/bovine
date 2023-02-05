@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from bovine_blog import app
-from bovine_tortoise import init
+from bovine_tortoise.utils import init
 from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
 

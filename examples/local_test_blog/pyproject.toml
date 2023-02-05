@@ -4,11 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Helge <helge.krueger@gmail.com>"]
 readme = "README.md"
-packages = [{include = "local_test_blog"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bovine-blog = {path = "../../bovine_blog"}
+bovine-blog = {path = "../../bovine_blog", develop=true}
 
 
 [build-system]

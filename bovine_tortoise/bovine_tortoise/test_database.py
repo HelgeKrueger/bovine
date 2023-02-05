@@ -2,7 +2,7 @@ from bovine.types import InboxItem, LocalUser
 
 from . import ManagedDataStore
 from .processors.inbox import store_in_database
-from .utils import db_url  # noqa: F401
+from .utils.test import db_url  # noqa: F401
 
 
 async def test_basic_data_store(db_url):  # noqa: F811

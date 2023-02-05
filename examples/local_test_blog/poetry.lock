@@ -225,10 +225,10 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
-bovine-core = {path = "../bovine_core"}
+bovine-core = {path = "../bovine_core", develop = true}
 quart = "^0.18.3"
 quart-cors = "^0.6.0"
 
@@ -244,13 +244,13 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 aerich = "^0.7.1"
 aiohttp = "^3.8.3"
-bovine = {path = "../bovine"}
-bovine-tortoise = {path = "../bovine_tortoise"}
+bovine = {path = "../bovine", develop = true}
+bovine-tortoise = {path = "../bovine_tortoise", develop = true}
 markdown = "^3.4.1"
 python-markdown-math = "^0.8"
 
@@ -266,7 +266,7 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 aiohttp = "^3.8.3"
@@ -285,10 +285,10 @@ category = "main"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
-bovine = {path = "../bovine"}
+bovine = {path = "../bovine", develop = true}
 tortoise-orm = "^0.19.3"
 
 [package.source]
@@ -1220,4 +1220,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d17d94092d2fc00cd0a689644ea6a6ecd0e88db305e17b12ac68b7b0341bed3b"
+content-hash = "a1068fb2756b010422ec5399b52067e90587e58e62a0581036e31a2472ee8c5f"

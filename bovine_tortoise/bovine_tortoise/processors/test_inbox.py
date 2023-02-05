@@ -3,7 +3,7 @@ import json
 from bovine.types import InboxItem, LocalUser
 
 from bovine_tortoise.models import Actor, InboxEntry
-from bovine_tortoise.test_database import db_url  # noqa: F401
+from bovine_tortoise.utils.test import db_url  # noqa: F401
 
 from .inbox import remove_from_database, store_in_database
 

@@ -8,7 +8,7 @@ async def create_actor_and_local_user():
     actor = await Actor.create(
         account="name",
         url="/activitypub/name",
-        actor_type="type",
+        actor_type="Person",
         private_key="private_key",
         public_key="public_key",
     )

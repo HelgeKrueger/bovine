@@ -48,10 +48,14 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     activitypub_profile_url = f"https://{domain}/activitypub/{user_info.name}"
 
     return (
-        build_actor(account_name, actor_type=user_info.actor_type)
-        .with_account_url(activitypub_profile_url)
-        .with_public_key(user_info.public_key)
-        .build()
+        (
+            build_actor(account_name, actor_type=user_info.actor_type)
+            .with_account_url(activitypub_profile_url)
+            .with_public_key(user_info.public_key)
+            .build()
+        ),
+        200,
+        {"content-type": "application/activity+json"},
     )
 
 

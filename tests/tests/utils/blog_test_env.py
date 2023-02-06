@@ -67,7 +67,10 @@ class BlogTestEnv:
         assert result_get.status_code == 200
         assert result_get.headers["content-type"] == "application/activity+json"
 
-        return result_get
+        result_json = await result_get.get_json()
+        assert "@context" in result_json
+
+        return result_json
 
     async def get_from_inbox(self):
         return await self.get_activity(self.local_user.get_inbox())

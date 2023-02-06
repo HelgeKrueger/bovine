@@ -12,12 +12,12 @@ tests
 These are things necessary for the instance to interoperate.
 
 #### fedi-objects-are-accessible-via-id
-[blog_test_env.py](../tests/tests/utils/blog_test_env.py)[test_create_note.py](../tests/tests/outbox/test_create_note.py)
+
 So if a note is published via `"id":"https://my_domain/someid"`, your
 server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
-[blog_test_env.py](../tests/tests/utils/blog_test_env.py)
+
 Content-Type should be `application/activity+json`
 
 ## ActivityPub
@@ -25,12 +25,12 @@ Content-Type should be `application/activity+json`
 ### [Actors](https://www.w3.org/TR/activitypub/#actor-objects)
 
 #### ap-actor-inbox
-[test_actor.py](../tests/tests/test_actor.py)
+
 OrderedCollection comprised of messages received by the actor.
 MUST
 
 #### ap-actor-outbox
-[test_actor.py](../tests/tests/test_actor.py)
+
 OrderedCollection comprised of messages produced by the actor.
 MUST
 
@@ -55,7 +55,7 @@ list of supplementary Collections
 MAY
 
 #### ap-actor-preferredUsername
-[test_actor.py](../tests/tests/test_actor.py)
+
 A short username which may be used to refer to the actor  
 MAY
 
@@ -183,7 +183,7 @@ Servers MUST return a 201 Created HTTP code, and unless the activity is transien
 The server MUST remove the bto and/or bcc properties, if they exist, from the ActivityStreams object before delivery, but MUST utilize the addressing originally stored on the bto / bcc properties for determining recipients in delivery.
 
 #### ap-c2s-add-to-outbox
-[test_create_note.py](../tests/tests/outbox/test_create_note.py)
+
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
 
 #### ap-client-addressing
@@ -215,7 +215,7 @@ Any to, bto, cc, bcc, and audience properties specified on the object MUST be co
 The Update activity is used when updating an already existing object. The side effect of this is that the object MUST be modified to reflect the new structure as defined in the update activity, assuming the actor has permission to update this object.
 
 #### ap-c2s-delete-activity
-[test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py)
+
 The Delete activity is used to delete an already existing object. The side effect of this is that the server MAY replace the object with a Tombstone of the object that will be displayed in activities which reference the deleted object. If the deleted object is requested the server SHOULD respond with either the HTTP 410 Gone status code if a Tombstone object is presented as the response body, otherwise respond with a HTTP 404 Not Found.
 
 #### ap-c2s-follow-activity
@@ -255,7 +255,7 @@ An Activity sent over the network SHOULD have an id, unless it is intended to be
 POST requests (eg. to the inbox) MUST be made with a Content-Type of application/ld+json; profile="https://www.w3.org/ns/activitystreams" and GET requests (see also 3.2 Retrieving objects) with an Accept header of application/ld+json; profile="https://www.w3.org/ns/activitystreams". Servers SHOULD interpret a Content-Type or Accept header of application/activity+json as equivalent to application/ld+json; profile="https://www.w3.org/ns/activitystreams" for server-to-server interactions.
 
 #### ap-s2s-has-object
-[test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py)
+
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 
 #### ap-s2s-has-target

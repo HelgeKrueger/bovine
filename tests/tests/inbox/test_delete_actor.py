@@ -14,8 +14,5 @@ async def test_mastodon_delete_actor(blog_test_env):  # noqa F811
 
     result_get = await blog_test_env.get_from_inbox()
 
-    assert result_get.status_code == 200
-
-    data = await result_get.get_json()
-    assert data["type"] == "OrderedCollection"
-    assert data["totalItems"] == 0
+    assert result_get["type"] == "OrderedCollection"
+    assert result_get["totalItems"] == 0

@@ -30,20 +30,21 @@ async def test_create_note_is_send_to_user(blog_test_env):  # noqa F811
     assert result.status_code == 202
 
     result = await blog_test_env.get_from_outbox()
+    assert result["id"].endswith(blog_test_env.local_user.get_outbox())  # FIXME?
+    assert result["type"] == "OrderedCollection"
 
-    assert result.status_code == 200
-
-    result_json = await result.get_json()
-
-    assert result_json["id"].endswith(blog_test_env.local_user.get_outbox())  # FIXME?
-    assert result_json["type"] == "OrderedCollection"
-
-    assert result_json["totalItems"] == 1
-    assert result_json["orderedItems"][0] == create
+    assert result["totalItems"] == 1
+    assert result["orderedItems"][0] == create
 
     blog_test_env.mock_signed_post.assert_awaited_once()
 
     args = blog_test_env.mock_signed_post.await_args[0]
-
     assert args[3] == "other/inbox"
-    assert json.loads(args[4]) == create
+    create_data = json.loads(args[4])
+
+    assert create_data == create
+
+    assert create_data["type"] == "Create"
+
+    # LABEL: ap-s2s-has-object
+    assert isinstance(create_data["object"], dict)

@@ -53,6 +53,7 @@ async def signed_post(
     target = parsed_url.path
 
     accept = "application/activity+json"
+    # LABEL: ap-s2s-content-type
     content_type = "application/activity+json"
     date_header = get_gmt_now()
 

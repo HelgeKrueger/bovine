@@ -21,11 +21,10 @@ async def test_create_then_delete(blog_test_env):  # noqa F811
     )
 
     result = await blog_test_env.get_from_outbox()
-    assert result.status_code == 200
+    assert result["type"] == "OrderedCollection"
+    assert result["totalItems"] == 1
 
-    data = await result.get_json()
-    assert data["type"] == "OrderedCollection"
-    assert data["totalItems"] == 1
+    # ap-c2s-delete-activity
 
     result = await blog_test_env.send_to_outbox(delete)
     assert result.status_code == 202
@@ -33,8 +32,5 @@ async def test_create_then_delete(blog_test_env):  # noqa F811
     assert await OutboxEntry.filter(actor=blog_test_env.actor).count() == 0
 
     result = await blog_test_env.get_from_outbox()
-    assert result.status_code == 200
-
-    data = await result.get_json()
-    assert data["type"] == "OrderedCollection"
-    assert data["totalItems"] == 0
+    assert result["type"] == "OrderedCollection"
+    assert result["totalItems"] == 0

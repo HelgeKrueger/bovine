@@ -16,15 +16,12 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     assert entry.content == item
 
     result = await blog_test_env.get_from_outbox()
+    assert result["id"].endswith(blog_test_env.local_user.get_outbox())  # FIXME?
+    assert result["type"] == "OrderedCollection"
 
-    assert result.status_code == 200
-    result_json = await result.get_json()
-
-    assert result_json["id"].endswith(blog_test_env.local_user.get_outbox())  # FIXME?
-    assert result_json["type"] == "OrderedCollection"
-
-    assert result_json["totalItems"] == 1
-    created_item = result_json["orderedItems"][0]
+    # LABEL: ap-c2s-add-to-outbox
+    assert result["totalItems"] == 1
+    created_item = result["orderedItems"][0]
     assert created_item == item
 
     assert created_item["type"] == "Create"
@@ -37,9 +34,5 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     object_id = object_item["id"]
 
     result = await blog_test_env.get_activity(object_id)
-    assert result.status_code == 200
-    assert result.headers["content-type"] == "application/activity+json"
-
-    result_json = await result.get_json()
-    assert result_json["type"] == "Note"
-    assert "@context" in result_json
+    assert result["type"] == "Note"
+    assert "@context" in result

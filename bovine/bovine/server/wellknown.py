@@ -40,13 +40,17 @@ async def webfinger() -> tuple[dict, int]:
 
     activitypub_profile_url = f"https://{domain}/activitypub/{user_info.name}"
 
-    return {
-        "subject": f"acct:{user_info.name}@{domain}",
-        "links": [
-            {
-                "href": activitypub_profile_url,
-                "rel": "self",
-                "type": "application/activity+json",
-            }
-        ],
-    }, 200
+    return (
+        {
+            "subject": f"acct:{user_info.name}@{domain}",
+            "links": [
+                {
+                    "href": activitypub_profile_url,
+                    "rel": "self",
+                    "type": "application/activity+json",
+                }
+            ],
+        },
+        200,
+        {"content-type": "application/jrd+json"},
+    )

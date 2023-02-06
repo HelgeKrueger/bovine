@@ -10,6 +10,9 @@ tests
 ## FediVerse
 
 These are things necessary for the instance to interoperate.
+Generally everything starting with `fedi-` corresponds to something
+needed to be a citizen in the Fediverse, that I couldn't find
+in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
@@ -20,44 +23,116 @@ server should answer to requests to `https://my_domain/someid`.
 
 Content-Type should be `application/activity+json`
 
+## Webfinger
+
+Webfinger is specified in [RFC-7033](https://datatracker.ietf.org/doc/html/rfc7033).
+
+
+#### webfinger-subject
+
+[Subject](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.1) should be present.
+
+
+#### webfinger-content-type
+
+[RFC-7033 Section 10.2](https://datatracker.ietf.org/doc/html/rfc7033#section-10.2) specifies
+that the answer to a webfinger request should have content-type `application/jrd+json`.
+Jrd stands for _JSON Resource Descriptor_.
+
+#### fedi-webfinger-self
+
+The [links](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.4) of the webfinger
+response contain an element with `"rel":"self"` and `"type":"application/activity+json"`
+pointing to the activity pub actor profile.
+
+
+#### fedi-webfinger-username-is-preferredUsername
+
+The entry of `preferredUsername` in the actor profile obtained above corresponds
+to the username part of the account used in webfinger.
+
+
 ## ActivityPub
 
 ### [Actors](https://www.w3.org/TR/activitypub/#actor-objects)
 
 #### ap-actor-inbox
 
-OrderedCollection comprised of messages received by the actor.
-MUST
+A reference to an ActivityStreams OrderedCollection comprised of all the messages received by the actor.
+See [5.2 Inbox](https://www.w3.org/TR/activitypub/#inbox)
+
+#### ap-collections-inbox-filter
+
+The server SHOULD filter content according to the requester's permission.
+
+
+#### ap-collections-inbox-deduplication
+
+The server MUST perform de-duplication of activities returned by the inbox. Such deduplication MUST be performed by comparing the id of the activities and dropping any activities already seen.
+
+#### ap-collections-inbox-federations
+
+Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a POST request.
+
 
 #### ap-actor-outbox
 
-OrderedCollection comprised of messages produced by the actor.
-MUST
+An ActivityStreams OrderedCollection comprised of all the messages produced by the actor;
+see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox). 
 
 #### ap-actor-following
 
-collection of the actors that this actor is following  
-SHOULD
+A link to an ActivityStreams collection of the actors that this actor is following; 
+see [5.4 Following Collection](https://www.w3.org/TR/activitypub/#following)
+
+#### ap-collections-following
+
+The following collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-following-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-actor-followers
 
-collection of the actors that follow this actor  
-SHOULD
+A link to an [ActivityStreams] collection of the actors that follow this actor;
+see [5.3 Followers Collection](https://www.w3.org/TR/activitypub/#followers)
+
+
+#### ap-collections-followers
+
+The followers collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-followers-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
 
 #### ap-actor-like
 
-collection of objects this actor has liked  
-MAY
+A link to an [ActivityStreams] collection of objects this actor has liked;
+see [5.5 Liked Collection](https://www.w3.org/TR/activitypub/#liked).
+
+
+#### ap-collections-likes
+
+The likes collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-likes-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
+
+
 
 #### ap-actor-streams
 
-list of supplementary Collections  
-MAY
+__MAY__: A list of supplementary Collections which may be of interest. 
 
 #### ap-actor-preferredUsername
 
-A short username which may be used to refer to the actor  
-MAY
+__MAY__: A short username which may be used to refer to the actor  
+
 
 #### ap-actor- endpoints
 
@@ -100,41 +175,6 @@ MAY
 
 An OrderedCollection MUST be presented consistently in reverse chronological order.
 
-#### ap-collections-outbox
-
-The outbox MUST be an OrderedCollection.
-
-#### ap-collections-inbox
-
-The inbox MUST be an OrderedCollection.
-
-#### ap-collections-inbox-filter
-
-The server SHOULD filter content according to the requester's permission.
-
-#### ap-collections-inbox-deduplication
-
-The server MUST perform de-duplication of activities returned by the inbox. Such deduplication MUST be performed by comparing the id of the activities and dropping any activities already seen.
-
-#### ap-collections-inbox-federations
-
-Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a POST request.
-
-#### ap-collections-followers
-
-The followers collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-followers-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
-
-#### ap-collections-following
-
-The following collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-following-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-collections-liked
 
@@ -144,17 +184,12 @@ The liked collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
+
+
 #### ap-public-no-delivery
 
 Implementations MUST NOT deliver to the "public" special collection; it is not capable of receiving actual activities
 
-#### ap-collections-likes
-
-The likes collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-likes-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-collections-shares
 
@@ -163,6 +198,9 @@ The shares collection MUST be either an OrderedCollection or a Collection
 #### ap-collections-shares-filter
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
+
+
 
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 

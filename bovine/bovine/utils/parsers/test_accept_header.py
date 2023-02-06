@@ -19,9 +19,7 @@ def test_is_activity_request(header):
 
 @pytest.mark.parametrize(
     "header",
-    [
-        "text/html",
-    ],
+    ["text/html", "application/jrd+json"],
 )
 def test_is_activity_request_fail(header):
     assert not is_activity_request(header)

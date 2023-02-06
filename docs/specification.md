@@ -10,54 +10,139 @@ tests
 ## FediVerse
 
 These are things necessary for the instance to interoperate.
+Generally everything starting with `fedi-` corresponds to something
+needed to be a citizen in the Fediverse, that I couldn't find
+in any spec.
 
 #### fedi-objects-are-accessible-via-id
-[blog_test_env.py](../tests/tests/utils/blog_test_env.py)[test_create_note.py](../tests/tests/outbox/test_create_note.py)
+- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L70)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L32)
+
 So if a note is published via `"id":"https://my_domain/someid"`, your
 server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
-[blog_test_env.py](../tests/tests/utils/blog_test_env.py)
+- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L70)
+
 Content-Type should be `application/activity+json`
+
+## Webfinger
+
+Webfinger is specified in [RFC-7033](https://datatracker.ietf.org/doc/html/rfc7033).
+
+
+#### webfinger-subject
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L17)
+
+[Subject](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.1) should be present.
+
+
+#### webfinger-content-type
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L12)
+
+[RFC-7033 Section 10.2](https://datatracker.ietf.org/doc/html/rfc7033#section-10.2) specifies
+that the answer to a webfinger request should have content-type `application/jrd+json`.
+Jrd stands for _JSON Resource Descriptor_.
+
+#### fedi-webfinger-self
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L20)
+
+The [links](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.4) of the webfinger
+response contain an element with `"rel":"self"` and `"type":"application/activity+json"`
+pointing to the activity pub actor profile.
+
+
+#### fedi-webfinger-username-is-preferredUsername
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L30)
+
+The entry of `preferredUsername` in the actor profile obtained above corresponds
+to the username part of the account used in webfinger.
+
 
 ## ActivityPub
 
 ### [Actors](https://www.w3.org/TR/activitypub/#actor-objects)
 
 #### ap-actor-inbox
-[test_actor.py](../tests/tests/test_actor.py)
-OrderedCollection comprised of messages received by the actor.
-MUST
+- [test_actor.py](../tests/tests/test_actor.py#L14)
+
+A reference to an ActivityStreams OrderedCollection comprised of all the messages received by the actor.
+See [5.2 Inbox](https://www.w3.org/TR/activitypub/#inbox)
+
+#### ap-collections-inbox-filter
+
+The server SHOULD filter content according to the requester's permission.
+
+
+#### ap-collections-inbox-deduplication
+
+The server MUST perform de-duplication of activities returned by the inbox. Such deduplication MUST be performed by comparing the id of the activities and dropping any activities already seen.
+
+#### ap-collections-inbox-federations
+
+Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a POST request.
+
 
 #### ap-actor-outbox
-[test_actor.py](../tests/tests/test_actor.py)
-OrderedCollection comprised of messages produced by the actor.
-MUST
+- [test_actor.py](../tests/tests/test_actor.py#L18)
+
+An ActivityStreams OrderedCollection comprised of all the messages produced by the actor;
+see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox). 
 
 #### ap-actor-following
 
-collection of the actors that this actor is following  
-SHOULD
+A link to an ActivityStreams collection of the actors that this actor is following; 
+see [5.4 Following Collection](https://www.w3.org/TR/activitypub/#following)
+
+#### ap-collections-following
+
+The following collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-following-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-actor-followers
 
-collection of the actors that follow this actor  
-SHOULD
+A link to an [ActivityStreams] collection of the actors that follow this actor;
+see [5.3 Followers Collection](https://www.w3.org/TR/activitypub/#followers)
+
+
+#### ap-collections-followers
+
+The followers collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-followers-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
 
 #### ap-actor-like
 
-collection of objects this actor has liked  
-MAY
+A link to an [ActivityStreams] collection of objects this actor has liked;
+see [5.5 Liked Collection](https://www.w3.org/TR/activitypub/#liked).
+
+
+#### ap-collections-likes
+
+The likes collection MUST be either an OrderedCollection or a Collection
+
+#### ap-collections-likes-filter
+
+MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
+
+
 
 #### ap-actor-streams
 
-list of supplementary Collections  
-MAY
+__MAY__: A list of supplementary Collections which may be of interest. 
 
 #### ap-actor-preferredUsername
-[test_actor.py](../tests/tests/test_actor.py)
-A short username which may be used to refer to the actor  
-MAY
+- [test_actor.py](../tests/tests/test_actor.py#L10)
+
+__MAY__: A short username which may be used to refer to the actor  
+
 
 #### ap-actor- endpoints
 
@@ -100,41 +185,6 @@ MAY
 
 An OrderedCollection MUST be presented consistently in reverse chronological order.
 
-#### ap-collections-outbox
-
-The outbox MUST be an OrderedCollection.
-
-#### ap-collections-inbox
-
-The inbox MUST be an OrderedCollection.
-
-#### ap-collections-inbox-filter
-
-The server SHOULD filter content according to the requester's permission.
-
-#### ap-collections-inbox-deduplication
-
-The server MUST perform de-duplication of activities returned by the inbox. Such deduplication MUST be performed by comparing the id of the activities and dropping any activities already seen.
-
-#### ap-collections-inbox-federations
-
-Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a POST request.
-
-#### ap-collections-followers
-
-The followers collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-followers-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
-
-#### ap-collections-following
-
-The following collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-following-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-collections-liked
 
@@ -144,17 +194,12 @@ The liked collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
+
+
 #### ap-public-no-delivery
 
 Implementations MUST NOT deliver to the "public" special collection; it is not capable of receiving actual activities
 
-#### ap-collections-likes
-
-The likes collection MUST be either an OrderedCollection or a Collection
-
-#### ap-collections-likes-filter
-
-MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
 #### ap-collections-shares
 
@@ -163,6 +208,9 @@ The shares collection MUST be either an OrderedCollection or a Collection
 #### ap-collections-shares-filter
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
+
+
+
 
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 
@@ -183,7 +231,8 @@ Servers MUST return a 201 Created HTTP code, and unless the activity is transien
 The server MUST remove the bto and/or bcc properties, if they exist, from the ActivityStreams object before delivery, but MUST utilize the addressing originally stored on the bto / bcc properties for determining recipients in delivery.
 
 #### ap-c2s-add-to-outbox
-[test_create_note.py](../tests/tests/outbox/test_create_note.py)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L21)
+
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
 
 #### ap-client-addressing
@@ -215,7 +264,8 @@ Any to, bto, cc, bcc, and audience properties specified on the object MUST be co
 The Update activity is used when updating an already existing object. The side effect of this is that the object MUST be modified to reflect the new structure as defined in the update activity, assuming the actor has permission to update this object.
 
 #### ap-c2s-delete-activity
-[test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py)
+- [test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py#L26)
+
 The Delete activity is used to delete an already existing object. The side effect of this is that the server MAY replace the object with a Tombstone of the object that will be displayed in activities which reference the deleted object. If the deleted object is requested the server SHOULD respond with either the HTTP 410 Gone status code if a Tombstone object is presented as the response body, otherwise respond with a HTTP 404 Not Found.
 
 #### ap-c2s-follow-activity
@@ -255,7 +305,8 @@ An Activity sent over the network SHOULD have an id, unless it is intended to be
 POST requests (eg. to the inbox) MUST be made with a Content-Type of application/ld+json; profile="https://www.w3.org/ns/activitystreams" and GET requests (see also 3.2 Retrieving objects) with an Accept header of application/ld+json; profile="https://www.w3.org/ns/activitystreams". Servers SHOULD interpret a Content-Type or Accept header of application/activity+json as equivalent to application/ld+json; profile="https://www.w3.org/ns/activitystreams" for server-to-server interactions.
 
 #### ap-s2s-has-object
-[test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py)
+- [test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py#L48)
+
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 
 #### ap-s2s-has-target
@@ -323,10 +374,13 @@ The side effect of receiving this is that (assuming the object is owned by the s
 
 
 #### ap-s2s-follow
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L19)
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L33)
 
  The side effect of receiving this in an inbox is that the server SHOULD generate either an Accept or Reject activity with the Follow as the object and deliver it to the actor of the Follow. The Accept or Reject MAY be generated automatically, or MAY be the result of user input (possibly after some delay in which the user reviews). Servers MAY choose to not explicitly send a Reject in response to a Follow, though implementors ought to be aware that the server sending the request could be left in an intermediate state. For example, a server might not send a Reject to protect a user's privacy.
 
 #### ap-s2s-follow-accept
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L33)
 
 
 In the case of receiving an Accept referencing this Follow as the object, the server SHOULD add the actor to the object actor's Followers Collection. In the case of a Reject, the server MUST NOT add the actor to the object actor's Followers Collection. 

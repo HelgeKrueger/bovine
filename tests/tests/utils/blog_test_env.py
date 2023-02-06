@@ -52,7 +52,7 @@ class BlogTestEnv:
         )
         return result
 
-    async def get_activity(self, url):
+    async def get(self, url, headers={}):
         parsed_url = urlparse(url)
         path = parsed_url.path
         if parsed_url.query:
@@ -60,8 +60,13 @@ class BlogTestEnv:
         logger.debug(f"Getting path {path} for url {url}")
         result_get = await self.client.get(
             path,
-            headers=fake_get_headers,
+            headers=headers,
         )
+
+        return result_get
+
+    async def get_activity(self, url, headers={}):
+        result_get = await self.get(url, headers={**fake_get_headers, **headers})
 
         # label fedi-objects-are-accessible-via-id-content-type
         assert result_get.status_code == 200

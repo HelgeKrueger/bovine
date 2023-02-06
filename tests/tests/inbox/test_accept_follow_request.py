@@ -17,6 +17,8 @@ async def test_mastodon_follow_request_is_accepted(blog_test_env):  # noqa: F811
     while blog_test_env.mock_signed_post.await_count == 0:
         await asyncio.sleep(0.1)
 
+    # LABEL: ap-s2s-follow
+
     blog_test_env.mock_signed_post.assert_awaited_once()
 
     args = blog_test_env.mock_signed_post.await_args[0]
@@ -25,9 +27,12 @@ async def test_mastodon_follow_request_is_accepted(blog_test_env):  # noqa: F811
     # assert args[3] == "inbox"
     # FIXME the logic for generating the inbox name is broken
 
-    response_activity = json.loads(args[4])
-    assert response_activity["type"] == "Accept"
-    assert response_activity["object"] == item
+    request_activity = json.loads(args[4])
+    assert request_activity["type"] == "Accept"
+    assert request_activity["object"] == item
+
+    # LABEL: ap-s2s-follow-accept
+    # FIXME: Should check ActivityPub Follower collection once implemented
 
     assert await Follower.filter(actor=blog_test_env.actor).count() == 1
 

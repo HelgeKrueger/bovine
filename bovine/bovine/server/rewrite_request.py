@@ -7,7 +7,7 @@ from quart import current_app, g, redirect, request
 
 from bovine.utils.parsers.accept_header import is_activity_request
 
-logger = logging.getLogger("rewrite")
+logger = logging.getLogger(__name__)
 
 
 access_token = os.environ.get("ACCESS_TOKEN", None)

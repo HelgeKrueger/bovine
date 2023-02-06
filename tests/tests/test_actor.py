@@ -1,7 +1,7 @@
 from tests.utils.blog_test_env import blog_test_env  # noqa: F401
 
 
-async def test_mastodon_follow_request_is_accepted(blog_test_env):  # noqa: F811
+async def test_actor(blog_test_env):  # noqa: F811
     result = await blog_test_env.get_activity("/activitypub/name")
 
     assert result["type"] == "Person"

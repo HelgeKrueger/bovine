@@ -27,6 +27,8 @@ async def test_success() -> None:
     response = await client.get("/.well-known/webfinger?resource=acct:user")
 
     assert response.status_code == 200
+    # Label: webfinger-content-type
+    assert response.headers["content-type"] == "application/jrd+json"
 
     data = await response.get_json()
 

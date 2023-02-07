@@ -2,7 +2,7 @@ import logging
 
 from bovine_tortoise.models import PublicKey
 
-logger = logging.getLogger("public-key")
+logger = logging.getLogger(__name__)
 
 
 class PublicKeyCache:

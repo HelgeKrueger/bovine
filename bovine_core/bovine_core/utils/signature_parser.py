@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("sig")
+logger = logging.getLogger(__name__)
 
 
 class Signature:

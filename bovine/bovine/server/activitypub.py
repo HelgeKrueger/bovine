@@ -19,7 +19,7 @@ cors_properties = {
 
 activitypub = Blueprint("activitypub", __name__, url_prefix="/activitypub")
 
-logger = logging.getLogger("activitypub")
+logger = logging.getLogger(__name__)
 
 
 def has_authorization() -> bool:

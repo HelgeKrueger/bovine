@@ -373,6 +373,8 @@ Additionally, if an object is addressed to the Public special collection, a serv
 
 #### ap-s2s-update
 
+- [test_create_then_update_note.py](../tests/tests/inbox/test_create_then_update_note.py#L29)
+
 For server to server interactions, an Update activity means that the receiving server SHOULD update its copy of the object of the same id to the copy supplied in the Update activity. Unlike the client to server handling of the Update activity, this is not a partial update but a complete replacement of the object.
 
 #### ap-s2s-delete

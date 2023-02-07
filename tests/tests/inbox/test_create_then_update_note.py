@@ -1,3 +1,5 @@
+import asyncio
+
 from tests.utils import get_activity_from_json
 from tests.utils.blog_test_env import (  # noqa: F401
     blog_test_env,
@@ -14,8 +16,21 @@ async def test_create_then_update_note(blog_test_env):  # noqa F811
     assert result.status_code == 202
     await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)
 
+    inbox_content = await blog_test_env.get_from_inbox()
+    assert len(inbox_content["orderedItems"]) == 1
+    inbox_item = inbox_content["orderedItems"][0]
+
+    assert inbox_item["type"] == "Create"
+
     result = await blog_test_env.send_to_inbox(update_item)
 
-    # FIXME: There should only be one item in inbox
-    # FIXME: Content of item should be updated
-    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 2)
+    await asyncio.sleep(0.3)
+
+    # LABEL: ap-s2s-update
+    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)
+
+    inbox_content = await blog_test_env.get_from_inbox()
+    assert len(inbox_content["orderedItems"]) == 1
+    inbox_item = inbox_content["orderedItems"][0]
+
+    assert inbox_item["type"] == "Update"

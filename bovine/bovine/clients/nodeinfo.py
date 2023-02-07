@@ -5,7 +5,7 @@ import traceback
 import aiohttp
 from bovine_core.clients.consts import BOVINE_CLIENT_NAME
 
-logger = logging.getLogger("nodeinfo")
+logger = logging.getLogger(__name__)
 
 
 async def fetch_nodeinfo(session: aiohttp.ClientSession, domain: str) -> dict | None:

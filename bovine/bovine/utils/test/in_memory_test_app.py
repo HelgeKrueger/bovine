@@ -1,5 +1,3 @@
-import logging
-import sys
 from unittest.mock import AsyncMock
 
 import aiohttp
@@ -16,13 +14,8 @@ from bovine.utils.in_memory_store import InMemoryUserStore
 
 from . import get_user_keys
 
-log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=log_format, stream=sys.stderr)
-
-
-async def silly(*args):
-    print("Coroutine silly called with", args)
-    return
+# log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
+# logging.basicConfig(level=logging.DEBUG, format=log_format, stream=sys.stderr)
 
 
 signature_checker = SignatureChecker(get_public_key)
@@ -47,7 +40,6 @@ app.config.update(
         "validate_signature": signature_checker.validate_signature,
         "get_user": data_store.get_user,
         "session": AsyncMock(aiohttp.ClientSession),
-        "inbox_getter": silly,
     }
 )
 app.register_blueprint(default_configuration)

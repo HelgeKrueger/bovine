@@ -10,6 +10,8 @@ from cryptography.hazmat.primitives.serialization import (
     load_pem_public_key,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def generate_public_private_key():
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -51,7 +53,7 @@ def verify_signature(public_key, message, signature):
             hashes.SHA256(),
         )
     except InvalidSignature:
-        logging.warning("invalid signature")
+        logger.warning("invalid signature")
         return False
 
     return True

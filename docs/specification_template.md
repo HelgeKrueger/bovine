@@ -1,5 +1,7 @@
 # Specification
 
+## Introduction
+
 ### Goal of this document
 
 My goal here is to provide an easily referencable index
@@ -7,12 +9,21 @@ of the [ActivityPub](https://www.w3.org/TR/activitypub/#actor-objects)
 and related specs, in order to reference them in Bovine
 tests
 
+### Usage
+
+This template is to be used in combination with the
+`make_specification.py` script. It is meant to scan your implementation
+for the usage of the here provided ids and then create a markdown
+document `specification.md` containing links to the implementation.
+
 ## FediVerse
 
 These are things necessary for the instance to interoperate.
 Generally everything starting with `fedi-` corresponds to something
 needed to be a citizen in the Fediverse, that I couldn't find
 in any spec.
+
+### General properties
 
 #### fedi-objects-are-accessible-via-id
 
@@ -23,15 +34,18 @@ server should answer to requests to `https://my_domain/someid`.
 
 Content-Type should be `application/activity+json`
 
-## Webfinger
+#### fedi-objects-have-html-representations
+
+By requesting an object with `Accept` header `text/html` (or similar)
+one is redirected to a webpage, featuring said activity.
+
+### Webfinger
 
 Webfinger is specified in [RFC-7033](https://datatracker.ietf.org/doc/html/rfc7033).
-
 
 #### webfinger-subject
 
 [Subject](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.1) should be present.
-
 
 #### webfinger-content-type
 
@@ -45,12 +59,10 @@ The [links](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.4) of the 
 response contain an element with `"rel":"self"` and `"type":"application/activity+json"`
 pointing to the activity pub actor profile.
 
-
 #### fedi-webfinger-username-is-preferredUsername
 
 The entry of `preferredUsername` in the actor profile obtained above corresponds
 to the username part of the account used in webfinger.
-
 
 ## ActivityPub
 
@@ -65,7 +77,6 @@ See [5.2 Inbox](https://www.w3.org/TR/activitypub/#inbox)
 
 The server SHOULD filter content according to the requester's permission.
 
-
 #### ap-collections-inbox-deduplication
 
 The server MUST perform de-duplication of activities returned by the inbox. Such deduplication MUST be performed by comparing the id of the activities and dropping any activities already seen.
@@ -74,15 +85,14 @@ The server MUST perform de-duplication of activities returned by the inbox. Such
 
 Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a POST request.
 
-
 #### ap-actor-outbox
 
 An ActivityStreams OrderedCollection comprised of all the messages produced by the actor;
-see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox). 
+see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox).
 
 #### ap-actor-following
 
-A link to an ActivityStreams collection of the actors that this actor is following; 
+A link to an ActivityStreams collection of the actors that this actor is following;
 see [5.4 Following Collection](https://www.w3.org/TR/activitypub/#following)
 
 #### ap-collections-following
@@ -95,9 +105,8 @@ MAY be filtered on privileges of an authenticated user or as appropriate when no
 
 #### ap-actor-followers
 
-A link to an [ActivityStreams] collection of the actors that follow this actor;
+A link to an \[ActivityStreams\] collection of the actors that follow this actor;
 see [5.3 Followers Collection](https://www.w3.org/TR/activitypub/#followers)
-
 
 #### ap-collections-followers
 
@@ -107,12 +116,10 @@ The followers collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
-
 #### ap-actor-like
 
-A link to an [ActivityStreams] collection of objects this actor has liked;
+A link to an \[ActivityStreams\] collection of objects this actor has liked;
 see [5.5 Liked Collection](https://www.w3.org/TR/activitypub/#liked).
-
 
 #### ap-collections-likes
 
@@ -122,51 +129,47 @@ The likes collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
-
-
-
 #### ap-actor-streams
 
-__MAY__: A list of supplementary Collections which may be of interest. 
+__MAY__: A list of supplementary Collections which may be of interest.
 
 #### ap-actor-preferredUsername
 
-__MAY__: A short username which may be used to refer to the actor  
-
+__MAY__: A short username which may be used to refer to the actor
 
 #### ap-actor- endpoints
 
-huh?  
+huh?\
 MAY
 
 #### ap-actor-endpoints-proxyUrl
 
-x-www-form-urlencoded id  
+x-www-form-urlencoded id\
 MAY
 
 #### ap-actor-endpoints-oauthAuthorizationEndpoint
 
-...  
+...\
 MAY
 
 #### ap-actor-endpoints-oauthTokenEndpoint
 
-...  
+...\
 MAY
 
 #### ap-actor-endpoints-provideClientKey
 
-...  
+...\
 MAY
 
 #### ap-actor-endpoints-signClientKey
 
-...  
+...\
 MAY
 
 #### ap-actor-endpoints-sharedInbox
 
-...  
+...\
 MAY
 
 ### [Collections](https://www.w3.org/TR/activitypub/#collections)
@@ -174,7 +177,6 @@ MAY
 #### ap-collections-reverse-chronological-order
 
 An OrderedCollection MUST be presented consistently in reverse chronological order.
-
 
 #### ap-collections-liked
 
@@ -184,12 +186,9 @@ The liked collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
-
-
 #### ap-public-no-delivery
 
 Implementations MUST NOT deliver to the "public" special collection; it is not capable of receiving actual activities
-
 
 #### ap-collections-shares
 
@@ -198,9 +197,6 @@ The shares collection MUST be either an OrderedCollection or a Collection
 #### ap-collections-shares-filter
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
-
-
-
 
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 
@@ -244,7 +240,7 @@ A mismatch between addressing of the Create activity and its object is likely to
 
 #### ap-c2s-post-non-activity
 
-For client to server posting, it is possible to submit an object for creation without a surrounding activity. The server MUST accept a valid [ActivityStreams] object that isn't a subtype of Activity in the POST request to the outbox. The server then MUST attach this object as the object of a Create Activity. For non-transient objects, the server MUST attach an id to both the wrapping Create and its wrapped Object.
+For client to server posting, it is possible to submit an object for creation without a surrounding activity. The server MUST accept a valid ActivityStreams object that isn't a subtype of Activity in the POST request to the outbox. The server then MUST attach this object as the object of a Create Activity. For non-transient objects, the server MUST attach an id to both the wrapping Create and its wrapped Object.
 
 Any to, bto, cc, bcc, and audience properties specified on the object MUST be copied over to the new Create activity by the server.
 
@@ -302,7 +298,7 @@ Additionally, servers performing server to server delivery of the following acti
 
 #### ap-s2s-caching
 
-HTTP caching mechanisms [RFC7234] SHOULD be respected when appropriate, both when receiving responses from other servers as well as sending responses to other servers.
+HTTP caching mechanisms \[RFC7234\] SHOULD be respected when appropriate, both when receiving responses from other servers as well as sending responses to other servers.
 
 #### ap-s2s-collection
 
@@ -326,7 +322,7 @@ For federated servers performing delivery to a third party server, delivery SHOU
 
 When objects are received in the outbox (for servers which support both Client to Server interactions and Server to Server Interactions), the server MUST target and deliver to:
 
-    The to, bto, cc, bcc or audience fields if their values are individuals or Collections owned by the actor.
+> The to, bto, cc, bcc or audience fields if their values are individuals or Collections owned by the actor.
 
 These fields will have been populated appropriately by the client which posted the Activity to the outbox.
 
@@ -334,71 +330,60 @@ These fields will have been populated appropriately by the client which posted t
 
 When Activities are received in the inbox, the server needs to forward these to recipients that the origin was unable to deliver them to. To do this, the server MUST target and deliver to the values of to, cc, and/or audience if and only if all of the following are true:
 
-    This is the first time the server has seen this Activity.
-    The values of to, cc, and/or audience contain a Collection owned by the server.
-    The values of inReplyTo, object, target and/or tag are objects owned by the server. The server SHOULD recurse through these values to look for linked objects owned by the server, and SHOULD set a maximum limit for recursion (ie. the point at which the thread is so deep the recipients followers may not mind if they are no longer getting updates that don't directly involve the recipient). The server MUST only target the values of to, cc, and/or audience on the original object being forwarded, and not pick up any new addressees whilst recursing through the linked objects (in case these addressees were purposefully amended by or via the client).
+> This is the first time the server has seen this Activity.
+> The values of to, cc, and/or audience contain a Collection owned by the server.
+> The values of inReplyTo, object, target and/or tag are objects owned by the server. The server SHOULD recurse through these values to look for linked objects owned by the server, and SHOULD set a maximum limit for recursion (ie. the point at which the thread is so deep the recipients followers may not mind if they are no longer getting updates that don't directly involve the recipient). The server MUST only target the values of to, cc, and/or audience on the original object being forwarded, and not pick up any new addressees whilst recursing through the linked objects (in case these addressees were purposefully amended by or via the client).
 
 The server MAY filter its delivery targets according to implementation-specific rules (for example, spam filtering).
 
-
 #### ap-s2s-delivery-shared-inbox
-When an object is being delivered to the originating actor's followers, a server MAY reduce the number of receiving actors delivered to by identifying all followers which share the same sharedInbox who would otherwise be individual recipients and instead deliver objects to said sharedInbox. 
 
-
+When an object is being delivered to the originating actor's followers, a server MAY reduce the number of receiving actors delivered to by identifying all followers which share the same sharedInbox who would otherwise be individual recipients and instead deliver objects to said sharedInbox.
 
 #### ap-s2s-delivery-shared-inbox-public
 
-Additionally, if an object is addressed to the Public special collection, a server MAY deliver that object to all known sharedInbox endpoints on the network. 
-
+Additionally, if an object is addressed to the Public special collection, a server MAY deliver that object to all known sharedInbox endpoints on the network.
 
 #### ap-s2s-update
 
-For server to server interactions, an Update activity means that the receiving server SHOULD update its copy of the object of the same id to the copy supplied in the Update activity. Unlike the client to server handling of the Update activity, this is not a partial update but a complete replacement of the object. 
+For server to server interactions, an Update activity means that the receiving server SHOULD update its copy of the object of the same id to the copy supplied in the Update activity. Unlike the client to server handling of the Update activity, this is not a partial update but a complete replacement of the object.
 
 #### ap-s2s-delete
 
-The side effect of receiving this is that (assuming the object is owned by the sending actor / server) the server receiving the delete activity SHOULD remove its representation of the object with the same id, and MAY replace that representation with a Tombstone object. 
-
+The side effect of receiving this is that (assuming the object is owned by the sending actor / server) the server receiving the delete activity SHOULD remove its representation of the object with the same id, and MAY replace that representation with a Tombstone object.
 
 #### ap-s2s-follow
 
- The side effect of receiving this in an inbox is that the server SHOULD generate either an Accept or Reject activity with the Follow as the object and deliver it to the actor of the Follow. The Accept or Reject MAY be generated automatically, or MAY be the result of user input (possibly after some delay in which the user reviews). Servers MAY choose to not explicitly send a Reject in response to a Follow, though implementors ought to be aware that the server sending the request could be left in an intermediate state. For example, a server might not send a Reject to protect a user's privacy.
+The side effect of receiving this in an inbox is that the server SHOULD generate either an Accept or Reject activity with the Follow as the object and deliver it to the actor of the Follow. The Accept or Reject MAY be generated automatically, or MAY be the result of user input (possibly after some delay in which the user reviews). Servers MAY choose to not explicitly send a Reject in response to a Follow, though implementors ought to be aware that the server sending the request could be left in an intermediate state. For example, a server might not send a Reject to protect a user's privacy.
 
 #### ap-s2s-follow-accept
 
-
-In the case of receiving an Accept referencing this Follow as the object, the server SHOULD add the actor to the object actor's Followers Collection. In the case of a Reject, the server MUST NOT add the actor to the object actor's Followers Collection. 
-
+In the case of receiving an Accept referencing this Follow as the object, the server SHOULD add the actor to the object actor's Followers Collection. In the case of a Reject, the server MUST NOT add the actor to the object actor's Followers Collection.
 
 #### ap-s2s-accept
 
-If the object of an Accept received to an inbox is a Follow activity previously sent by the receiver, the server SHOULD add the actor to the receiver's Following Collection. 
-
+If the object of an Accept received to an inbox is a Follow activity previously sent by the receiver, the server SHOULD add the actor to the receiver's Following Collection.
 
 #### ap-s2s-reject
 
-If the object of a Reject received to an inbox is a Follow activity previously sent by the receiver, this means the recipient did not approve the Follow request. The server MUST NOT add the actor to the receiver's Following Collection. 
+If the object of a Reject received to an inbox is a Follow activity previously sent by the receiver, this means the recipient did not approve the Follow request. The server MUST NOT add the actor to the receiver's Following Collection.
 
 #### ap-s2s-add
 
- Upon receipt of an Add activity into the inbox, the server SHOULD add the object to the collection specified in the target property, unless: 
-
+Upon receipt of an Add activity into the inbox, the server SHOULD add the object to the collection specified in the target property, unless:
 
 #### ap-s2s-remove
 
-Upon receipt of a Remove activity into the inbox, the server SHOULD remove the object from the collection specified in the target property, unless: 
+Upon receipt of a Remove activity into the inbox, the server SHOULD remove the object from the collection specified in the target property, unless:
 
 #### ap-s2s-like
 
-
- The side effect of receiving this in an inbox is that the server SHOULD increment the object's count of likes by adding the received activity to the likes collection if this collection is present.
-
+The side effect of receiving this in an inbox is that the server SHOULD increment the object's count of likes by adding the received activity to the likes collection if this collection is present.
 
 #### ap-s2s-announce
 
-Upon receipt of an Announce activity in an inbox, a server SHOULD increment the object's count of shares by adding the received activity to the shares collection if this collection is present. 
-
+Upon receipt of an Announce activity in an inbox, a server SHOULD increment the object's count of shares by adding the received activity to the shares collection if this collection is present.
 
 #### ap-s2s-undo
 
-The Undo activity is used to undo the side effects of previous activities. See the ActivityStreams documentation on Inverse Activities and "Undo". 
+The Undo activity is used to undo the side effects of previous activities. See the ActivityStreams documentation on Inverse Activities and "Undo".

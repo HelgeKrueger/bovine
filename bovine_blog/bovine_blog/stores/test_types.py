@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from bovine_tortoise.models import Actor, OutboxEntry
@@ -30,12 +31,39 @@ async def test_post_entry_from_outbox_entry(db_url):  # noqa F811
 
     data = {"object": {"inReplyTo": "author", "content": "blabla"}}
 
+    my_uuid = uuid.uuid4()
+
     outbox_entry = await OutboxEntry.create(
-        actor=actor, local_path="me/path", created=datetime.now(), content=data
+        actor=actor, local_path=f"me/{my_uuid}", created=datetime.now(), content=data
     )
 
     post_entry = PostEntry.from_outbox_entry(outbox_entry)
 
     assert post_entry.in_reply_to == "author"
     assert post_entry.author == "me"
-    assert post_entry.local_id == "path"
+    assert post_entry.local_id == str(my_uuid)
+
+
+async def test_post_entry_from_outbox_entry_two(db_url):  # noqa F811
+    actor = await Actor.create(
+        account="name",
+        url="proto://url",
+        actor_type="Person",
+        public_key="",
+        private_key="",
+    )
+
+    data = {"object": {"inReplyTo": "author", "content": "blabla"}}
+
+    my_uuid = uuid.uuid4()
+    local_path = f"/prefix/two/me/{my_uuid}/suffix"
+
+    outbox_entry = await OutboxEntry.create(
+        actor=actor, local_path=local_path, created=datetime.now(), content=data
+    )
+
+    post_entry = PostEntry.from_outbox_entry(outbox_entry)
+
+    assert post_entry.in_reply_to == "author"
+    assert post_entry.author == "me"
+    assert post_entry.local_id == str(my_uuid)

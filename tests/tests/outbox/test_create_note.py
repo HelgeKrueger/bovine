@@ -36,3 +36,17 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     result = await blog_test_env.get_activity(object_id)
     assert result["type"] == "Note"
     assert "@context" in result
+
+    # LAVEL: fedi-objects-have-html-representations
+    redirect = await blog_test_env.get(object_id, headers={"Accept": "text/html"})
+    assert redirect.status_code == 302
+
+    new_location = redirect.headers["location"]
+    html_representation = await blog_test_env.get(
+        new_location, headers={"Accept": "text/html"}
+    )
+
+    assert html_representation.status_code == 200
+    html_content = await html_representation.get_data(as_text=True)
+
+    assert "I&#39;m literally creating test data" in html_content

@@ -1,8 +1,10 @@
-from pyld import jsonld
-import requests
-import os
 import json
+import os
+
 import pytest
+import requests
+from pyld import jsonld
+
 from bovine_core.activitystreams import (
     build_actor,
     build_ordered_collection,

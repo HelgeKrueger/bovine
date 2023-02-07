@@ -32,3 +32,7 @@ poetry run pytest
 poetry run black .
 poetry run flake8 .
 
+cd ../docs
+python make_specification.py
+poetry run mdformat .
+

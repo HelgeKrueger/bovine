@@ -33,8 +33,15 @@ class TortoiseStore:
             return None
 
         local_path = f"{username}/{uuid}"
-
         entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
+
+        if entry is None:
+            local_path = f"/activitypub/{username}/{uuid}"
+            entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
+
+        if entry is None:
+            local_path = f"/activitypub/{username}/{uuid}/activity"
+            entry = await OutboxEntry.get_or_none(actor=actor, local_path=local_path)
 
         if entry is None:
             return None

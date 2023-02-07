@@ -20,6 +20,6 @@ with open("specification_template.md", "r") as f:
             if line.startswith("####"):
                 key = line[5:-1]
                 for name, content in tests.items():
-                    for line_number, line in enumerate(content):
+                    for line_number, line in enumerate(content, start=1):
                         if key in line:
                             fw.write(make_link(name, line_number))

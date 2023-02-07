@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from bovine_tortoise.models import OutboxEntry
@@ -55,14 +56,20 @@ class PostEntry:
     def from_outbox_entry(entry: OutboxEntry):
         content = extract_content(entry.content)
 
-        local_path = entry.local_path
-        local_path = local_path.removesuffix("/activity")
+        print(entry.local_path)
 
-        if "/" in local_path:
-            author, local_id = local_path.split("/", 1)
-        else:
+        re_match = re.search(
+            r"([^/]*)/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})",
+            entry.local_path,
+        )
+
+        if not re_match:
             author = ""
-            local_id = local_path
+            local_id = entry.local_path
+        else:
+            author = re_match.group(1)
+            local_id = re_match.group(2)
+
         entry = PostEntry(local_id, author, entry.created, content).set_in_reply_to(
             extract_in_reply_to(entry.content)
         )

@@ -12,6 +12,7 @@ rdflib = "^6.2.0"
 requests = "^2.28.2"
 aiohttp = "^3.8.3"
 pyld = "^2.0.3"
+bovine = {path = "../bovine", develop = true}
 
 
 [build-system]

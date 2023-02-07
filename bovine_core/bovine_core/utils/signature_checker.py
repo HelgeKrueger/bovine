@@ -40,11 +40,11 @@ class SignatureChecker:
                 return None
 
             http_date = parse_gmt(request.headers["date"])
-            # if not check_max_offset_now(http_date):
-            #     logger.warning(
-            #         f"Encountered invalid http date {request.headers['date']}"
-            #     )
-            #     # return None
+            if not check_max_offset_now(http_date):
+                logger.warning(
+                    f"Encountered invalid http date {request.headers['date']}"
+                )
+                return None
 
             for field in signature_fields:
                 if field == "(request-target)":

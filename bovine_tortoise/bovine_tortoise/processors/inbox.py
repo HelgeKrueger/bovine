@@ -75,7 +75,7 @@ async def remove_from_database(
             logger.error(f"Actor not found!!! {local_user.name}")
             return
 
-        content_id = determine_content_id(item)
+        content_id = determine_content_id(item, for_delete=True)
 
         if not content_id:
             logger.error("Cannot delete item without id")
@@ -100,13 +100,16 @@ async def remove_from_database(
         return
 
 
-def determine_content_id(item):
+def determine_content_id(item, for_delete=False):
     if isinstance(item, dict):
         data = item
     elif isinstance(item, str):
         return item
     else:
         data = item.get_data()
+
+    if for_delete:
+        return data.get("id")
 
     content_id = data.get("object", {}).get("id")
     if content_id is not None:

@@ -39,7 +39,9 @@ const transformActivity = (data) => {
   const displayed = 0;
 
   if (data.type === "Announce") {
-    seen = 1;
+    if (!data.object.startsWith("https://mymath")) {
+      seen = 1;
+    }
   }
 
   let updated = data?.updated;

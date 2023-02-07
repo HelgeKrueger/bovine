@@ -37,7 +37,7 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     assert result["type"] == "Note"
     assert "@context" in result
 
-    # LAVEL: fedi-objects-have-html-representations
+    # LABEL: fedi-objects-have-html-representations
     redirect = await blog_test_env.get(object_id, headers={"Accept": "text/html"})
     assert redirect.status_code == 302
 

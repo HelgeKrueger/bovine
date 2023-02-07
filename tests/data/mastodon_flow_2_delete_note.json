@@ -1,0 +1,21 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    { "ostatus": "http://ostatus.org#", "atomUri": "ostatus:atomUri" }
+  ],
+  "id": "https://mastodon/users/remote-user/statuses/109820990504#delete",
+  "type": "Delete",
+  "actor": "https://mastodon/users/remote-user",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "object": {
+    "id": "https://mastodon/users/remote-user/statuses/109820990504",
+    "type": "Tombstone",
+    "atomUri": "https://mastodon/users/remote-user/statuses/109820990504"
+  },
+  "signature": {
+    "type": "RsaSignature2017",
+    "creator": "https://mastodon/users/remote-user#main-key",
+    "created": "2023-02-07T11:37:28Z",
+    "signatureValue": "meaningless=="
+  }
+}

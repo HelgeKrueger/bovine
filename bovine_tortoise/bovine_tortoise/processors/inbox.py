@@ -6,7 +6,7 @@ from bovine.types import LocalActor, ProcessingItem
 
 from bovine_tortoise.models import Actor, InboxEntry
 
-logger = logging.getLogger("tor-proc")
+logger = logging.getLogger(__name__)
 
 
 async def store_in_database(
@@ -69,6 +69,12 @@ async def remove_from_database(
         entry = await InboxEntry.get_or_none(
             content_id=content_id,
         )
+
+        # FIXME
+        if not entry:
+            entry = await InboxEntry.get_or_none(
+                content_id=content_id + "/activity",
+            )
 
         if not entry:
             logger.warning("Item not found")

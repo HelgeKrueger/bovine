@@ -1,7 +1,7 @@
 import logging
 import traceback
 
-logger = logging.getLogger("bov-proc")
+logger = logging.getLogger(__name__)
 
 
 async def do_nothing(item, *args):

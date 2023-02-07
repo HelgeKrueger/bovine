@@ -2,7 +2,7 @@ import logging
 
 from bovine_tortoise.models import PublicKey
 
-logger = logging.getLogger("public-key")
+logger = logging.getLogger(__name__)
 
 
 class PublicKeyCache:
@@ -15,6 +15,7 @@ class PublicKeyCache:
         if item:
             return item.public_key
 
+        logging.info(f"Fetching public key for {url}")
         public_key = await self.key_fetcher(url)
 
         if public_key is None:

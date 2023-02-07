@@ -5,7 +5,7 @@ import bovine_core.clients.signed_http
 
 from bovine.types import ProcessingItem, LocalActor
 
-logger = logging.getLogger("proc-fetch")
+logger = logging.getLogger(__name__)
 
 
 async def fetch_object_and_process(

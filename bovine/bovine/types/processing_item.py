@@ -21,7 +21,7 @@ class ProcessingItem:
             parsed = json.loads(self.body.decode("utf-8"))
             return parsed["id"]
         except Exception as e:
-            logging.info(e)
+            logger.info(e)
             return "failed fetching id"
 
     def dump(self):

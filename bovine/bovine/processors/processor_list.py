@@ -3,7 +3,7 @@ import traceback
 
 from . import build_do_for_types
 
-logger = logging.getLogger("pro-list")
+logger = logging.getLogger(__name__)
 
 
 class ProcessorList:

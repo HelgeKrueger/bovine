@@ -8,7 +8,7 @@ from bovine_core.activitystreams.activities import build_accept
 
 from bovine_tortoise.models import Actor, Follower, Following
 
-logger = logging.getLogger("tor-proc")
+logger = logging.getLogger(__name__)
 
 
 async def accept_follow_request(

@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urlparse
 
 import aiohttp
@@ -8,6 +9,8 @@ from bovine_core.utils.date import get_gmt_now
 
 from .consts import BOVINE_CLIENT_NAME
 
+logger = logging.getLogger(__name__)
+
 
 async def signed_get(
     session: aiohttp.ClientSession,
@@ -16,6 +19,8 @@ async def signed_get(
     url: str,
     headers: dict = {},
 ) -> aiohttp.ClientResponse:
+    logger.debug(f"Signed get with {private_key} on {url}")
+
     parsed_url = urlparse(url)
     host = parsed_url.netloc
     target = parsed_url.path
@@ -48,6 +53,8 @@ async def signed_post(
     body: str,
     headers: dict = {},
 ) -> aiohttp.ClientResponse:
+    logger.debug(f"Signed post with {private_key} on {url}")
+
     parsed_url = urlparse(url)
     host = parsed_url.netloc
     target = parsed_url.path

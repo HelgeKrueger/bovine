@@ -5,7 +5,7 @@ from bovine.types import LocalActor, ProcessingItem
 from bovine_tortoise.models import Actor, InboxEntry
 from bovine_tortoise.utils.test import db_url  # noqa: F401
 
-from .inbox import remove_from_database, store_in_database
+from .inbox import remove_from_database, store_in_database, update_in_database
 
 
 async def test_store_in_database(db_url):  # noqa: F811
@@ -21,9 +21,10 @@ async def test_store_in_database(db_url):  # noqa: F811
     item = ProcessingItem(
         json.dumps(
             {
+                "id": "object_id/activity",
                 "type": "Create",
                 "actor": "url",
-                "object": {"conversation": "uid:bovine:123"},
+                "object": {"id": "object_id", "conversation": "uid:bovine:123"},
             }
         ),
     )
@@ -34,6 +35,7 @@ async def test_store_in_database(db_url):  # noqa: F811
 
     entry = await InboxEntry.filter(actor=actor).get()
 
+    assert entry.content_id == "object_id"
     assert entry.content["type"] == "Create"
     assert entry.conversation == "uid:bovine:123"
 
@@ -88,3 +90,48 @@ async def test_store_and_remove_from_database(db_url):  # noqa: F811
 
     await remove_from_database(item, local_user, None)
     assert await InboxEntry.filter(actor=actor).count() == 0
+
+
+async def test_store_and_update_from_database(db_url):  # noqa: F811
+    actor = await Actor.create(
+        account="name",
+        url="url",
+        actor_type="type",
+        private_key="private_key",
+        public_key="public_key",
+    )
+    local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
+
+    create = ProcessingItem(
+        json.dumps(
+            {
+                "type": "Create",
+                "actor": "url",
+                "object": {"id": "object_id", "content": "old"},
+                "id": "object_id",
+            }
+        ),
+    )
+
+    update_data = {
+        "type": "Update",
+        "actor": "url",
+        "object": {"id": "object_id", "content": "new"},
+        "id": "object_id",
+    }
+
+    update = ProcessingItem(
+        json.dumps(update_data),
+    )
+
+    assert await InboxEntry.filter(actor=actor).count() == 0
+
+    await store_in_database(create, local_user, None)
+    assert await InboxEntry.filter(actor=actor).count() == 1
+
+    await update_in_database(update, local_user, None)
+    assert await InboxEntry.filter(actor=actor).count() == 1
+
+    inbox_entry = await InboxEntry.filter(actor=actor).get()
+
+    assert inbox_entry.content == update_data

@@ -10,7 +10,7 @@ from bovine.types import LocalActor
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.utils import determine_local_path_from_activity_id
 
-logger = logging.getLogger("outbox-proc")
+logger = logging.getLogger(__name__)
 
 
 async def create_outbox_entry(

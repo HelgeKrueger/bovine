@@ -15,7 +15,7 @@ activitypub_client = Blueprint(
     "activitypub_client", __name__, url_prefix="/activitypub"
 )
 
-logger = logging.getLogger("ap-c2s")
+logger = logging.getLogger(__name__)
 
 
 def has_authorization(local_user) -> bool:

@@ -1,7 +1,7 @@
-from bovine_tortoise.models import OutboxEntry
-
 from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from tests.utils.blog_test_env import (  # noqa: F401
+    blog_test_env,
+)
 
 
 async def test_buffalo_create_note(blog_test_env):  # noqa F811
@@ -11,10 +11,6 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
 
     assert result.status_code == 202
 
-    assert await OutboxEntry.filter(actor=blog_test_env.actor).count() == 1
-    entry = await OutboxEntry.filter(actor=blog_test_env.actor).get()
-    assert entry.content == item
-
     result = await blog_test_env.get_from_outbox()
     assert result["id"].endswith(blog_test_env.local_user.get_outbox())  # FIXME?
     assert result["type"] == "OrderedCollection"
@@ -22,13 +18,15 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     # LABEL: ap-c2s-add-to-outbox
     assert result["totalItems"] == 1
     created_item = result["orderedItems"][0]
-    assert created_item == item
+    assert item["id"] != created_item["id"]
 
     assert created_item["type"] == "Create"
     assert isinstance(created_item["object"], dict)
     object_item = created_item["object"]
 
     assert object_item["type"] == "Note"
+    # LABEL: ap-c2s-new-id
+    assert object_item["id"] != item["object"]["id"]
 
     # LABEL: fedi-objects-are-accessible-via-id
     object_id = object_item["id"]

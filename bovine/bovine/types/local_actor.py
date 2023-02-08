@@ -1,3 +1,4 @@
+import uuid
 import logging
 
 from .base_count_and_items import BaseCountAndItems
@@ -81,3 +82,6 @@ class LocalActor:
             return await self.streams[stream_name].items(self, **kwargs)
 
         return items
+
+    def generate_uuid(self):
+        return f"{self.url}/{uuid.uuid4()}"

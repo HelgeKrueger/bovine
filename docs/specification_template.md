@@ -137,40 +137,19 @@ __MAY__: A list of supplementary Collections which may be of interest.
 
 __MAY__: A short username which may be used to refer to the actor
 
-#### ap-actor- endpoints
-
-huh?\
-MAY
+#### ap-actor-endpoints
 
 #### ap-actor-endpoints-proxyUrl
 
-x-www-form-urlencoded id\
-MAY
-
 #### ap-actor-endpoints-oauthAuthorizationEndpoint
-
-...\
-MAY
 
 #### ap-actor-endpoints-oauthTokenEndpoint
 
-...\
-MAY
-
 #### ap-actor-endpoints-provideClientKey
-
-...\
-MAY
 
 #### ap-actor-endpoints-signClientKey
 
-...\
-MAY
-
 #### ap-actor-endpoints-sharedInbox
-
-...\
-MAY
 
 ### [Collections](https://www.w3.org/TR/activitypub/#collections)
 

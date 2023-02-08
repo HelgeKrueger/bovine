@@ -33,6 +33,7 @@ def has_authorization() -> bool:
 
 
 @activitypub.get("/<account_name>")
+@route_cors(**cors_properties)
 async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     user_info = await current_app.config["get_user"](account_name)
 

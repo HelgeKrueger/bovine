@@ -1,6 +1,7 @@
 import { ExpandMore } from "@mui/icons-material";
 import { Divider, Link, Paper, Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import Delete from "./actions/Delete";
 import Like from "./actions/Like";
 import Actor from "./Actor";
 import Attachments from "./Attachments";
@@ -90,6 +91,7 @@ const CreateNote = ({ note, source, seen }) => {
         <ReplyWithSketch entry={note} />
         <Source entry={source} />
         <Like object={note} />
+        <Delete object={note} />
       </Box>
     </Paper>
   );

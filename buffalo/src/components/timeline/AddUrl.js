@@ -6,6 +6,11 @@ const AddUrl = () => {
   const [urlToFetch, setUrlToFetch] = useState("");
 
   const performFetch = () => {
+    // FIXME use this to query proxy endpoint
+    // fetch('/', {method:"POST", headers: {
+    //   'Content-Type': 'application/x-www-form-urlencoded'
+    // },
+    // body: new URLSearchParams({"id": "uuid"})})
     fetch("/api/fetch", {
       method: "post",
       headers: { "Content-Type": "application/json" },

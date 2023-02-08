@@ -21,7 +21,14 @@ const Attachments = ({ attachments }) => {
     return <></>;
   }
 
-  return attachments.map((entry) => (
+  // FIXME
+
+  if (Object.keys(attachments)[0] !== "0") {
+    console.log(attachments);
+    return <Attachment entry={attachments} key={attachments?.url} />;
+  }
+
+  return attachments?.map((entry) => (
     <Attachment entry={entry} key={entry?.url} />
   ));
 };

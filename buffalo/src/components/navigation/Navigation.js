@@ -11,6 +11,7 @@ import ToFetch from "./ToFetch";
 
 import { EntryContext } from "../../pages/Main";
 import { useNavigate } from "react-router";
+import ToOutbox from "./ToOutbox";
 
 const Navigation = () => {
   const { updateEntry } = useContext(EntryContext);
@@ -33,6 +34,7 @@ const Navigation = () => {
       <ToPost />
       <ToSketch />
       <ToFetch />
+      <ToOutbox />
       <DataUpdate />
       <IconButton onClick={handleMessageClick} color="primary">
         <UnreadCountBadge>

@@ -15,7 +15,7 @@ class PublicKeyCache:
         if item:
             return item.public_key
 
-        logging.info(f"Fetching public key for {url}")
+        logger.info(f"Fetching public key for {url}")
         public_key = await self.key_fetcher(url)
 
         if public_key is None:

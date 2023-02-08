@@ -1,4 +1,5 @@
 from bovine.processors.fetch_object_and_process import fetch_object_and_process
+from bovine.processors.outbox.replace_ids import replace_ids
 from bovine.processors.processor_list import ProcessorList
 from bovine_tortoise.processors.inbox import (
     remove_from_database,
@@ -34,6 +35,9 @@ default_inbox_process = (
 
 default_outbox_process = (
     ProcessorList()
+    .add_for_types(
+        Create=replace_ids,
+    )
     .add_for_types(
         Add=create_outbox_entry,
         Announce=create_outbox_entry,

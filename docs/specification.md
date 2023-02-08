@@ -28,7 +28,7 @@ in any spec.
 #### fedi-objects-are-accessible-via-id
 
 - [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L71)
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L33)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L31)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
 server should answer to requests to `https://my_domain/someid`.
@@ -41,7 +41,7 @@ Content-Type should be `application/activity+json`
 
 #### fedi-objects-have-html-representations
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L40)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L38)
 
 By requesting an object with `Accept` header `text/html` (or similar)
 one is redirected to a webpage, featuring said activity.
@@ -158,40 +158,19 @@ __MAY__: A list of supplementary Collections which may be of interest.
 
 __MAY__: A short username which may be used to refer to the actor
 
-#### ap-actor- endpoints
-
-huh?\
-MAY
+#### ap-actor-endpoints
 
 #### ap-actor-endpoints-proxyUrl
 
-x-www-form-urlencoded id\
-MAY
-
 #### ap-actor-endpoints-oauthAuthorizationEndpoint
-
-...\
-MAY
 
 #### ap-actor-endpoints-oauthTokenEndpoint
 
-...\
-MAY
-
 #### ap-actor-endpoints-provideClientKey
-
-...\
-MAY
 
 #### ap-actor-endpoints-signClientKey
 
-...\
-MAY
-
 #### ap-actor-endpoints-sharedInbox
-
-...\
-MAY
 
 ### [Collections](https://www.w3.org/TR/activitypub/#collections)
 
@@ -227,6 +206,8 @@ Client to server interaction takes place through clients posting Activities to a
 
 #### ap-c2s-new-id
 
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L28)
+
 If an Activity is submitted with a value in the id property, servers MUST ignore this and generate a new id for the Activity.
 
 #### ap-c2s-status-code
@@ -239,7 +220,7 @@ The server MUST remove the bto and/or bcc properties, if they exist, from the Ac
 
 #### ap-c2s-add-to-outbox
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L22)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L18)
 
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
 
@@ -273,7 +254,7 @@ The Update activity is used when updating an already existing object. The side e
 
 #### ap-c2s-delete-activity
 
-- [test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py#L27)
+- [test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py#L34)
 
 The Delete activity is used to delete an already existing object. The side effect of this is that the server MAY replace the object with a Tombstone of the object that will be displayed in activities which reference the deleted object. If the deleted object is requested the server SHOULD respond with either the HTTP 410 Gone status code if a Tombstone object is presented as the response body, otherwise respond with a HTTP 404 Not Found.
 

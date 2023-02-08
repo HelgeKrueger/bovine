@@ -34,7 +34,7 @@ async def test_create_note_is_send_to_user(blog_test_env):  # noqa F811
     assert result["type"] == "OrderedCollection"
 
     assert result["totalItems"] == 1
-    assert result["orderedItems"][0] == create
+    assert result["orderedItems"][0]["id"] != create["id"]
 
     blog_test_env.mock_signed_post.assert_awaited_once()
 
@@ -42,7 +42,7 @@ async def test_create_note_is_send_to_user(blog_test_env):  # noqa F811
     assert args[3] == "other/inbox"
     create_data = json.loads(args[4])
 
-    assert create_data == create
+    assert create_data == result["orderedItems"][0]
 
     assert create_data["type"] == "Create"
 

@@ -13,3 +13,7 @@ db.version(3).stores({
 db.version(4).stores({
   activity: "&id, conversation, seen, displayed, updated, remoteId",
 });
+db.version(5).stores({
+  activity: "&id, conversation, seen, displayed, updated, remoteId",
+  meta: "&key",
+});

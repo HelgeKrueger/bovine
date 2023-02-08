@@ -23,6 +23,22 @@ const buildLike = (actor, object) => {
   };
 };
 
+const buildDelete = (actor, object) => {
+  return {
+    "@context": "https://www.w3.org/ns/activitystreams",
+    type: "Delete",
+    id: actor + "/delete-" + uuidv4(),
+    actor: actor,
+    object: {
+      type: "Tombstone",
+      id: object?.id,
+    },
+    to: object.to,
+    cc: object.cc,
+    published: currentDate(),
+  };
+};
+
 const buildSource = (content) => {
   return {
     content: content,
@@ -173,4 +189,11 @@ const buildFollow = (other) => {
   };
 };
 
-export { buildLike, buildCreateForNote, buildFollow, buildNote, buildImage };
+export {
+  buildDelete,
+  buildLike,
+  buildCreateForNote,
+  buildFollow,
+  buildNote,
+  buildImage,
+};

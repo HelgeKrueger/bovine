@@ -13,7 +13,9 @@ async def fetch_nodeinfo(session: aiohttp.ClientSession, domain: str) -> dict | 
         wellknown_nodeinfo_url = f"https://{domain}/.well-known/nodeinfo"
 
         async with session.get(
-            wellknown_nodeinfo_url, headers={"user-agent": BOVINE_CLIENT_NAME}
+            wellknown_nodeinfo_url,
+            headers={"user-agent": BOVINE_CLIENT_NAME},
+            timeout=60,
         ) as response:
             text = await response.text()
             data = json.loads(text)

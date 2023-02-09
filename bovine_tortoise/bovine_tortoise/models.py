@@ -1,7 +1,7 @@
 from tortoise import fields
 from tortoise.models import Model
 
-from .types import PeerType
+from .utils.peer_type import PeerType
 
 
 class Actor(Model):

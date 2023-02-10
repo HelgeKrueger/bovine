@@ -30,7 +30,7 @@ class Signature:
 
             return Signature(
                 parsed["keyId"],
-                parsed["algorithm"],
+                parsed.get("algorithm", "rsa-sha256"),
                 parsed["headers"],
                 parsed["signature"],
             )

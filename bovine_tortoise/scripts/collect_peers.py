@@ -1,12 +1,11 @@
 import asyncio
-import aiohttp
-
 from urllib.parse import urlparse
+
+import aiohttp
+from bovine.clients.nodeinfo import fetch_nodeinfo
 from tortoise import Tortoise
 
-from bovine.clients.nodeinfo import fetch_nodeinfo
-
-from bovine_tortoise.models import PublicKey, Peer
+from bovine_tortoise.models import Peer, PublicKey
 from bovine_tortoise.utils import init
 from bovine_tortoise.utils.peer_type import PeerType
 
@@ -24,17 +23,17 @@ async def get_for_peer(session, peer):
 
 async def update_nodeinfo():
     async with aiohttp.ClientSession() as session:
-        peers = await Peer().filter(software__isnull=False).all()
+        peers = await Peer().filter(software__not_isnull=False).all()
         for peer in peers:
             try:
                 nodeinfo = await fetch_nodeinfo(session, peer.domain)
                 peer.software = nodeinfo["software"]["name"]
                 peer.version = nodeinfo["software"]["version"]
-                peer.save()
+                await peer.save()
                 print(peer.domain)
             except Exception:
                 peer.peer_type = PeerType.OFFLINE
-                peer.save()
+                await peer.save()
                 print(f"Nodeinfo failed for {peer.domain}")
 
 

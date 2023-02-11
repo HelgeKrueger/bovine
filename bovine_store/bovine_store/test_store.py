@@ -78,3 +78,64 @@ async def test_store_basic_access(store):
 
     assert owner is not None
     assert other is None
+
+
+async def test_store_public_access(store):
+    first_id = "https://my_domain/first"
+    item = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": first_id,
+        "type": "Create",
+    }
+
+    await store.store("owner", item, as_public=True)
+
+    other = await store.retrieve("other", first_id)
+
+    assert other is not None
+    assert other["id"] == first_id
+
+
+async def test_store_visible_to_other(store):
+    first_id = "https://my_domain/first"
+    item = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": first_id,
+        "type": "Create",
+    }
+
+    await store.store("owner", item, visible_to=["other"])
+
+    other = await store.retrieve("other", first_id)
+
+    assert other is not None
+    assert other["id"] == first_id
+
+
+async def test_store_update(store):
+    first_id = "https://my_domain/first"
+    second_id = "https://my_domain/second"
+    third_id = "https://my_domain/third"
+
+    item = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": first_id,
+        "type": "Create",
+        "object": {"type": "Note", "id": second_id, "content": "new"},
+    }
+
+    second_item = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": third_id,
+        "type": "Create",
+        "object": {"type": "Note", "id": second_id, "content": "updated"},
+    }
+
+    await store.store("owner", item)
+    await store.store("owner", second_item)
+
+    data = await store.retrieve("owner", second_id)
+
+    print(data)
+
+    assert data["content"] == "updated"

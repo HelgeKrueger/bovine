@@ -2,9 +2,10 @@ import asyncio
 
 from tortoise import Tortoise
 
-from bovine_store.models import StoredObject
+from bovine_store.models import StoredObject, VisibilityTypes, VisibleTo
 
 from .jsonld import split_into_objects, combine_items
+from .permissions import has_access
 
 
 class Store:
@@ -21,19 +22,45 @@ class Store:
     async def close_connection(self):
         await Tortoise.close_connections()
 
-    async def store(self, owner, item):
+    async def store(self, owner, item, as_public=False, visible_to=[]):
+        visibility_type = VisibilityTypes.RESTRICTED
+        if as_public:
+            visibility_type = VisibilityTypes.PUBLIC
+
         to_store = await split_into_objects(item)
 
         tasks = [
-            StoredObject.create(id=obj["id"], content=obj, owner=owner)
+            StoredObject.get_or_create(
+                id=obj["id"],
+                defaults={
+                    "content": obj,
+                    "owner": owner,
+                    "visibility": visibility_type,
+                },
+            )
             for obj in to_store
         ]
 
-        await asyncio.gather(*tasks)
+        items = await asyncio.gather(*tasks)
+
+        for item, created in items:
+            if created:
+                visible_tasks = [
+                    VisibleTo.create(
+                        main_object=item,
+                        object_id=actor,
+                    )
+                    for actor in visible_to
+                ]
+                await asyncio.gather(*visible_tasks)
+            else:
+                print("XXX")
 
     async def retrieve(self, retriever, object_id, include=[]):
-        result = await StoredObject.get_or_none(id=object_id)
-        if result.owner != retriever:
+        result = await StoredObject.get_or_none(id=object_id).prefetch_related(
+            "visible_to"
+        )
+        if not await has_access(result, retriever):
             return None
 
         data = result.content

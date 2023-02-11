@@ -10,13 +10,14 @@ class VisibilityTypes(Enum):
 
 
 class ObjectType(Enum):
-    NORMAL = "NORMAL"
+    ACTOR = "ACTOR"
     COLLECTION = "COLLECTION"
 
-
-class OriginType(Enum):
     LOCAL = "LOCAL"
+    LOCAL_COLLECTION = "LOCAL_COLLECTION"
+
     REMOTE = "REMOTE"
+    REMOTE_COLLECTION = "REMOTE_COLLECTION"
 
 
 class StoredObject(Model):
@@ -27,19 +28,22 @@ class StoredObject(Model):
     created = fields.DatetimeField(auto_now_add=True)
     updated = fields.DatetimeField(auto_now=True)
 
-    origin = fields.CharEnumField(OriginType, default=OriginType.LOCAL)
     visibility = fields.CharEnumField(
         VisibilityTypes, default=VisibilityTypes.RESTRICTED
     )
-    object_type = fields.CharEnumField(ObjectType, default=ObjectType.NORMAL)
+    object_type = fields.CharEnumField(ObjectType, default=ObjectType.LOCAL)
 
 
 class VisibleTo(Model):
-    main_object = fields.ForeignKeyField("models.StoredObject")
+    main_object = fields.ForeignKeyField(
+        "models.StoredObject", related_name="visible_to"
+    )
     object_id = fields.CharField(max_length=255)
-    object_type = fields.CharEnumField(ObjectType)
 
 
 class CollectionItem(Model):
-    part_of = fields.ForeignKeyField("models.StoredObject")
+    part_of = fields.CharField(max_length=255)
     object_id = fields.CharField(max_length=255)
+
+    created = fields.DatetimeField(auto_now_add=True)
+    updated = fields.DatetimeField(auto_now=True)

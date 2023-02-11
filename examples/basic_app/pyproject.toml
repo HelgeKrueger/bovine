@@ -7,7 +7,7 @@ readme = "../../README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bovine = {path = "../../bovine"}
+bovine = {path = "../../bovine", develop=true}
 
 
 [build-system]

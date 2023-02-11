@@ -139,3 +139,18 @@ async def test_store_update(store):
     print(data)
 
     assert data["content"] == "updated"
+
+
+async def test_add_remove_item(store):
+    first_id = "https://my_domain/first"
+    second_id = "https://my_domain/second"
+
+    assert not await store.remove_from_collection(first_id, second_id)
+
+    await store.add_to_collection(first_id, second_id)
+
+    assert await store.collection_count(first_id) == 1
+
+    assert await store.remove_from_collection(first_id, second_id)
+
+    assert await store.collection_count(first_id) == 0

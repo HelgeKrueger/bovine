@@ -10,14 +10,9 @@ class VisibilityTypes(Enum):
 
 
 class ObjectType(Enum):
-    ACTOR = "ACTOR"
-    COLLECTION = "COLLECTION"
-
     LOCAL = "LOCAL"
-    LOCAL_COLLECTION = "LOCAL_COLLECTION"
-
     REMOTE = "REMOTE"
-    REMOTE_COLLECTION = "REMOTE_COLLECTION"
+    LOCAL_COLLECTION = "LOCAL_COLLECTION"
 
 
 class StoredObject(Model):
@@ -35,6 +30,7 @@ class StoredObject(Model):
 
 
 class VisibleTo(Model):
+    id = fields.IntField(pk=True)
     main_object = fields.ForeignKeyField(
         "models.StoredObject", related_name="visible_to"
     )
@@ -42,6 +38,7 @@ class VisibleTo(Model):
 
 
 class CollectionItem(Model):
+    id = fields.IntField(pk=True)
     part_of = fields.CharField(max_length=255)
     object_id = fields.CharField(max_length=255)
 

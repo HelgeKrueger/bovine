@@ -29,14 +29,18 @@ const ReplyWithSketch = ({ entry }) => {
 
     const tags = entry?.tag;
 
-    if (tags) {
-      for (let tag of tags) {
-        if (tag?.type === "Mention") {
-          newMentions.push(tag?.href);
-        } else if (tag?.type === "Hashtag") {
-          newHashtags.push(tag?.name);
+    try {
+      if (tags) {
+        for (let tag of tags) {
+          if (tag?.type === "Mention") {
+            newMentions.push(tag?.href);
+          } else if (tag?.type === "Hashtag") {
+            newHashtags.push(tag?.name);
+          }
         }
       }
+    } catch (ex) {
+      console.error(ex);
     }
 
     if (entry?.attributedTo) {

@@ -146,3 +146,28 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     await local_user.process_inbox_item(inbox_item, current_app.config["session"])
 
     return {"status": "success"}, 200
+
+
+@activitypub_client.post("/<account_name>/proxyUrl")
+@route_cors(allow_origin=["http://localhost:8000"], allow_methods=["POST"])
+async def proxy_url(account_name: str) -> tuple[dict, int]:
+    await request.get_data(parse_form_data=True)
+
+    local_user = await current_app.config["get_user"](account_name)
+    if not has_authorization(local_user):
+        return {"status": "access denied"}, 401
+
+    url = (await request.form)["id"]
+
+    logger.info(f"Fetching {url} for {account_name}")
+
+    response = await signed_get(
+        current_app.config["session"],
+        local_user.get_public_key_url(),
+        local_user.private_key,
+        url,
+    )
+
+    data = json.loads(await response.text())
+
+    return data, 200

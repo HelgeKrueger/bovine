@@ -2,7 +2,7 @@ import asyncio
 
 from tortoise import Tortoise
 
-from bovine_store.models import StoredObject, VisibilityTypes, VisibleTo
+from bovine_store.models import StoredObject, VisibilityTypes, VisibleTo, CollectionItem
 
 from .jsonld import split_into_objects, combine_items
 from .permissions import has_access
@@ -16,7 +16,6 @@ class Store:
         await Tortoise.init(
             db_url=self.db_url, modules={"models": ["bovine_store.models"]}
         )
-        # Generate the schema
         await Tortoise.generate_schemas()
 
     async def close_connection(self):
@@ -41,6 +40,8 @@ class Store:
             for obj in to_store
         ]
 
+        id_to_store = {obj["id"]: obj for obj in to_store}
+
         items = await asyncio.gather(*tasks)
 
         for item, created in items:
@@ -54,7 +55,11 @@ class Store:
                 ]
                 await asyncio.gather(*visible_tasks)
             else:
-                print("XXX")
+                if item.owner == owner:
+                    item.content = id_to_store[item.id]
+                    await item.save()
+
+                    # FIXME visibility not changed; check timestamps?
 
     async def retrieve(self, retriever, object_id, include=[]):
         result = await StoredObject.get_or_none(id=object_id).prefetch_related(
@@ -73,3 +78,21 @@ class Store:
         items = [obj.content for obj in items if obj]
 
         return combine_items(data, items)
+
+    async def add_to_collection(self, collection_id, object_id):
+        await CollectionItem.create(part_of=collection_id, object_id=object_id)
+
+    async def remove_from_collection(self, collection_id, object_id):
+        item = await CollectionItem.get_or_none(
+            part_of=collection_id, object_id=object_id
+        )
+
+        if item is None:
+            return False
+
+        await item.delete()
+
+        return True
+
+    async def collection_count(self, collection_id):
+        return await CollectionItem.filter(part_of=collection_id).count()

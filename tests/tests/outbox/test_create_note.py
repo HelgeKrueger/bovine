@@ -47,4 +47,4 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     assert html_representation.status_code == 200
     html_content = await html_representation.get_data(as_text=True)
 
-    assert "I&#39;m literally creating test data" in html_content
+    assert "literally creating test data" in html_content

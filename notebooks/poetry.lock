@@ -1963,15 +1963,14 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
-name = "pyld"
-version = "2.0.3"
+name = "PyLD"
+version = "2.0.4.dev0"
 description = "Python implementation of the JSON-LD API"
 category = "main"
 optional = false
 python-versions = "*"
-files = [
-    {file = "PyLD-2.0.3.tar.gz", hash = "sha256:287445f888c3a332ccbd20a14844c66c2fcbaeab3c99acd506a0788e2ebb2f82"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 cachetools = "*"
@@ -1983,6 +1982,12 @@ aiohttp = ["aiohttp"]
 cachetools = ["cachetools"]
 frozendict = ["frozendict"]
 requests = ["requests"]
+
+[package.source]
+type = "git"
+url = "https://github.com/HelgeKrueger/pyld.git"
+reference = "HEAD"
+resolved_reference = "2ffb02fc890deb5b60cdd253dabb2a71491bfc3f"
 
 [[package]]
 name = "pyparsing"
@@ -2802,4 +2807,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "49d5f8e1550ff3501f978d2914a23e58bdb4380e7d9bc90ae6bca95f348a19c6"
+content-hash = "2b18726291f8c20e58f98c1a5587238dc3bcd8a3a37cb15fe9084f7a7605a74e"

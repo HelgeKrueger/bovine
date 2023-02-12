@@ -175,7 +175,7 @@ async def sse(actor_name: str):
                     yield event.encode()
                     queue.task_done()
                 except asyncio.TimeoutError:
-                    yield (":Blub" + " " * 2048 + "\n").encode("utf-8")
+                    yield (":" + " " * 2048 + "\n").encode("utf-8")
 
             except asyncio.CancelledError as e:
                 queue_manager.remove_queue_for_actor(actor_name, queue_id)

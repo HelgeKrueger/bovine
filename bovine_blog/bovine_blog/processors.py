@@ -2,6 +2,7 @@ import json
 
 import aiohttp
 from bovine.processors.fetch_object_and_process import fetch_object_and_process
+from bovine.processors.inbox.add_to_queue import add_to_queue
 from bovine.processors.outbox.replace_ids import replace_ids
 from bovine.processors.processor_list import ProcessorList
 from bovine.types import LocalActor, ProcessingItem
@@ -34,6 +35,7 @@ default_inbox_process = (
         .apply,
     )
     .add(store_in_database)
+    .add(add_to_queue)
     .apply
 )
 

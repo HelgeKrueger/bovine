@@ -10,7 +10,6 @@ const transformInboxEntry = (entry) => {
   const displayed = 0;
 
   if (data.type === "Announce") {
-    console.log(data);
     if (!data.object.startsWith("https://mymath")) {
       seen = 1;
     }

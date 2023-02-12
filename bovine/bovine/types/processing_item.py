@@ -10,6 +10,7 @@ class ProcessingItem:
         self.authorization = authorization
         self.body = body
         self.data = None
+        self.meta = {}
 
     def get_data(self):
         if not self.data:

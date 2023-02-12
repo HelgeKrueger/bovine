@@ -18,7 +18,7 @@ const fetchFromResult = async (url, type) => {
           await db.activity.bulkAdd(result.orderedItems.map(transformActivity));
           await fetchFromResult(result.prev, type);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           await fetchFromResult(result.prev, type);
 
           if (result.prev) {
@@ -28,7 +28,7 @@ const fetchFromResult = async (url, type) => {
         }
       } else {
         if (result.prev) {
-          console.log(result);
+          // console.log(result);
           await db.meta.put({ key: `prev${type}`, value: result["prev"] });
         }
       }

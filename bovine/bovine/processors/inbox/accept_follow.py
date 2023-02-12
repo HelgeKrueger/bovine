@@ -6,8 +6,7 @@ from bovine.types import ProcessingItem, LocalActor
 
 
 async def accept_follow_request(
-    item: ProcessingItem,
-    local_actor: LocalActor,
+    item: ProcessingItem, local_actor: LocalActor, session
 ) -> ProcessingItem | None:
     data = item.get_data()
 

@@ -24,16 +24,19 @@ def is_post():
 def is_activity_pub():
     if is_get():
         accept_header = request.headers.get("accept", "*/*")
-        logger.info(f"obtained accept header {accept_header}")
+        logger.info(f"obtained accept header '{accept_header}'")
+        if accept_header == "text/event-stream":
+            return True
+
         return is_activity_request(accept_header)
 
-    if is_post:
+    if is_post():
         # content_type = request.headers.get("content-type", "*/*")
         # return is_activity_request(content_type)
         # will support posts with form encoded data for images.
         return True
 
-    if re.match(r"^option$", request.method, re.IGNORECASE):
+    if re.match(r"^options$", request.method, re.IGNORECASE):
         return True
 
     return False

@@ -1,13 +1,15 @@
+import asyncio
 import json
 import logging
 
 import werkzeug
 from bovine_core.clients.signed_http import signed_get
-from quart import Blueprint, current_app, g, request
+from quart import Blueprint, current_app, g, request, abort, make_response
 from quart_cors import route_cors
 
 from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
+
 
 from .activitypub import cors_properties
 
@@ -122,7 +124,7 @@ async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response
 
 
 @activitypub_client.post("/<account_name>/fetch")
-@route_cors(allow_origin=["http://localhost:8000"], allow_methods=["POST"])
+@route_cors(**cors_properties)
 async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     raw_data = await request.get_data()
 
@@ -146,3 +148,48 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     await local_user.process_inbox_item(inbox_item, current_app.config["session"])
 
     return {"status": "success"}, 200
+
+
+@activitypub_client.get("/<actor_name>/serverSideEvents")
+@route_cors(**cors_properties)
+async def sse(actor_name: str):
+    if "text/event-stream" not in request.accept_mimetypes:
+        abort(400)
+
+    queue_manager = current_app.config["queue_manager"]
+
+    local_user = await current_app.config["get_user"](actor_name)
+    if not has_authorization(local_user):
+        return {"status": "access denied"}, 401
+
+    logger.info(f"Opening stream for {actor_name}")
+
+    queue_id, queue = queue_manager.new_queue_for_actor(actor_name)
+
+    async def send_events():
+        while True:
+            try:
+                try:
+                    event = await asyncio.wait_for(queue.get(), timeout=10)
+                    logger.debug(f"Sending event {event.encode()}")
+                    yield event.encode()
+                    queue.task_done()
+                except asyncio.TimeoutError:
+                    yield (":Blub" + " " * 2048 + "\n").encode("utf-8")
+
+            except asyncio.CancelledError as e:
+                queue_manager.remove_queue_for_actor(actor_name, queue_id)
+
+                logger.info(f"Removing {queue_id} from {actor_name}")
+                raise e
+
+    response = await make_response(
+        send_events(),
+        {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            "Transfer-Encoding": "chunked",
+        },
+    )
+    response.timeout = None
+    return response

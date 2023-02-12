@@ -3,6 +3,7 @@ import os
 
 import aiohttp
 from bovine.server import default_configuration
+from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
@@ -36,6 +37,7 @@ async def startup():
 
     app.config["session"] = session
     app.config["validate_signature"] = signature_checker.validate_signature
+    app.config["queue_manager"] = QueueManager()
 
 
 async def account_name_or_none_for_token(token):

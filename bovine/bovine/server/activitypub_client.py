@@ -7,7 +7,6 @@ from bovine_core.clients.signed_http import signed_get
 from quart import Blueprint, current_app, g, request, abort, make_response
 from quart_cors import route_cors
 
-from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
 
 
@@ -121,33 +120,6 @@ async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response
     await local_user.process_outbox_item(activity, current_app.config["session"])
 
     return {"status": "success"}, 202
-
-
-@activitypub_client.post("/<account_name>/fetch")
-@route_cors(**cors_properties)
-async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
-    raw_data = await request.get_data()
-
-    local_user = await current_app.config["get_user"](account_name)
-    if not has_authorization(local_user):
-        return {"status": "access denied"}, 401
-
-    data = json.loads(raw_data)
-
-    logger.info(f"Fetching {data['url']} for {account_name}")
-
-    response = await signed_get(
-        current_app.config["session"],
-        local_user.get_public_key_url(),
-        local_user.private_key,
-        data["url"],
-    )
-
-    inbox_item = ProcessingItem(await response.text())
-
-    await local_user.process_inbox_item(inbox_item, current_app.config["session"])
-
-    return {"status": "success"}, 200
 
 
 @activitypub_client.get("/<actor_name>/serverSideEvents")

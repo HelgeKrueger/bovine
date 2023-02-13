@@ -2,24 +2,25 @@ import { Add } from "@mui/icons-material";
 import { Button, Container, TextField } from "@mui/material";
 import React, { useState } from "react";
 
+import { transformActivity } from "../../utils/transformInboxEntry";
+import { db } from "../../database";
+
 const AddUrl = () => {
   const [urlToFetch, setUrlToFetch] = useState("");
 
   const performFetch = () => {
-    // FIXME use this to query proxy endpoint
-    // fetch('/', {method:"POST", headers: {
-    //   'Content-Type': 'application/x-www-form-urlencoded'
-    // },
-    // body: new URLSearchParams({"id": "uuid"})})
-    fetch("/api/fetch", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        url: urlToFetch,
-      }),
-    }).then(() => {
-      window.location.reload();
-    });
+    fetch("/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({ id: urlToFetch }),
+    })
+      .then((x) => x.json())
+      .then(async (data) => {
+        const activity = transformActivity(data);
+        await db.activity.add(activity);
+      });
   };
 
   return (

@@ -12,7 +12,6 @@ import { transformActivity } from "../utils/transformInboxEntry";
 import { db } from "../database";
 
 export const DataUpdate = () => {
-  // const [intervalId, setIntervalId] = useState(null);
   const [source, setSource] = useState();
 
   useEffect(() => {
@@ -34,17 +33,8 @@ export const DataUpdate = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const id = setInterval(reloadTimeline, 5 * 60 * 1000);
-  //   setIntervalId(id);
-  // }, []);
-
   const buttonClick = () => {
-    // clearInterval(intervalId);
     reloadTimeline();
-
-    // const id = setInterval(reloadTimeline, 5 * 60 * 1000);
-    // setIntervalId(id);
   };
 
   return (

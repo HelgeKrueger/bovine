@@ -37,6 +37,7 @@ then reload systemd via `systemctl daemon-reload`.
 The settings starting with `Limit` are not fine tuned. In particular, the number of allowed file connections is needed in order to handle the many `GET` requests from fellow Fediverse servers, when somebody announces your content.
 
 The default value of the number of allowed open files can be viewed on your system with `ulimit -n`. Having too low number of open files leads to errors such as
+
 ```
 [2023-02-07 19:16:10,518] ERROR    asyncio      socket.accept() out of system resource
 socket: <asyncio.TransportSocket fd=3, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0, laddr=/tmp/bovine.sock>

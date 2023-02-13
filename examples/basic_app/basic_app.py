@@ -1,6 +1,5 @@
 import aiohttp
 import os
-
 from quart import Quart
 
 from bovine import get_bovine_user
@@ -17,7 +16,8 @@ from bovine.processors.processor_list import ProcessorList
 import logging
 import sys
 
-logging.basicConfig( level=logging.DEBUG, stream=sys.stdout)
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+
 
 async def return_true(*args, **kwargs):
     return True
@@ -44,6 +44,12 @@ data_store.add_user(local_user)
 data_store.add_user(get_bovine_user(domain))
 
 app = Quart(__name__)
+
+
+@app.before_serving
+async def startup():
+    app.config["session"] = aiohttp.ClientSession()
+
 
 app.config.update(
     {

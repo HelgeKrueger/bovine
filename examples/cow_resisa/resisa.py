@@ -45,6 +45,8 @@ async def update_account(session, client, config):
         if outbox_id not in entry_ids
     ]
 
+    print(activities)
+
     async with asyncio.TaskGroup() as tg:
         for activity in activities:
             tg.create_task(

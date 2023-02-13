@@ -5,6 +5,7 @@ from bovine_core.utils.crypto import generate_public_private_key
 
 async def dump_incoming_inbox_to_stdout(local_user, result, session):
     result.dump()
+    return local_user
 
 
 def get_server_keys():

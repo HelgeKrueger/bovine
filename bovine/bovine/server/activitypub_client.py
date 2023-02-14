@@ -8,6 +8,7 @@ from quart import Blueprint, current_app, g, request, abort, make_response
 from quart_cors import route_cors
 
 from bovine.types import ProcessingItem
+from bovine.types.server_sent_event import ServerSentEvent
 from bovine.utils.server import ordered_collection_responder
 
 
@@ -150,6 +151,19 @@ async def fetch(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     return {"status": "success"}, 200
 
 
+async def enqueue_missing_events(queue, last_event_id, actor_name):
+    logger.info(f"Enqueueing events starting from {last_event_id} for {actor_name}")
+
+    if "inbox_lookup" in current_app.config:
+        missing_entries = await current_app.config["inbox_lookup"](
+            actor_name, last_event_id
+        )
+
+        for entry in missing_entries:
+            event = ServerSentEvent(entry["data"], "inbox", entry["id"])
+            await queue.put(event)
+
+
 @activitypub_client.get("/<actor_name>/serverSideEvents")
 @route_cors(**cors_properties)
 async def sse(actor_name: str):
@@ -192,4 +206,11 @@ async def sse(actor_name: str):
         },
     )
     response.timeout = None
+
+    last_event_id = request.headers.get("last-event-id")
+    if last_event_id:
+        current_app.add_background_task(
+            enqueue_missing_events, queue, last_event_id, actor_name
+        )
+
     return response

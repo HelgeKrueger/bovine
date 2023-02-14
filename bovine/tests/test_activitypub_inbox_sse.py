@@ -43,6 +43,6 @@ async def test_activitypub_server_side_events(
         data = await connection.receive()
         data = data.decode("utf-8")
 
-        assert data == 'data: {"test": "xxx"}\nevent: outbox\n\n'
+        assert data == 'data: {"test": "xxx"}\nevent: inbox\n\n'
 
         await connection.disconnect()

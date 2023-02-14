@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L71)
+- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L73)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L31)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L71)
+- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L73)
 
 Content-Type should be `application/activity+json`
 
@@ -360,7 +360,7 @@ For server to server interactions, an Update activity means that the receiving s
 
 #### ap-s2s-delete
 
-- [test_flow_2_create_then_delete.py](../tests/tests/inbox/test_flow_2_create_then_delete.py#L19)
+- [test_flow_2_create_then_delete.py](../tests/tests/inbox/test_flow_2_create_then_delete.py#L18)
 
 The side effect of receiving this is that (assuming the object is owned by the sending actor / server) the server receiving the delete activity SHOULD remove its representation of the object with the same id, and MAY replace that representation with a Tombstone object.
 

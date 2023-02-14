@@ -39,6 +39,8 @@ async def test_store_in_database(db_url):  # noqa: F811
     assert entry.content["type"] == "Create"
     assert entry.conversation == "uid:bovine:123"
 
+    assert result.meta["database_id"] == entry.id
+
 
 async def test_store_in_database_no_conversation(db_url):  # noqa: F811
     actor = await Actor.create(

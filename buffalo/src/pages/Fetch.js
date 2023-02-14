@@ -17,11 +17,7 @@ const Fetch = () => {
       await db.activity.update(url, { seen: 0, displayed: 0 });
       navigate("/");
     } else {
-      const data = {
-        url,
-      };
-
-      sendFetch(data).then(() => {
+      sendFetch(url).then(() => {
         navigate("/");
       });
     }

@@ -26,9 +26,6 @@ def has_authorization() -> bool:
     authorized_user = g.get("authorized_user")
     used_public_key = g.get("signature_result")
 
-    logger.warning(authorized_user)
-    logger.warning(used_public_key)
-
     return authorized_user or used_public_key
 
 

@@ -2,7 +2,7 @@ from quart import current_app
 import json
 
 from bovine.types import ProcessingItem, LocalActor
-from bovine.types.server_side_event import ServerSentEvent
+from bovine.types.server_sent_event import ServerSentEvent
 
 import logging
 
@@ -15,7 +15,7 @@ async def add_to_queue(
     data = item.get_data()
 
     data_s = json.dumps(data)
-    event = ServerSentEvent(data=data_s, event="outbox")
+    event = ServerSentEvent(data=data_s, event="inbox")
 
     if "database_id" in item.meta:
         event.id = item.meta["database_id"]

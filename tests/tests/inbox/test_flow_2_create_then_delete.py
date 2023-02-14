@@ -1,5 +1,4 @@
 import asyncio
-import json
 from tests.utils import get_activity_from_json
 from tests.utils.blog_test_env import (  # noqa F401
     blog_test_env,
@@ -23,8 +22,6 @@ async def test_flow_2_mastodon_create_then_delete(blog_test_env):  # noqa F811
     await asyncio.sleep(0.4)
 
     result_get = await blog_test_env.get_from_inbox()
-
-    print(json.dumps(result_get, indent=2))
 
     assert result_get["type"] == "OrderedCollection"
     assert result_get["totalItems"] == 0

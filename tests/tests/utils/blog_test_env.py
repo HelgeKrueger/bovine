@@ -5,7 +5,9 @@ from urllib.parse import urlparse
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from bovine.utils.queue_manager import QueueManager
 from bovine_blog import app
+from bovine_tortoise import inbox_items_for_actor_from
 from bovine_tortoise.utils import init
 from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
@@ -96,6 +98,8 @@ async def blog_test_env() -> str:
 
     actor, local_user = await create_actor_and_local_user()
     app.config["validate_signature"].return_value = local_user.get_public_key_url()
+    app.config["queue_manager"] = QueueManager()
+    app.config["inbox_lookup"] = inbox_items_for_actor_from
 
     client = app.test_client()
 

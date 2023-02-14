@@ -33,13 +33,15 @@ async def store_in_database(
         if not content_id:
             logger.warning("Received item without id")
 
-        await InboxEntry.create(
+        entry = await InboxEntry.create(
             actor=actor,
             created=datetime.now(),
             content=item.body,
             conversation=conversation,
             content_id=content_id,
         )
+
+        item.meta["database_id"] = entry.id
 
         return item
     except Exception as ex:

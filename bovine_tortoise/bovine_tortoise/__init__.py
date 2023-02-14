@@ -1,9 +1,13 @@
+import logging
+
 from bovine.types import LocalActor as LocalActor
 from tortoise import Tortoise
 
 from bovine_tortoise.models import Actor, InboxEntry, OutboxEntry
 
 from .utils.count_and_items import CountAndItems
+
+logger = logging.getLogger(__name__)
 
 outbox = CountAndItems(OutboxEntry)
 default_outbox = (outbox.item_count, outbox.items)
@@ -57,3 +61,14 @@ class ManagedDataStore:
             private_key=local_user.private_key,
             public_key=local_user.public_key,
         )
+
+
+async def inbox_items_for_actor_from(actor_name, last_database_id):
+    actor = await Actor.get_or_none(account=actor_name)
+    if not actor:
+        logger.warning(f"Lookup for unknown actor name {actor_name}")
+        return None
+
+    results = await InboxEntry.filter(actor=actor, id__gt=last_database_id).all()
+
+    return [{"data": x.content, "id": x.id} for x in results]

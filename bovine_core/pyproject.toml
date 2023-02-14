@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bovine-core"
-version = "0.0.3"
+version = "0.0.4"
 description = "Core functionality of bovine needed to build client to server applications"
 authors = ["Helge <helge.krueger@gmail.com>"]
 license = "../LICENSE"

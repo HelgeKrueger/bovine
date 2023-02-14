@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "bovine-tortoise"
-version = "0.0.3"
+version = "0.0.4"
 description = ""
 authors = ["Helge <helge.krueger@gmail.com>"]
-readme = "../README.md"
+readme = "README.md"
 packages = [{include = "bovine_tortoise"}]
 
 [tool.poetry.dependencies]

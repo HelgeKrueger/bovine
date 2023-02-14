@@ -31,7 +31,7 @@ const transformInboxEntry = (entry) => {
   };
 };
 
-const transformActivity = (data) => {
+const transformActivity = (data, entryId) => {
   if (data.type === "Create" || data.type === "Update") {
     data = data?.object;
   }
@@ -51,6 +51,11 @@ const transformActivity = (data) => {
     updated = data?.published;
   }
 
+  let remoteId = 0;
+  if (entryId) {
+    remoteId = parseInt(entryId, 10);
+  }
+
   return {
     id,
     conversation,
@@ -58,7 +63,7 @@ const transformActivity = (data) => {
     updated,
     data,
     displayed,
-    remoteId: 0,
+    remoteId,
   };
 };
 

@@ -69,6 +69,8 @@ async def inbox_items_for_actor_from(actor_name, last_database_id):
         logger.warning(f"Lookup for unknown actor name {actor_name}")
         return None
 
-    results = await InboxEntry.filter(actor=actor, id__gt=last_database_id).all()
+    results = (
+        await InboxEntry.filter(actor=actor, id__gt=last_database_id).limit(100).all()
+    )
 
     return [{"data": x.content, "id": x.id} for x in results]

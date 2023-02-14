@@ -14,7 +14,7 @@ from bovine.utils.server import ordered_collection_responder
 cors_properties = {
     "allow_origin": ["http://localhost:8000"],
     "allow_methods": ["GET", "POST"],
-    "allow_headers": ["Authorization", "Content-Type"],
+    "allow_headers": ["Authorization", "Content-Type", "Last-Event-Id"],
 }
 
 activitypub = Blueprint("activitypub", __name__, url_prefix="/activitypub")

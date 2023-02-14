@@ -16,20 +16,34 @@ export const DataUpdate = () => {
 
   useEffect(() => {
     if (!source) {
-      const headers = {
-        Authorization: `Bearer ${config.accessToken}`,
-        Accept: "text/event-stream",
-      };
-      const source = new EventSourcePolyfill(
-        "https://mymath.rocks/activitypub/helge/serverSideEvents",
-        { headers }
-      );
+      db.activity
+        .orderBy("remoteId")
+        .reverse()
+        .limit(1)
+        .toArray()
+        .then((x) => {
+          const lastEventId = x[0].remoteId;
 
-      source.addEventListener("outbox", async (entry) => {
-        const activity = transformActivity(JSON.parse(entry.data));
-        await db.activity.add(activity);
-      });
-      setSource(source);
+          const headers = {
+            "Last-Event-Id": lastEventId,
+            Authorization: `Bearer ${config.accessToken}`,
+            Accept: "text/event-stream",
+          };
+
+          const source = new EventSourcePolyfill(
+            "https://mymath.rocks/activitypub/helge/serverSideEvents",
+            { headers }
+          );
+
+          source.addEventListener("inbox", async (entry) => {
+            const activity = transformActivity(
+              JSON.parse(entry.data),
+              entry.lastEventId
+            );
+            await db.activity.add(activity);
+          });
+          setSource(source);
+        });
     }
   }, []);
 

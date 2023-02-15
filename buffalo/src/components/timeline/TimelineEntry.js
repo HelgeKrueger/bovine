@@ -38,6 +38,10 @@ const TimelineEntry = ({ entry, seen }) => {
     return <Person entry={entry} />;
   }
 
+  if (entry?.type === "Service") {
+    return <Person entry={entry} />;
+  }
+
   if (entry?.type === "Update" && entry?.object?.type === "Question") {
     return <UpdateQuestion entry={entry} />;
   }

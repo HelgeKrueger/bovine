@@ -96,8 +96,7 @@ async def send_activity(
             elif "#Public" in account:
                 logger.info("Public post")
             else:
-                # FIXME this is horrible
-                if "mymath.rocks" not in account:
+                if account != local_user.url:
                     logger.info(f"Getting inbox for {account}")
                     inbox = await bovine.clients.get_inbox(session, local_user, account)
                     inboxes.append(inbox)

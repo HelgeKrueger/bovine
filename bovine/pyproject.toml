@@ -1,13 +1,14 @@
 [tool.poetry]
 name = "bovine"
-version = "0.0.3"
+version = "0.0.4"
 description = ""
 authors = ["Helge <helge.krueger@gmail.com>"]
-readme = "../README.md"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bovine-core = {path = "../bovine_core", develop=true}
+bovine_core = {git = "https://github.com/HelgeKrueger/bovine.git", rev = "v0.0.4", subdirectory = "bovine_core"}
+# bovine-core = {path = "../bovine_core", develop=true}
 quart = "^0.18.3"
 quart-cors = "^0.6.0"
 

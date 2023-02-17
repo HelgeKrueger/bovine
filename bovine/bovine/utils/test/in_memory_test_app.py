@@ -12,7 +12,7 @@ from bovine.types import LocalActor
 from bovine.processors.inbox.add_to_queue import add_to_queue
 from bovine.processors.processor_list import ProcessorList
 from bovine.utils import dump_incoming_inbox_to_stdout
-from bovine.utils.in_memory_store import InMemoryUserStore
+from bovine.utils.in_memory_store import InMemoryUserStore, InMemoryObjectStore
 from bovine.utils.queue_manager import QueueManager
 
 from . import get_user_keys
@@ -46,6 +46,7 @@ app.config.update(
         "get_user": data_store.get_user,
         "session": AsyncMock(aiohttp.ClientSession),
         "queue_manager": QueueManager(),
+        "object_store": InMemoryObjectStore(),
     }
 )
 app.register_blueprint(default_configuration)

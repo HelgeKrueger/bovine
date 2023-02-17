@@ -7,8 +7,7 @@ from bovine_core.clients.signed_http import signed_get
 from quart import Blueprint, current_app, g, request, abort, make_response
 from quart_cors import route_cors
 
-
-from bovine.types.server_sent_event import ServerSentEvent
+from bovine_core.types import ServerSentEvent
 from bovine.utils.server import ordered_collection_responder
 
 
@@ -137,9 +136,9 @@ async def enqueue_missing_events(queue, last_event_id, actor_name):
             await queue.put(event)
 
 
-@activitypub_client.get("/<actor_name>/serverSideEvents")
+@activitypub_client.get("/<actor_name>/serverSentEvents")
 @route_cors(**cors_properties)
-async def sse(actor_name: str):
+async def server_sent_events(actor_name: str):
     if "text/event-stream" not in request.accept_mimetypes:
         abort(400)
 
@@ -202,6 +201,13 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
 
     logger.info(f"Fetching {url} for {account_name}")
 
+    # stored_object = await current_app.config["object_store"].retrieve(
+    #     local_user.url, url
+    # )
+
+    # if stored_object:
+    #     return stored_object, 200
+
     response = await signed_get(
         current_app.config["session"],
         local_user.get_public_key_url(),
@@ -210,5 +216,9 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
     )
 
     data = json.loads(await response.text())
+
+    # await current_app.config["object_store"].store(
+    #     None, url, visible_to=[local_user.url]
+    # )
 
     return data, 200

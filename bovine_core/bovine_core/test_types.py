@@ -1,4 +1,4 @@
-from .server_sent_event import ServerSentEvent
+from .types import ServerSentEvent
 
 
 def test_server_sent_event():

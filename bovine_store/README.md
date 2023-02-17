@@ -27,13 +27,8 @@ principles:
 - A remote actor can only access objects owned by this store.
 - Any valid actor can access a public object
 - A named actor can access objects, he is named for
-- Access to objects having a collection being used a
-resolved as best current knowledge:
-  - Somebody in the followers collection of a local actor can access
- an object with this followers collection in its permitted list. Even
- if this actor was not a follower at the time of creation.
-  - Remote followers collections are resolved using the following
- collection.
+
+Collections are resolved on storage of remote objects.
 
 ## Data fetching
 

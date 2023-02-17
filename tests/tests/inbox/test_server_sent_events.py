@@ -1,6 +1,6 @@
 import asyncio
 
-from bovine.types.server_sent_event import ServerSentEvent
+from bovine_core.types import ServerSentEvent
 
 from bovine_core.activitystreams.activities import build_create
 from bovine_core.activitystreams.objects import build_note
@@ -29,7 +29,7 @@ async def send_test_with_id_to_inbox(env, test_id):
 
 async def test_server_sent_events(blog_test_env):  # noqa F811
     async with blog_test_env.client.request(
-        blog_test_env.local_user.url + "/serverSideEvents",
+        blog_test_env.local_user.url + "/serverSentEvents",
         headers={
             "Accept": "text/event-stream",
             "Authorization": "Bearer test_token",
@@ -49,7 +49,7 @@ async def test_server_sent_events(blog_test_env):  # noqa F811
     await asyncio.sleep(0.1)
 
     async with blog_test_env.client.request(
-        blog_test_env.local_user.url + "/serverSideEvents",
+        blog_test_env.local_user.url + "/serverSentEvents",
         headers={
             "Accept": "text/event-stream",
             "Authorization": "Bearer test_token",

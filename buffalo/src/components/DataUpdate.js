@@ -31,7 +31,7 @@ export const DataUpdate = () => {
           };
 
           const source = new EventSourcePolyfill(
-            "https://mymath.rocks/activitypub/helge/serverSideEvents",
+            "https://mymath.rocks/activitypub/helge/serverSentEvents",
             { headers }
           );
 

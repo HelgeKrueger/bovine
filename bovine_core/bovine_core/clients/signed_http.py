@@ -8,6 +8,7 @@ from bovine_core.utils.crypto import content_digest_sha256
 from bovine_core.utils.date import get_gmt_now
 
 from .consts import BOVINE_CLIENT_NAME
+from .event_source import EventSource
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,37 @@ async def signed_get(
     headers["signature"] = signature_header
     headers["user-agent"] = BOVINE_CLIENT_NAME
     return await session.get(url, headers=headers)
+
+
+def signed_event_source(
+    session: aiohttp.ClientSession,
+    public_key_url: str,
+    private_key: str,
+    url: str,
+    headers: dict = {},
+):
+    logger.debug(f"Signed event source with {private_key} on {url}")
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    target = parsed_url.path
+
+    accept = "text/event-stream"
+    date_header = get_gmt_now()
+
+    signature_header = (
+        build_signature(host, "get", target)
+        .with_field("date", date_header)
+        .with_field("accept", accept)
+        .build_signature(public_key_url, private_key)
+    )
+
+    headers["accept"] = accept
+    headers["date"] = date_header
+    headers["host"] = host
+    headers["signature"] = signature_header
+    headers["user-agent"] = BOVINE_CLIENT_NAME
+    return EventSource(session, url, headers=headers)
 
 
 async def signed_post(

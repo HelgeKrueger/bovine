@@ -1,7 +1,5 @@
 import logging
-
 import re
-
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
@@ -29,11 +27,15 @@ class ServerSentEvent:
 
     @staticmethod
     def parse(raw):
+        return ServerSentEvent.parse_utf8(raw.decode("utf-8"))
+
+    @staticmethod
+    def parse_utf8(raw):
         data = None
         event = None
         event_id = None
         retry = None
-        for line in raw.decode("utf-8").splitlines():
+        for line in raw.splitlines():
             m = sse_line_pattern.match(line)
             if m is None:
                 logger.warning(f"Invalid Server Sent Event line: '{line}'")

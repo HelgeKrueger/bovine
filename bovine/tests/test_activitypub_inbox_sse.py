@@ -6,7 +6,7 @@ from bovine.utils.test.in_memory_test_app import (  # noqa F401
 )
 
 
-async def test_activitypub_server_side_events(
+async def test_activitypub_server_sent_events(
     test_client_with_authorization,  # noqa F811
 ) -> None:
     date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
@@ -20,7 +20,7 @@ async def test_activitypub_server_side_events(
     )
 
     async with test_client_with_authorization.request(
-        "/activitypub/user/serverSideEvents",
+        "/activitypub/user/serverSentEvents",
         headers={
             "Accept": "text/event-stream",
             "Authorization": "Bearer test_token",

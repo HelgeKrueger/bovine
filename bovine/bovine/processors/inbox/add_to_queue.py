@@ -2,7 +2,7 @@ from quart import current_app
 import json
 
 from bovine.types import ProcessingItem, LocalActor
-from bovine.types.server_sent_event import ServerSentEvent
+from bovine_core.types import ServerSentEvent
 
 import logging
 

@@ -12,3 +12,11 @@ class InMemoryUserStore:
         if username in self.users:
             return self.users[username]
         return None
+
+
+class InMemoryObjectStore:
+    async def retrieve(self, retriever, object_id, include=[]):
+        pass
+
+    async def store(self, owner, item, as_public=False, visible_to=[]):
+        pass

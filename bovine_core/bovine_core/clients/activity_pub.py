@@ -1,13 +1,20 @@
 import json
+import tomli
 
-from .signed_http import signed_get, signed_post
+from .signed_http import signed_get, signed_post, signed_event_source
 
 
 class ActivityPubClient:
-    def __init__(self, session, public_key_url, private_key):
+    def __init__(self, session, public_key_url, private_key, account_url=None):
         self.session = session
         self.public_key_url = public_key_url
         self.private_key = private_key
+        self.account_url = account_url
+
+    def set_session(self, session):
+        self.session = session
+
+        return self
 
     async def get(self, url, headers={}):
         return await signed_get(
@@ -52,3 +59,22 @@ class ActivityPubClient:
                 items += page_data["orderedItems"]
 
         return {"total_items": total_number_of_items, "items": items}
+
+    def server_sent_events(self):
+        return signed_event_source(
+            self.session,
+            self.public_key_url,
+            self.private_key,
+            self.account_url + "/serverSentEvents",
+        )
+
+    @staticmethod
+    def from_toml_file(file_handle):
+        data = tomli.load(file_handle)
+
+        return ActivityPubClient(
+            None,
+            data["public_key_url"],
+            data["private_key"],
+            account_url=data["account_url"],
+        )

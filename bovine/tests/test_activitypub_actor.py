@@ -12,15 +12,16 @@ async def test_activitypub_actor_unauthorized() -> None:
     app.config["account_name_or_none_for_token"].return_value = "unknown"
 
     response = await client.get(
-        "/activitypub/unknown",
+        "/activitypub/user",
         headers={"Accept": "application/activity+json"},
     )
 
-    assert response.status_code == 401
+    assert response.status_code == 200
 
     data = await response.get_json()
 
-    assert data == {"status": "http signature not valid"}
+    assert "inbox" not in data
+    assert "outbox" not in data
 
 
 async def return_true(*args, **kwargs):

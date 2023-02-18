@@ -1,3 +1,5 @@
+from bovine_core.types import Visibility
+
 from .actor_builder import ActorBuilder
 
 
@@ -28,6 +30,27 @@ def test_public_key():
     assert isinstance(result["@context"], list)
     assert "https://www.w3.org/ns/activitystreams" in result["@context"]
     assert "https://w3id.org/security/v1" in result["@context"]
+
+    assert result["publicKey"] == {
+        "id": "account_url#main-key",
+        "owner": "account_url",
+        "publicKeyPem": "---key---",
+    }
+
+
+def test_visibility_web():
+    result = (
+        ActorBuilder("name")
+        .with_account_url("account_url")
+        .with_public_key("---key---")
+        .build(visibility=Visibility.WEB)
+    )
+
+    assert isinstance(result["@context"], list)
+    assert "https://www.w3.org/ns/activitystreams" in result["@context"]
+    assert "https://w3id.org/security/v1" in result["@context"]
+
+    assert "inbox" not in result
 
     assert result["publicKey"] == {
         "id": "account_url#main-key",

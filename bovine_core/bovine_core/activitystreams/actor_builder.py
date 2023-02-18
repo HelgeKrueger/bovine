@@ -1,3 +1,5 @@
+from bovine_core.types import Visibility
+
 from .common import build_context
 
 
@@ -18,13 +20,13 @@ class ActorBuilder:
         self.context_builder.add("https://w3id.org/security/v1")
         return self
 
-    def build(self):
+    def build(self, visibility=Visibility.PUBLIC):
         return {
             "@context": self.context_builder.build(),
             "name": self.name,
             "preferredUsername": self.name,
             "type": self.actor_type,
-            **self._build_account_urls(),
+            **self._build_account_urls(visibility),
             **self._build_private_key(),
         }
 
@@ -37,9 +39,13 @@ class ActorBuilder:
 
         return "https://www.w3.org/ns/activitystreams"
 
-    def _build_account_urls(self):
+    def _build_account_urls(self, visibility):
         if not self.account_url:
             return {}
+
+        if visibility == Visibility.WEB:
+            return {"id": self.account_url}
+
         return {
             "id": self.account_url,
             "inbox": self.account_url + "/inbox",

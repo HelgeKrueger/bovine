@@ -4,18 +4,14 @@ from datetime import datetime
 
 import aiohttp
 import bleach
-import tomli
 
-from bovine_core.clients.event_source import EventSource
+from bovine_core.clients.activity_pub import ActivityPubClient
 
 
-async def sse(url, access_token):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
-
+async def sse(client):
     async with aiohttp.ClientSession() as session:
-        event_source = EventSource(session, url, headers=headers)
+        client = client.set_session(session)
+        event_source = client.server_sent_events()
 
         async for event in event_source:
             data = json.loads(event.data)
@@ -30,6 +26,6 @@ async def sse(url, access_token):
 
 
 with open("helge.toml", "rb") as f:
-    config = tomli.load(f)["helge"]
+    client = ActivityPubClient.from_toml_file(f)
 
-asyncio.run(sse(config["server_sent_events_url"], config["access_token"]))
+asyncio.run(sse(client))

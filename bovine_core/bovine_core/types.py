@@ -1,8 +1,17 @@
 import logging
 import re
 from dataclasses import dataclass
+from enum import Enum
 
 logger = logging.getLogger(__name__)
+
+
+class Visibility(Enum):
+    WEB = "WEB"
+    PUBLIC = "PUBLIC"
+    RESTRICTED = "RESTRICTED"
+    OWNER = "OWNER"
+
 
 sse_line_pattern = re.compile("(?P<name>[^:]*):?( ?(?P<value>.*))?")
 

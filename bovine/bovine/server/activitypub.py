@@ -8,6 +8,7 @@ from bovine_core.utils.crypto import content_digest_sha256
 from quart import Blueprint, current_app, g, request
 from quart_cors import route_cors
 
+from bovine_core.types import Visibility
 from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
 
@@ -34,10 +35,10 @@ def has_authorization() -> bool:
 async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     user_info = await current_app.config["get_user"](account_name)
 
-    if user_info and user_info.no_auth_fetch:
-        logging.debug(f"Skipping signature check for user {account_name}")
-    elif not has_authorization():
-        return {"status": "http signature not valid"}, 401
+    # if user_info and user_info.no_auth_fetch:
+    #     logging.debug(f"Skipping signature check for user {account_name}")
+    # elif not has_authorization():
+    #     return {"status": "http signature not valid"}, 401
 
     if not user_info:
         return {"status": "not found"}, 404
@@ -45,12 +46,17 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     domain = current_app.config["DOMAIN"]
     activitypub_profile_url = f"https://{domain}/activitypub/{user_info.name}"
 
+    visibility = Visibility.WEB
+
+    if has_authorization():
+        visibility = Visibility.PUBLIC
+
     return (
         (
             build_actor(account_name, actor_type=user_info.actor_type)
             .with_account_url(activitypub_profile_url)
             .with_public_key(user_info.public_key)
-            .build()
+            .build(visibility=visibility)
         ),
         200,
         {"content-type": "application/activity+json"},

@@ -12,6 +12,8 @@ from bovine_tortoise.utils import init
 from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
 
+from bovine_store.store import ObjectStore
+
 from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
 
 import logging
@@ -100,6 +102,8 @@ async def blog_test_env() -> str:
     app.config["validate_signature"].return_value = local_user.get_public_key_url()
     app.config["queue_manager"] = QueueManager()
     app.config["inbox_lookup"] = inbox_items_for_actor_from
+
+    app.config["object_store"] = ObjectStore()
 
     client = app.test_client()
 

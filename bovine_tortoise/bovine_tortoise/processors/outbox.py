@@ -6,6 +6,7 @@ from datetime import datetime
 import aiohttp
 import bovine.clients
 from bovine.types import LocalActor
+from quart import current_app
 
 from bovine_tortoise.models import Actor, Follower, OutboxEntry
 from bovine_tortoise.utils import determine_local_path_from_activity_id
@@ -69,7 +70,13 @@ async def send_activity_no_local_path(
     session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["id"])
-    return await send_activity(session, local_user, activity, local_path)
+
+    async def send():
+        await send_activity(session, local_user, activity, local_path)
+
+    current_app.add_background_task(send)
+
+    return activity
 
 
 async def send_activity(

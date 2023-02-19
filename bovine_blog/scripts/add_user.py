@@ -2,8 +2,8 @@ import asyncio
 import os
 from argparse import ArgumentParser
 
-from bovine.types import LocalUser
-from bovine.utils.crypto import generate_public_private_key
+from bovine.types import LocalActor
+from bovine_core.utils.crypto import generate_public_private_key
 from bovine_tortoise import ManagedDataStore
 
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         print("Failed to generate keys")
         exit(1)
 
-    local_user = LocalUser(
+    local_user = LocalActor(
         args.username,
         url,
         public_key,

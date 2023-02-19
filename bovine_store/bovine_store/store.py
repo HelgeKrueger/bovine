@@ -8,7 +8,7 @@ from .jsonld import split_into_objects, combine_items
 from .permissions import has_access
 
 
-class Store:
+class ObjectStore:
     def __init__(self, db_url="sqlite://store.db"):
         self.db_url = db_url
 

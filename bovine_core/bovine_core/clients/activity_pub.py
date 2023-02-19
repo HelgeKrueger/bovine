@@ -1,7 +1,8 @@
 import json
+
 import tomli
 
-from .signed_http import signed_get, signed_post, signed_event_source
+from .signed_http import signed_event_source, signed_get, signed_post
 
 
 class ActivityPubClient:

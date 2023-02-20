@@ -1,8 +1,9 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import TimelineEntry from "./TimelineEntry";
 
 import { buildTree, getDateForEntry } from "../../utils/conversations";
+import { Download } from "@mui/icons-material";
 
 export const DisplayConversation = ({ conversation, fallback }) => {
   if (conversation.length === 0) {
@@ -12,7 +13,24 @@ export const DisplayConversation = ({ conversation, fallback }) => {
   if (!root) {
     return <TimelineEntry entry={fallback} />;
   }
-  return <DisplayTreeItem entry={root} />;
+
+  return (
+    <>
+      <IconButton
+        onClick={() => {
+          console.log(root);
+        }}
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+        }}
+      >
+        <Download />
+      </IconButton>
+      <DisplayTreeItem entry={root} />
+    </>
+  );
 };
 
 const isUnseen = (entry) => {

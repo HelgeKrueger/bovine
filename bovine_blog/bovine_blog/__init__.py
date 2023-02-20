@@ -72,7 +72,11 @@ TORTOISE_ORM = {
     "connections": {"default": "sqlite://db.sqlite3"},
     "apps": {
         "models": {
-            "models": ["bovine_tortoise.models", "aerich.models"],
+            "models": [
+                "bovine_tortoise.models",
+                "bovine_store.models",
+                "aerich.models",
+            ],
             "default_connection": "default",
         },
     },

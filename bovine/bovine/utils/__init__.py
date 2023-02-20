@@ -3,7 +3,7 @@ import os
 from bovine_core.utils.crypto import generate_public_private_key
 
 
-async def dump_incoming_inbox_to_stdout(local_user, result, session):
+async def dump_incoming_inbox_to_stdout(local_user, result):
     result.dump()
     return local_user
 

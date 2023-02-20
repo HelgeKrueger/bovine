@@ -63,13 +63,13 @@ class LocalActor:
         logger.info(f"name: {self.name}")
         logger.info(f"type: {self.actor_type}")
 
-    async def process_inbox_item(self, inbox_item: ProcessingItem, session):
+    async def process_inbox_item(self, inbox_item: ProcessingItem):
         if self.inbox_process:
-            await self.inbox_process(inbox_item, self, session)
+            await self.inbox_process(inbox_item, self)
 
-    async def process_outbox_item(self, activity: ProcessingItem, session):
+    async def process_outbox_item(self, activity: ProcessingItem):
         if self.outbox_process:
-            await self.outbox_process(activity, self, session)
+            await self.outbox_process(activity, self)
 
     def item_count_for(self, stream_name: str):
         async def item_count():

@@ -15,7 +15,7 @@ class ObjectType(Enum):
     LOCAL_COLLECTION = "LOCAL_COLLECTION"
 
 
-class StoredObject(Model):
+class StoredJsonObject(Model):
     id = fields.CharField(max_length=255, pk=True)
     owner = fields.CharField(max_length=255)
 
@@ -32,7 +32,7 @@ class StoredObject(Model):
 class VisibleTo(Model):
     id = fields.IntField(pk=True)
     main_object = fields.ForeignKeyField(
-        "models.StoredObject", related_name="visible_to"
+        "models.StoredJsonObject", related_name="visible_to"
     )
     object_id = fields.CharField(max_length=255)
 

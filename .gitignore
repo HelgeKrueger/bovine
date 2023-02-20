@@ -4,7 +4,7 @@ node_modules
 build
 __pycache__
 .files
-db.sqlite3
+db.sqlite3*
 debug.log
 .coverage
 *.pem

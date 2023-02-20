@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from .models import StoredObject, CollectionItem, VisibleTo
+from .models import StoredJsonObject, CollectionItem, VisibleTo
 
 from .permissions import has_access
 from .store import ObjectStore
@@ -21,14 +21,14 @@ async def store():
 
 
 async def test_has_access_for_owner(store):
-    entry = await StoredObject.create(id="first", owner="owner", content={})
+    entry = await StoredJsonObject.create(id="first", owner="owner", content={})
 
     assert await has_access(entry, "owner")
     assert not await has_access(entry, "other")
 
 
 async def test_has_access_for_other_in_list(store):
-    entry = await StoredObject.create(id="first", owner="owner", content={})
+    entry = await StoredJsonObject.create(id="first", owner="owner", content={})
 
     await VisibleTo.create(main_object=entry, object_id="list")
     await CollectionItem.create(part_of="list", object_id="other")

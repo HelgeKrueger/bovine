@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 async def store_in_database(
-    item: ProcessingItem, local_user: LocalActor, session
+    item: ProcessingItem, local_user: LocalActor
 ) -> ProcessingItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)
@@ -68,7 +68,7 @@ async def inbox_entry_for_id(content_id):
 
 
 async def remove_from_database(
-    item: ProcessingItem, local_user: LocalActor, session
+    item: ProcessingItem, local_user: LocalActor
 ) -> ProcessingItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)
@@ -121,7 +121,7 @@ def determine_content_id(item, for_delete=False):
 
 
 async def update_in_database(
-    item: ProcessingItem, local_user: LocalActor, session
+    item: ProcessingItem, local_user: LocalActor
 ) -> ProcessingItem | None:
     try:
         actor = await Actor.get_or_none(account=local_user.name)

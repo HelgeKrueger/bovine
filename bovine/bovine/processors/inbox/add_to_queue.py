@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 async def add_to_queue(
-    item: ProcessingItem, local_actor: LocalActor, session
+    item: ProcessingItem, local_actor: LocalActor
 ) -> ProcessingItem | None:
     data = item.get_data()
 

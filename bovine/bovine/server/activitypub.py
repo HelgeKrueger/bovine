@@ -82,7 +82,7 @@ async def handle_inbox(data) -> None:
         return
     local_actor = await current_app.config["get_user"](account_name)
     inbox_item = ProcessingItem(raw_data)
-    await local_actor.process_inbox_item(inbox_item, current_app.config["session"])
+    await local_actor.process_inbox_item(inbox_item)
 
 
 @activitypub.get("/<account_name>/outbox")

@@ -5,6 +5,7 @@ from datetime import datetime
 import bovine.clients
 from bovine.types import LocalActor, ProcessingItem
 from bovine_core.activitystreams.activities import build_accept
+from quart import current_app
 
 from bovine_tortoise.models import Actor, Follower, Following
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 async def accept_follow_request(
-    item: ProcessingItem, local_user: LocalActor, session
+    item: ProcessingItem, local_user: LocalActor
 ) -> ProcessingItem | None:
     data = item.get_data()
 
@@ -28,6 +29,8 @@ async def accept_follow_request(
         await Follower.create(
             actor=actor, inbox=inbox, account=data["actor"], followed_on=datetime.now()
         )
+
+        session = current_app.config["session"]
 
         request_data = build_accept(local_user.url, data).build()
         await bovine.clients.send_activitypub_request(
@@ -49,7 +52,7 @@ async def store_host_as_peer(
 
 
 async def record_accept_follow(
-    item: ProcessingItem, local_user: LocalActor, session
+    item: ProcessingItem, local_user: LocalActor
 ) -> ProcessingItem | None:
     try:
         data = item.get_data()

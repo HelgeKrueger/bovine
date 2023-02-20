@@ -1,0 +1,95 @@
+from tortoise import BaseDBAsyncClient
+
+
+async def upgrade(db: BaseDBAsyncClient) -> str:
+    return """
+        CREATE TABLE IF NOT EXISTS "actor" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "account" VARCHAR(255) NOT NULL,
+    "url" VARCHAR(255) NOT NULL,
+    "actor_type" VARCHAR(255) NOT NULL,
+    "private_key" TEXT NOT NULL,
+    "public_key" TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "follower" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "account" VARCHAR(255) NOT NULL,
+    "followed_on" TIMESTAMP NOT NULL,
+    "inbox" VARCHAR(255),
+    "public_key" TEXT,
+    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "following" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "account" VARCHAR(255) NOT NULL,
+    "followed_on" TIMESTAMP NOT NULL,
+    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "inboxentry" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "created" TIMESTAMP NOT NULL,
+    "content" JSON NOT NULL,
+    "conversation" VARCHAR(255),
+    "read" INT NOT NULL  DEFAULT 1,
+    "content_id" VARCHAR(255),
+    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "outboxentry" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "local_path" VARCHAR(255) NOT NULL,
+    "created" TIMESTAMP NOT NULL,
+    "content" JSON NOT NULL,
+    "content_id" VARCHAR(255),
+    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "peer" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "domain" VARCHAR(255) NOT NULL,
+    "peer_type" VARCHAR(7) NOT NULL  DEFAULT 'NEW' /* TRUSTED: TRUSTED\nBLOCKED: BLOCKED\nNEW: NEW\nOFFLINE: OFFLINE */,
+    "software" VARCHAR(255),
+    "version" VARCHAR(255),
+    "created" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated" TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS "publickey" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "url" VARCHAR(255) NOT NULL UNIQUE,
+    "public_key" TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "storedobject" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "name" VARCHAR(255) NOT NULL UNIQUE,
+    "data" BLOB NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "collectionitem" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "part_of" VARCHAR(255) NOT NULL,
+    "object_id" VARCHAR(255) NOT NULL,
+    "created" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS "storedjsonobject" (
+    "id" VARCHAR(255) NOT NULL  PRIMARY KEY,
+    "owner" VARCHAR(255) NOT NULL,
+    "content" JSON NOT NULL,
+    "created" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated" TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "visibility" VARCHAR(10) NOT NULL  DEFAULT 'RESTRICTED' /* PUBLIC: PUBLIC\nRESTRICTED: RESTRICTED */,
+    "object_type" VARCHAR(16) NOT NULL  DEFAULT 'LOCAL' /* LOCAL: LOCAL\nREMOTE: REMOTE\nLOCAL_COLLECTION: LOCAL_COLLECTION */
+);
+CREATE TABLE IF NOT EXISTS "visibleto" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "object_id" VARCHAR(255) NOT NULL,
+    "main_object_id" VARCHAR(255) NOT NULL REFERENCES "storedjsonobject" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "aerich" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "version" VARCHAR(255) NOT NULL,
+    "app" VARCHAR(100) NOT NULL,
+    "content" JSON NOT NULL
+);"""
+
+
+async def downgrade(db: BaseDBAsyncClient) -> str:
+    return """
+        """

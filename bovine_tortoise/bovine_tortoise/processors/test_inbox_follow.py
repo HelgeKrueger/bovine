@@ -2,6 +2,7 @@ import json
 from unittest.mock import patch
 
 from bovine.types import LocalActor, ProcessingItem
+from bovine.utils.test.in_memory_test_app import app
 
 from bovine_tortoise.models import Actor, Follower, Following
 from bovine_tortoise.utils.test import db_url  # noqa: F401
@@ -36,7 +37,7 @@ async def test_accepted_follow_request(db_url) -> None:  # noqa: F811
 
     item = ProcessingItem(body)
 
-    result = await record_accept_follow(item, local_user, None)
+    result = await record_accept_follow(item, local_user)
 
     assert result == item
 
@@ -61,7 +62,9 @@ async def test_accept_follow_request(
     local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
     item = ProcessingItem(json.dumps({"type": "Follow", "actor": "url"}))
-    result = await accept_follow_request(item, local_user, None)
+
+    async with app.app_context():
+        result = await accept_follow_request(item, local_user)
 
     assert result
 

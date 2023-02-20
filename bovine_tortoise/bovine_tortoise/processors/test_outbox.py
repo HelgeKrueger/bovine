@@ -26,12 +26,10 @@ async def test_create_outbox_entry(db_url: str) -> None:  # noqa: F811
         "to": ["somebody/followers"],
     }
 
-    async with aiohttp.ClientSession() as session:
-        result = await create_outbox_entry(
-            activity_to_send,
-            local_user,
-            session,
-        )
+    result = await create_outbox_entry(
+        activity_to_send,
+        local_user,
+    )
 
     assert result == activity_to_send
 
@@ -69,12 +67,10 @@ async def test_delete_outbox_entry(db_url: str) -> None:  # noqa: F811
 
     local_user = LocalActor("name", "url", "public_key", "private_key", "actor_type")
 
-    async with aiohttp.ClientSession() as session:
-        result = await delete_outbox_entry(
-            activity_to_delete,
-            local_user,
-            session,
-        )
+    result = await delete_outbox_entry(
+        activity_to_delete,
+        local_user,
+    )
 
     assert result == activity_to_delete
 

@@ -1,12 +1,9 @@
-import aiohttp
 import json
 
 from bovine.types import LocalActor, ProcessingItem
 
 
-async def replace_ids(
-    item: ProcessingItem, local_actor: LocalActor, session: aiohttp.ClientSession
-):
+async def replace_ids(item: ProcessingItem, local_actor: LocalActor):
     # FIXME?
     if isinstance(item, dict):
         obj = item

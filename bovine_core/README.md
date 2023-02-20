@@ -11,3 +11,27 @@ things covered:
  POST and GET requests using HTTP Signatures are implemented.
 - `bovine_core.utils` contains the cryptographic stuff to
  handle HTTP Signatures.
+
+## Examples and toml file format
+
+The two examples in the example folder currently rely on a configuration file
+called `helge.toml`.
+
+```toml
+account_url = "https://mymath.rocks/activitypub/helge"
+public_key_url = "https://mymath.rocks/activitypub/helge#main-key"
+private_key = """-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+"""
+```
+
+__FIXME__: Use hello.coop to provide oauth support.
+
+The two scripts are `examples/sse.py` which opens the event source for the inbox
+and displays new elements. The second script `examples/send_note.py` allows one
+to send a quick message. Example usage:
+
+```shell
+poetry run python examples/send_note.py 'Hello World! via send_note.py and AP-C2S.'
+```

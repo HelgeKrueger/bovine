@@ -118,7 +118,7 @@ async def post_outbox(account_name: str) -> tuple[dict, int] | werkzeug.Response
     else:
         activity = await request.get_json()
 
-    await local_user.process_outbox_item(activity, current_app.config["session"])
+    await local_user.process_outbox_item(activity)
 
     return {"status": "success"}, 202
 

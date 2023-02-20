@@ -2,13 +2,18 @@ import asyncio
 
 from tortoise import Tortoise
 
-from bovine_store.models import StoredObject, VisibilityTypes, VisibleTo, CollectionItem
+from bovine_store.models import (
+    StoredJsonObject,
+    VisibilityTypes,
+    VisibleTo,
+    CollectionItem,
+)
 
 from .jsonld import split_into_objects, combine_items
 from .permissions import has_access
 
 
-async def store_remote_object(self, owner, item, as_public=False, visible_to=[]):
+async def store_remote_object(owner, item, as_public=False, visible_to=[]):
     visibility_type = VisibilityTypes.RESTRICTED
     if as_public:
         visibility_type = VisibilityTypes.PUBLIC
@@ -16,7 +21,7 @@ async def store_remote_object(self, owner, item, as_public=False, visible_to=[])
     to_store = await split_into_objects(item)
 
     tasks = [
-        StoredObject.get_or_create(
+        StoredJsonObject.get_or_create(
             id=obj["id"],
             defaults={
                 "content": obj,
@@ -74,7 +79,7 @@ class ObjectStore:
         to_store = await split_into_objects(item)
 
         tasks = [
-            StoredObject.get_or_create(
+            StoredJsonObject.get_or_create(
                 id=obj["id"],
                 defaults={
                     "content": obj,
@@ -107,7 +112,7 @@ class ObjectStore:
                     # FIXME visibility not changed; check timestamps?
 
     async def retrieve(self, retriever, object_id, include=[]):
-        result = await StoredObject.get_or_none(id=object_id).prefetch_related(
+        result = await StoredJsonObject.get_or_none(id=object_id).prefetch_related(
             "visible_to"
         )
         if not await has_access(result, retriever):
@@ -118,7 +123,7 @@ class ObjectStore:
             return data
 
         items = await asyncio.gather(
-            *[StoredObject.get_or_none(id=data[key]) for key in include]
+            *[StoredJsonObject.get_or_none(id=data[key]) for key in include]
         )
         items = [obj.content for obj in items if obj]
 

@@ -23,7 +23,7 @@ LimitAS=infinity
 LimitRSS=infinity
 LimitCORE=infinity
 LimitNOFILE=65536
-ExecStart=/usr/local/bin/poetry run hypercorn bovine_blog:app --bind unix:/run/bovine.sock
+ExecStart=/usr/local/bin/poetry run hypercorn bovine_blog:app --bind unix:/run/bovine.sock -m 777
 
 [Install]
 WantedBy=multi-user.target
@@ -80,6 +80,18 @@ This is again necessary to handle the many get requests that occur if somebody a
 2023/02/11 13:21:46 [alert] 650#650: 768 worker_connections are not enough
 ```
 
-**FIXME**: For this to work, I had to run `chmod 777 /tmp/bovine.sock`. My internet research shows that it shoud be in `/run`. But no clue how to get this working.
+Furhermore, the error message
+
+```
+2023/02/20 11:58:43 [alert] 54804#54804: *7206  socket() failed (24: Too many open files) while connecting to upstream,
+```
+
+can be hopefully be fixed by adding
+
+```
+worker_rlimit_nofile 8192;
+```
+
+to `nginx.conf` (this one belongs outside the event block).
 
 **FIXME**: Should I add `proxy_buffering`?

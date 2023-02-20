@@ -13,7 +13,7 @@ async def test_dismiss_delete_callback_is_called():
 
     coroutine = dismiss_delete(mock)
 
-    await coroutine(item, None, None)
+    await coroutine(item, None)
 
     mock.assert_awaited_once()
 
@@ -25,6 +25,6 @@ async def test_dismiss_delete_callback_is_not_called():
 
     coroutine = dismiss_delete(mock)
 
-    await coroutine(item, None, None)
+    await coroutine(item, None)
 
     mock.assert_not_awaited()

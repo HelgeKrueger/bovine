@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 async def create_outbox_entry(
     activity: dict,
     local_user: LocalActor,
-    session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["id"])
     actor = await Actor.get_or_none(account=local_user.name)
@@ -40,7 +39,6 @@ async def create_outbox_entry(
 async def delete_outbox_entry(
     activity: dict,
     local_user: LocalActor,
-    session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["object"]["id"])
     actor = await Actor.get_or_none(account=local_user.name)
@@ -67,11 +65,11 @@ async def delete_outbox_entry(
 async def send_activity_no_local_path(
     activity: dict,
     local_user: LocalActor,
-    session: aiohttp.ClientSession,
 ):
     local_path = determine_local_path_from_activity_id(activity["id"])
 
     async def send():
+        session = current_app.config["session"]
         await send_activity(session, local_user, activity, local_path)
 
     current_app.add_background_task(send)

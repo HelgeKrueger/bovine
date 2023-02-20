@@ -29,7 +29,7 @@ async def test_store_in_database(db_url):  # noqa: F811
         ),
     )
 
-    result = await store_in_database(item, local_user, None)
+    result = await store_in_database(item, local_user)
 
     assert result == item
 
@@ -56,7 +56,7 @@ async def test_store_in_database_no_conversation(db_url):  # noqa: F811
         json.dumps({"type": "Follow", "actor": "url", "object": "proto://url"}),
     )
 
-    result = await store_in_database(item, local_user, None)
+    result = await store_in_database(item, local_user)
 
     assert result == item
 
@@ -84,13 +84,13 @@ async def test_store_and_remove_from_database(db_url):  # noqa: F811
 
     assert await InboxEntry.filter(actor=actor).count() == 0
 
-    await store_in_database(item, local_user, None)
+    await store_in_database(item, local_user)
     assert await InboxEntry.filter(actor=actor).count() == 1
 
-    await remove_from_database(item, local_user, None)
+    await remove_from_database(item, local_user)
     assert await InboxEntry.filter(actor=actor).count() == 0
 
-    await remove_from_database(item, local_user, None)
+    await remove_from_database(item, local_user)
     assert await InboxEntry.filter(actor=actor).count() == 0
 
 
@@ -128,10 +128,10 @@ async def test_store_and_update_from_database(db_url):  # noqa: F811
 
     assert await InboxEntry.filter(actor=actor).count() == 0
 
-    await store_in_database(create, local_user, None)
+    await store_in_database(create, local_user)
     assert await InboxEntry.filter(actor=actor).count() == 1
 
-    await update_in_database(update, local_user, None)
+    await update_in_database(update, local_user)
     assert await InboxEntry.filter(actor=actor).count() == 1
 
     inbox_entry = await InboxEntry.filter(actor=actor).get()

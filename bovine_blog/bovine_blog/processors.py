@@ -1,11 +1,11 @@
 import json
 
-import aiohttp
 from bovine.processors.fetch_object_and_process import fetch_object_and_process
 from bovine.processors.inbox.add_to_queue import add_to_queue
 from bovine.processors.outbox.replace_ids import replace_ids
 from bovine.processors.processor_list import ProcessorList
 from bovine.types import LocalActor, ProcessingItem
+from bovine_store.processors.store_incoming import add_incoming_to_inbox, store_incoming
 from bovine_tortoise.processors.inbox import (
     remove_from_database,
     store_in_database,
@@ -35,14 +35,14 @@ default_inbox_process = (
         .apply,
     )
     .add(store_in_database)
+    .add(store_incoming)
+    .add(add_incoming_to_inbox)
     .add(add_to_queue)
     .apply
 )
 
 
-async def fix_markup(
-    item: ProcessingItem, local_actor: LocalActor, session: aiohttp.ClientSession
-):
+async def fix_markup(item: ProcessingItem, local_actor: LocalActor):
     if isinstance(item, dict):
         obj = item
     else:

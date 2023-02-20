@@ -30,4 +30,4 @@ async def test_store_in_database(db_url):  # noqa: F811
 
     item = ProcessingItem("{}")
 
-    await store_in_database(item, local_user, None)
+    await store_in_database(item, local_user)

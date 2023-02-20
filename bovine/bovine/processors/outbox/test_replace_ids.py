@@ -15,7 +15,7 @@ async def test_replaces_id_of_note():
     note = build_note("account", "some_id", "uuid").build()
 
     item = ProcessingItem(json.dumps(note))
-    result = await replace_ids(item, local_actor, None)
+    result = await replace_ids(item, local_actor)
     result = result.get_data()
 
     assert re.match(
@@ -29,7 +29,7 @@ async def test_replaces_both_ids_in_activity():
     note = build_note("account", "some_id", "uuid").build()
     create = build_create(note).build()
     item = ProcessingItem(json.dumps(create))
-    result = await replace_ids(item, local_actor, None)
+    result = await replace_ids(item, local_actor)
     result = result.get_data()
 
     assert re.match(

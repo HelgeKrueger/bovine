@@ -57,4 +57,4 @@ async def fetch_post(
     text = await response.text()
 
     inbox_item = ProcessingItem(text)
-    await local_user.process_inbox_item(inbox_item, session)
+    await local_user.process_inbox_item(inbox_item)

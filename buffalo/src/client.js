@@ -25,7 +25,7 @@ const sendFetch = (url) => {
     .then((x) => x.json())
     .then(async (data) => {
       const activity = transformActivity(data);
-      await db.activity.add(activity);
+      await db.activity.put(activity);
     });
 };
 

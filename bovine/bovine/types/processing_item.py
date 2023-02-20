@@ -1,5 +1,6 @@
 import json
 import logging
+import uuid
 
 
 logger = logging.getLogger(__name__)
@@ -9,13 +10,33 @@ class ProcessingItem:
     def __init__(self, body, authorization={}):
         self.authorization = authorization
         self.body = body
-        self.data = None
         self.meta = {}
+
+        self.data = None
+
+        self.object_id()
 
     def get_data(self):
         if not self.data:
-            self.data = json.loads(self.body)
+            try:
+                self.data = json.loads(self.body)
+            except Exception as ex:
+                logger.error("Failed to parse with %s", str(ex))
+                self.data = {}
+
         return self.data
+
+    def object_id(self):
+        data = self.get_data()
+        object_id = data.get("id")
+
+        if object_id is None:
+            object_id = f"remote://{str(uuid.uuid4())}"
+            data["id"] = object_id
+            self.data = data
+            self.body = json.dumps(data)
+
+        return object_id
 
     def get_body_id(self) -> str:
         try:

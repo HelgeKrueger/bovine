@@ -2,14 +2,14 @@ import os
 
 import pytest
 
-from .store import Store
+from .store import ObjectStore
 
 
 @pytest.fixture
 async def store():
     db_file = "test_db.db"
     db_url = f"sqlite://{db_file}"
-    store = Store(db_url)
+    store = ObjectStore(db_url)
 
     await store.init_connection()
 

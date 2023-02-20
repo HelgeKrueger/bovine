@@ -1,3 +1,5 @@
+import re
+
 from datetime import datetime
 import json
 
@@ -43,6 +45,6 @@ async def test_activitypub_server_sent_events(
         data = await connection.receive()
         data = data.decode("utf-8")
 
-        assert data == 'data: {"test": "xxx"}\nevent: inbox\n\n'
+        assert re.match(r"data: {.*}\nevent: inbox\n\n", data)
 
         await connection.disconnect()

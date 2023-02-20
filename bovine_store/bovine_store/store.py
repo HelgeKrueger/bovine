@@ -8,6 +8,51 @@ from .jsonld import split_into_objects, combine_items
 from .permissions import has_access
 
 
+async def store_remote_object(self, owner, item, as_public=False, visible_to=[]):
+    visibility_type = VisibilityTypes.RESTRICTED
+    if as_public:
+        visibility_type = VisibilityTypes.PUBLIC
+
+    to_store = await split_into_objects(item)
+
+    tasks = [
+        StoredObject.get_or_create(
+            id=obj["id"],
+            defaults={
+                "content": obj,
+                "owner": owner,
+                "visibility": visibility_type,
+            },
+        )
+        for obj in to_store
+    ]
+
+    id_to_store = {obj["id"]: obj for obj in to_store}
+
+    items = await asyncio.gather(*tasks)
+
+    for item, created in items:
+        if created:
+            visible_tasks = [
+                VisibleTo.create(
+                    main_object=item,
+                    object_id=actor,
+                )
+                for actor in visible_to
+            ]
+            await asyncio.gather(*visible_tasks)
+        else:
+            if item.owner == owner:
+                item.content = id_to_store[item.id]
+                await item.save()
+
+                # FIXME visibility not changed; check timestamps?
+
+
+async def add_to_collection(collection_id, object_id):
+    await CollectionItem.create(part_of=collection_id, object_id=object_id)
+
+
 class ObjectStore:
     def __init__(self, db_url="sqlite://store.db"):
         self.db_url = db_url

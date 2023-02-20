@@ -103,7 +103,8 @@ async def blog_test_env() -> str:
     app.config["queue_manager"] = QueueManager()
     app.config["inbox_lookup"] = inbox_items_for_actor_from
 
-    app.config["object_store"] = ObjectStore()
+    app.config["object_store"] = ObjectStore(db_url=db_url)
+    await app.config["object_store"].init_connection()
 
     client = app.test_client()
 

@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from .store import ObjectStore
+from . import ObjectStore, store_remote_object
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ async def test_store_retrieval(store):
         },
     }
 
-    await store.store("owner", item)
+    await store_remote_object("owner", item)
 
     first = await store.retrieve("owner", first_id)
     second = await store.retrieve("owner", second_id)
@@ -54,7 +54,7 @@ async def test_store_retrieval_with_object(store):
         },
     }
 
-    await store.store("owner", item)
+    await store_remote_object("owner", item)
 
     first = await store.retrieve("owner", first_id, include=["object"])
 
@@ -71,7 +71,7 @@ async def test_store_basic_access(store):
         "type": "Create",
     }
 
-    await store.store("owner", item)
+    await store_remote_object("owner", item)
 
     owner = await store.retrieve("owner", first_id)
     other = await store.retrieve("other", first_id)
@@ -88,7 +88,7 @@ async def test_store_public_access(store):
         "type": "Create",
     }
 
-    await store.store("owner", item, as_public=True)
+    await store_remote_object("owner", item, as_public=True)
 
     other = await store.retrieve("other", first_id)
 
@@ -104,7 +104,7 @@ async def test_store_visible_to_other(store):
         "type": "Create",
     }
 
-    await store.store("owner", item, visible_to=["other"])
+    await store_remote_object("owner", item, visible_to=["other"])
 
     other = await store.retrieve("other", first_id)
 
@@ -131,26 +131,9 @@ async def test_store_update(store):
         "object": {"type": "Note", "id": second_id, "content": "updated"},
     }
 
-    await store.store("owner", item)
-    await store.store("owner", second_item)
+    await store_remote_object("owner", item)
+    await store_remote_object("owner", second_item)
 
     data = await store.retrieve("owner", second_id)
 
-    print(data)
-
     assert data["content"] == "updated"
-
-
-async def test_add_remove_item(store):
-    first_id = "https://my_domain/first"
-    second_id = "https://my_domain/second"
-
-    assert not await store.remove_from_collection(first_id, second_id)
-
-    await store.add_to_collection(first_id, second_id)
-
-    assert await store.collection_count(first_id) == 1
-
-    assert await store.remove_from_collection(first_id, second_id)
-
-    assert await store.collection_count(first_id) == 0

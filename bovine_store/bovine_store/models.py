@@ -40,7 +40,9 @@ class VisibleTo(Model):
 class CollectionItem(Model):
     id = fields.IntField(pk=True)
     part_of = fields.CharField(max_length=255)
-    object_id = fields.CharField(max_length=255)
+    object_id = fields.CharField(
+        max_length=255,
+    )
 
     created = fields.DatetimeField(auto_now_add=True)
     updated = fields.DatetimeField(auto_now=True)

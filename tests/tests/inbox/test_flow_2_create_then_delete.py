@@ -1,6 +1,6 @@
 import asyncio
-from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import (  # noqa F401
+from utils import get_activity_from_json
+from utils.blog_test_env import (  # noqa F401
     blog_test_env,
     wait_for_number_of_entries_in_inbox,
 )
@@ -13,7 +13,7 @@ async def test_flow_2_mastodon_create_then_delete(blog_test_env):  # noqa F811
     result = await blog_test_env.send_to_inbox(create_activity)
     assert result.status_code == 202
 
-    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)
+    await wait_for_number_of_entries_in_inbox(blog_test_env, 1)
 
     # LABEL: ap-s2s-delete
     result = await blog_test_env.send_to_inbox(delete_activity)

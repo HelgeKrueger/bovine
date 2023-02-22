@@ -1,8 +1,8 @@
 import json
 from unittest.mock import AsyncMock
 
-from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import (  # noqa: F401
+from utils import get_activity_from_json
+from utils.blog_test_env import (  # noqa: F401
     blog_test_env,
     wait_for_number_of_entries_in_inbox,
 )
@@ -24,7 +24,7 @@ async def test_mastodon_announce_then_undo(blog_test_env):  # noqa F811
 
     result = await blog_test_env.send_to_inbox(announce)
 
-    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 2)
+    await wait_for_number_of_entries_in_inbox(blog_test_env, 2)
 
     # inbox_entry = await InboxEntry.filter(actor=blog_test_env.actor).get()
 
@@ -39,4 +39,4 @@ async def test_mastodon_announce_then_undo(blog_test_env):  # noqa F811
 
     assert result.status_code == 202
 
-    await wait_for_number_of_entries_in_inbox(blog_test_env.actor, 1)
+    await wait_for_number_of_entries_in_inbox(blog_test_env, 1)

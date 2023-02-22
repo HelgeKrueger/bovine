@@ -5,7 +5,7 @@ from bovine_core.types import ServerSentEvent
 from bovine_core.activitystreams.activities import build_create
 from bovine_core.activitystreams.objects import build_note
 
-from tests.utils.blog_test_env import (  # noqa: F401
+from utils.blog_test_env import (  # noqa: F401
     blog_test_env,
     wait_for_number_of_entries_in_inbox,
 )

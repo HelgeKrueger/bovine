@@ -3,8 +3,8 @@ import json
 
 from bovine_tortoise.models import Follower
 
-from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from utils import get_activity_from_json
+from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
 async def test_mastodon_follow_request_is_accepted(blog_test_env):  # noqa: F811

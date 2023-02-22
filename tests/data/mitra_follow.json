@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://w3id.org/security/v1",
+    "https://w3id.org/security/data-integrity/v1",
+    {
+      "MitraJcsRsaSignature2022": "mitra:MitraJcsRsaSignature2022",
+      "mitra": "http://mitra.social#",
+      "proofPurpose": "sec:proofPurpose",
+      "proofValue": "sec:proofValue",
+      "verificationMethod": "sec:verificationMethod"
+    }
+  ],
+  "actor": "https://mitra.social/users/silverpill",
+  "id": "https://mitra.social/objects/01867438-0990-95d8-82d9-a3597fa5a28c",
+  "object": "https://mymath.rocks/activitypub/helge",
+  "proof": {
+    "created": "2023-02-21T13:44:39.093417671Z",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z2K6Y74KDNqueGSC75KqB5mgaWYxHMAMTtJ5gbiWtztJpsuJctw5LUKGpQD5QyTQ4BpTDYryS5S2xfGTHNh6gBkouMGq2fQAb7RaGwgBAjbGQC7L6dpEUPPJw1k6kJJvBPCAZdL61ND38FwZStT2LHoSgjVkMn15rzQJbT6o5J9n1CzhtL73NCguDDtr346EdcQXyLoHXEiTKWTDfjA2MF85WUptCnYfJSCkpKMdJQgvdZQtuTnn9TjzuhJM3gv6WoviAToQohKGzvcearrkpfLUbH9se44ry5p8UZwhfciB2mYy65igpoB2R9mC8ADaTrcc2yXKVuzxiXFAURPv7QLThSRz1Bw",
+    "type": "MitraJcsRsaSignature2022",
+    "verificationMethod": "https://mitra.social/users/silverpill#main-key"
+  },
+  "to": ["https://mymath.rocks/activitypub/helge"],
+  "type": "Follow"
+}

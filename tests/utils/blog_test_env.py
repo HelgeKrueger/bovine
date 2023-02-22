@@ -9,7 +9,6 @@ from bovine.utils.queue_manager import QueueManager
 from bovine_blog import app
 from bovine_tortoise import inbox_items_for_actor_from
 from bovine_tortoise.utils import init
-from bovine_tortoise.models import InboxEntry
 from tortoise import Tortoise
 
 from bovine_store.store import ObjectStore
@@ -119,10 +118,16 @@ async def blog_test_env() -> str:
     os.unlink(db_file)
 
 
-async def wait_for_number_of_entries_in_inbox(actor, entry_number):
+async def wait_for_number_of_entries_in_inbox(blog_test_env, entry_number):
     for _ in range(100):
-        if await InboxEntry.filter(actor=actor).count() == entry_number:
+        inbox_content = await blog_test_env.get_from_inbox()
+
+        print(inbox_content)
+
+        if inbox_content["totalItems"] == entry_number:
             break
         await asyncio.sleep(0.01)
 
-    assert await InboxEntry.filter(actor=actor).count() == entry_number
+    inbox_content = await blog_test_env.get_from_inbox()
+
+    assert inbox_content["totalItems"] == entry_number

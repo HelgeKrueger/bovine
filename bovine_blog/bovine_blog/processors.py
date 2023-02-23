@@ -5,12 +5,17 @@ from bovine.processors.inbox.add_to_queue import add_to_queue
 from bovine.processors.outbox.replace_ids import replace_ids
 from bovine.processors.processor_list import ProcessorList
 from bovine.types import LocalActor, ProcessingItem
-from bovine_store.processors.store_incoming import add_incoming_to_inbox, store_incoming
-from bovine_tortoise.processors.inbox import (
-    remove_from_database,
-    store_in_database,
-    update_in_database,
+from bovine_store.processors import default_content_processors
+from bovine_store.processors.content.store_incoming import (
+    add_incoming_to_inbox,
+    store_incoming,
 )
+
+# from bovine_tortoise.processors.inbox import (
+#     remove_from_database,
+#     store_in_database,
+#     update_in_database,
+# )
 from bovine_tortoise.processors.inbox_follow import (
     accept_follow_request,
     record_accept_follow,
@@ -25,16 +30,18 @@ from markdown import Markdown
 default_inbox_process = (
     ProcessorList()
     .add_for_types(
+        **default_content_processors,
         Accept=record_accept_follow,
         Announce=fetch_object_and_process,
-        Update=update_in_database,
-        Delete=ProcessorList(on_object=True).add(remove_from_database).apply,
+        # Update=update_in_database,
+        # Delete=incoming_delete,
+        # Delete=ProcessorList(on_object=True).add(remove_from_database).apply,
         Follow=accept_follow_request,
-        Undo=ProcessorList(on_object=True)
-        .add_for_types(Like=remove_from_database, Announce=remove_from_database)
-        .apply,
+        # Undo=ProcessorList(on_object=True)
+        # .add_for_types(Like=remove_from_inbox, Announce=remove_from_inbox)
+        # .apply,
     )
-    .add(store_in_database)
+    # .add(store_in_database)
     .add(store_incoming)
     .add(add_incoming_to_inbox)
     .add(add_to_queue)

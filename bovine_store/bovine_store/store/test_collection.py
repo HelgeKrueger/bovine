@@ -8,7 +8,7 @@ from .collection import (
 )
 
 from . import store_remote_object
-from .test_store import store  # noqa F401
+from bovine_store.utils.test import store  # noqa F401
 
 
 first_id = "https://my_domain/first"

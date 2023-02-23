@@ -1,8 +1,8 @@
 from bovine_core.activitystreams.activities import build_delete
 from bovine_tortoise.models import OutboxEntry
 
-from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from utils import get_activity_from_json
+from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
 async def test_create_then_delete(blog_test_env):  # noqa F811

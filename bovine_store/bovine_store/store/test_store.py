@@ -1,24 +1,9 @@
-import os
+from . import store_remote_object
 
-import pytest
-
-from . import ObjectStore, store_remote_object
+from bovine_store.utils.test import store  # noqa F401
 
 
-@pytest.fixture
-async def store():
-    db_file = "test_db.db"
-    db_url = f"sqlite://{db_file}"
-    store = ObjectStore(db_url)
-
-    await store.init_connection()
-
-    yield store
-    await store.close_connection()
-    os.unlink(db_file)
-
-
-async def test_store_retrieval(store):
+async def test_store_retrieval(store):  # noqa F811
     first_id = "https://my_domain/first"
     second_id = "https://my_domain/second"
     item = {
@@ -41,7 +26,7 @@ async def test_store_retrieval(store):
     assert second["id"] == second_id
 
 
-async def test_store_retrieval_with_object(store):
+async def test_store_retrieval_with_object(store):  # noqa F811
     first_id = "https://my_domain/first"
     second_id = "https://my_domain/second"
     item = {
@@ -63,7 +48,7 @@ async def test_store_retrieval_with_object(store):
     assert first["object"]["id"] == second_id
 
 
-async def test_store_basic_access(store):
+async def test_store_basic_access(store):  # noqa F811
     first_id = "https://my_domain/first"
     item = {
         "@context": "https://www.w3.org/ns/activitystreams",
@@ -80,7 +65,7 @@ async def test_store_basic_access(store):
     assert other is None
 
 
-async def test_store_public_access(store):
+async def test_store_public_access(store):  # noqa F811
     first_id = "https://my_domain/first"
     item = {
         "@context": "https://www.w3.org/ns/activitystreams",
@@ -96,7 +81,7 @@ async def test_store_public_access(store):
     assert other["id"] == first_id
 
 
-async def test_store_visible_to_other(store):
+async def test_store_visible_to_other(store):  # noqa F811
     first_id = "https://my_domain/first"
     item = {
         "@context": "https://www.w3.org/ns/activitystreams",
@@ -112,7 +97,7 @@ async def test_store_visible_to_other(store):
     assert other["id"] == first_id
 
 
-async def test_store_update(store):
+async def test_store_update(store):  # noqa F811
     first_id = "https://my_domain/first"
     second_id = "https://my_domain/second"
     third_id = "https://my_domain/third"

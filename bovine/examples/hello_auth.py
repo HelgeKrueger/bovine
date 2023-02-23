@@ -2,6 +2,13 @@ import aiohttp
 import os
 from quart import Quart
 
+from quart_auth import AuthManager
+
+
+import secrets
+from bovine.server.hello_auth import hello_auth
+
+
 from bovine import get_bovine_user
 from bovine.processors.inbox.accept_follow import accept_follow_request
 from bovine.processors.inbox.add_to_queue import add_to_queue
@@ -60,6 +67,11 @@ app.config.update(
     }
 )
 app.register_blueprint(default_configuration)
+
+app.register_blueprint(hello_auth)
+app.secret_key = secrets.token_urlsafe(16)
+
+AuthManager(app)
 
 if __name__ == "__main__":
     app.run()

@@ -55,6 +55,15 @@ class BlogTestEnv:
         )
         return result
 
+    async def proxy(self, url):
+        proxy_url = self.local_user.url + "/proxyUrl"
+        result = await self.client.post(
+            proxy_url, headers=fake_post_headers, form={"id": url}
+        )
+        assert result.status_code == 200
+
+        return await result.get_json()
+
     async def get(self, url, headers={}):
         parsed_url = urlparse(url)
         path = parsed_url.path
@@ -121,8 +130,6 @@ async def blog_test_env() -> str:
 async def wait_for_number_of_entries_in_inbox(blog_test_env, entry_number):
     for _ in range(100):
         inbox_content = await blog_test_env.get_from_inbox()
-
-        print(inbox_content)
 
         if inbox_content["totalItems"] == entry_number:
             break

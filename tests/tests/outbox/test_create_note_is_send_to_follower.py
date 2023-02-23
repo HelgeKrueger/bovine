@@ -5,7 +5,7 @@ from bovine_core.activitystreams.activities import build_create
 from bovine_core.activitystreams.objects import build_note
 from bovine_tortoise.models import Follower
 
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
 async def test_create_note_is_send_to_user(blog_test_env):  # noqa F811

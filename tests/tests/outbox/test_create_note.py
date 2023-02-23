@@ -1,5 +1,5 @@
-from tests.utils import get_activity_from_json
-from tests.utils.blog_test_env import (  # noqa: F401
+from utils import get_activity_from_json
+from utils.blog_test_env import (  # noqa: F401
     blog_test_env,
 )
 

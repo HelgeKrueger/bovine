@@ -8,7 +8,7 @@ class TombstoneBuilder:
     def build(self):
         context = (
             build_context()
-            .add(ostatus="http://ostatus.org#", atomUri="ostatus:atomUri")
+            # .add(ostatus="http://ostatus.org#", atomUri="ostatus:atomUri")
             .build()
         )
 
@@ -16,5 +16,5 @@ class TombstoneBuilder:
             "@context": context,
             "type": "Tombstone",
             "id": self.object_id,
-            "atomUri": self.object_id,
+            # "atomUri": self.object_id,
         }

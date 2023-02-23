@@ -24,4 +24,19 @@ async def test_flow_2_mastodon_create_then_delete(blog_test_env):  # noqa F811
     result_get = await blog_test_env.get_from_inbox()
 
     assert result_get["type"] == "OrderedCollection"
-    assert result_get["totalItems"] == 0
+    assert result_get["totalItems"] == 2
+
+    delete, create = result_get["orderedItems"]
+
+    response = await blog_test_env.proxy(delete)
+    assert response["type"] == "Delete"
+
+    object_to_delete = response["object"]
+
+    tombstone = await blog_test_env.proxy(object_to_delete)
+
+    assert tombstone["id"] == object_to_delete
+    assert tombstone["type"] == "Tombstone"
+    assert set(tombstone.keys()) == {"atomUri", "@context", "id", "type"}
+    # FIXME Check content
+    # FIXME: why atomid

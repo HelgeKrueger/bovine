@@ -1,5 +1,7 @@
 from quart import Blueprint
 
+from bovine import __version__
+
 info = Blueprint("info", __name__, url_prefix="/info")
 
 
@@ -10,7 +12,7 @@ async def nodeinfo() -> dict:
         "openRegistrations": False,
         "protocols": ["activitypub"],
         "services": {"inbound": [], "outbound": []},
-        "software": {"name": "bovine", "version": "0.0.1"},
+        "software": {"name": "bovine", "version": __version__},
         "usage": {"users": {}},
         "version": "2.0",
     }

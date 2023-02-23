@@ -1,6 +1,7 @@
 import logging
 
 from bovine.types import LocalActor as LocalActor
+from bovine_store.store.collection import collection_count, collection_items
 from tortoise import Tortoise
 
 from bovine_tortoise.models import Actor, InboxEntry, OutboxEntry
@@ -19,10 +20,19 @@ class ManagedDataStore:
         db_url="sqlite://db.sqlite3",
         inbox_process=None,
         outbox_process=None,
+        streams=None,
     ):
         self.db_url = db_url
         self.inbox_process = inbox_process
         self.outbox_process = outbox_process
+
+        if streams is None:
+            self.streams = {
+                "outbox": CountAndItems(OutboxEntry),
+                "inbox": CountAndItems(InboxEntry),
+            }
+        else:
+            self.streams = streams
 
     async def connect(self):
         await Tortoise.init(
@@ -44,12 +54,15 @@ class ManagedDataStore:
             result.private_key,
             result.actor_type,
         )
-        local_user = (
-            local_user.set_inbox_process(self.inbox_process)
-            .set_outbox_process(self.outbox_process)
-            .set_stream("outbox", CountAndItems(OutboxEntry))
-            .set_stream("inbox", CountAndItems(InboxEntry))
-        )
+        local_user = local_user.set_inbox_process(
+            self.inbox_process
+        ).set_outbox_process(self.outbox_process)
+
+        for name, count_and_items in self.streams.items():
+            local_user = local_user.set_stream(name, count_and_items)
+
+        local_user.collection_item_count = collection_count
+        local_user.collection_items = collection_items
 
         return local_user
 

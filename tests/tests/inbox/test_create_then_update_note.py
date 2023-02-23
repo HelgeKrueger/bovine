@@ -27,10 +27,12 @@ async def test_create_then_update_note(blog_test_env):  # noqa F811
     await asyncio.sleep(0.3)
 
     # LABEL: ap-s2s-update
-    await wait_for_number_of_entries_in_inbox(blog_test_env, 1)
+    await wait_for_number_of_entries_in_inbox(blog_test_env, 2)
 
     inbox_content = await blog_test_env.get_from_inbox()
-    assert len(inbox_content["orderedItems"]) == 1
+    assert len(inbox_content["orderedItems"]) == 2
     inbox_item = inbox_content["orderedItems"][0]
 
-    assert inbox_item["type"] == "Update"
+    assert inbox_item == update_item["id"]
+
+    # FIXME: Check updated object content

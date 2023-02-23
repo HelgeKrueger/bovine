@@ -7,10 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bovine_core = {git = "https://github.com/HelgeKrueger/bovine.git", rev = "v0.0.4", subdirectory = "bovine_core"}
-# bovine-core = {path = "../bovine_core", develop=true}
+# bovine_core = {git = "https://github.com/HelgeKrueger/bovine.git", rev = "v0.0.4", subdirectory = "bovine_core"}
+bovine-core = {path = "../bovine_core", develop=true}
 quart = "^0.18.3"
 quart-cors = "^0.6.0"
+quart-auth = "^0.8.0"
+pyjwt = "^2.6.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -2,6 +2,9 @@ from .types import LocalActor
 from .utils import dump_incoming_inbox_to_stdout, get_server_keys
 
 
+__version__ = "0.0.4"
+
+
 def get_bovine_user(
     domain: str,
 ) -> LocalActor:

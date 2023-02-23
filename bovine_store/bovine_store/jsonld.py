@@ -1,5 +1,10 @@
+import logging
+import json
+
 import requests_cache
 from pyld import jsonld
+
+logger = logging.getLogger(__name__)
 
 requests_cache.install_cache("context_cache")
 
@@ -7,6 +12,9 @@ jsonld.set_document_loader(jsonld.requests_document_loader(timeout=60))
 
 
 async def split_into_objects(input_data):
+    if "@context" not in input_data:
+        logger.warning("@context missing in %s", json.dumps(input_data))
+        return []
     context = input_data["@context"]
     flattened = jsonld.flatten(input_data)
     compacted = jsonld.compact(flattened, context)

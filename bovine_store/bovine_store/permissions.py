@@ -2,6 +2,9 @@ from .models import VisibilityTypes, CollectionItem
 
 
 async def has_access(entry, retriever):
+    if entry is None:
+        return False
+
     if retriever == entry.owner:
         return True
 

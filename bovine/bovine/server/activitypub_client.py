@@ -194,19 +194,22 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
     await request.get_data(parse_form_data=True)
 
     local_user = await current_app.config["get_user"](account_name)
+
     if not has_authorization(local_user):
         return {"status": "access denied"}, 401
+
+    logger.info(await request.form)
 
     url = (await request.form)["id"]
 
     logger.info(f"Fetching {url} for {account_name}")
 
-    # stored_object = await current_app.config["object_store"].retrieve(
-    #     local_user.url, url
-    # )
+    object_store = current_app.config["object_store"]
 
-    # if stored_object:
-    #     return stored_object, 200
+    if object_store:
+        data = await object_store.retrieve(local_user.url, url)
+        if data:
+            return data, 200
 
     response = await signed_get(
         current_app.config["session"],
@@ -217,8 +220,7 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
 
     data = json.loads(await response.text())
 
-    # await current_app.config["object_store"].store(
-    #     None, url, visible_to=[local_user.url]
-    # )
+    if object_store:
+        await object_store.store("FIXME", data, visible_to=[local_user.url])
 
     return data, 200

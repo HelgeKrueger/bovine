@@ -3,7 +3,7 @@ import asyncio
 from bovine_core.activitystreams.activities import build_create
 from bovine_core.activitystreams.objects import build_note
 
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
 async def test_create_many_notes(blog_test_env):  # noqa F811

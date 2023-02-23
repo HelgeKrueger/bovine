@@ -5,6 +5,8 @@ from bovine.types import LocalActor, ProcessingItem
 from bovine_store.store import store_remote_object
 from bovine_store.store.collection import add_to_collection
 
+from bovine_store.utils.activitystreams import actor_for_object, recipients_for_object
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,9 +15,11 @@ async def store_incoming(
 ) -> ProcessingItem:
     data = item.get_data()
 
-    # FIXME: Who owns an object?
+    owner = actor_for_object(data)
+    recipients = recipients_for_object(data)
+    recipients.add(local_actor.url)
 
-    await store_remote_object(local_actor.url, data, visible_to=[local_actor.url])
+    await store_remote_object(owner, data, visible_to=recipients)
     return item
 
 

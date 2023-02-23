@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L75)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L83)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L31)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/tests/utils/blog_test_env.py#L75)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L83)
 
 Content-Type should be `application/activity+json`
 

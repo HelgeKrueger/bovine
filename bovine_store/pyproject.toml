@@ -15,6 +15,7 @@ aiohttp = "^3.8.3"
 requests = "^2.28.2"
 requests-cache = "^0.9.8"
 quart = "^0.18.3"
+bovine = {path = "../bovine", develop = true}
 
 
 [tool.poetry.group.dev.dependencies]

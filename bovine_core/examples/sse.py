@@ -15,6 +15,7 @@ async def sse(client):
 
         async for event in event_source:
             data = json.loads(event.data)
+
             if "object" in data and "content" in data["object"]:
                 print(
                     datetime.now().isoformat() + "  " + data["object"]["attributedTo"]

@@ -1,4 +1,4 @@
-from tests.utils.blog_test_env import blog_test_env  # noqa: F401
+from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
 async def test_webfinger(blog_test_env):  # noqa: F811

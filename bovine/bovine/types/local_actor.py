@@ -29,6 +29,9 @@ class LocalActor:
 
         self.streams = {"inbox": BaseCountAndItems(), "outbox": BaseCountAndItems()}
 
+        self.collection_items = None
+        self.collection_item_count = None
+
     def set_stream(self, stream_name, obj):
         self.streams[stream_name] = obj
         return self
@@ -72,14 +75,32 @@ class LocalActor:
             await self.outbox_process(activity, self)
 
     def item_count_for(self, stream_name: str):
-        async def item_count():
-            return await self.streams[stream_name].item_count(self)
+        if self.collection_item_count and stream_name == "inbox":
+
+            async def item_count():
+                return await self.collection_item_count(
+                    self.url, self.url + "/" + stream_name
+                )
+
+        else:
+
+            async def item_count():
+                return await self.streams[stream_name].item_count(self)
 
         return item_count
 
     def items_for(self, stream_name: str):
-        async def items(**kwargs):
-            return await self.streams[stream_name].items(self, **kwargs)
+        if self.collection_item_count and stream_name == "inbox":
+
+            async def items(**kwargs):
+                return await self.collection_items(
+                    self.url, self.url + "/" + stream_name, **kwargs
+                )
+
+        else:
+
+            async def items(**kwargs):
+                return await self.streams[stream_name].items(self, **kwargs)
 
         return items
 

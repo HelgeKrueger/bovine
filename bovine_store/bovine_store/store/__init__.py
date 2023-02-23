@@ -35,6 +35,9 @@ async def store_remote_object(owner, item, as_public=False, visible_to=[]):
 
     items = await asyncio.gather(*tasks)
 
+    if visibility_type == VisibilityTypes.PUBLIC:
+        return items
+
     for item, created in items:
         if created:
             visible_tasks = [
@@ -55,6 +58,52 @@ async def store_remote_object(owner, item, as_public=False, visible_to=[]):
     return items
 
 
+async def update_remote_object(owner, item):
+    # FIXME Currently update does not handle visibility changes
+
+    to_store = await split_into_objects(item)
+
+    tasks = [
+        StoredJsonObject.update_or_create(
+            id=obj["id"],
+            defaults={
+                "content": obj,
+            },
+        )
+        for obj in to_store
+    ]
+
+    items = await asyncio.gather(*tasks)
+
+    return items
+
+
+async def retrieve_remote_object(retriever, object_id, include=[]):
+    result = await StoredJsonObject.get_or_none(id=object_id).prefetch_related(
+        "visible_to"
+    )
+    if not await has_access(result, retriever):
+        return None
+
+    data = result.content
+    if len(include) == 0:
+        return data
+
+    items = await asyncio.gather(
+        *[StoredJsonObject.get_or_none(id=data[key]) for key in include]
+    )
+    items = [obj.content for obj in items if obj]
+
+    return combine_items(data, items)
+
+
+async def remove_remote_object(remover, object_id):
+    result = await StoredJsonObject.get_or_none(id=object_id)
+
+    if result and result.owner == remover:
+        await result.delete()
+
+
 class ObjectStore:
     def __init__(self, db_url="sqlite://store.db"):
         self.db_url = db_url
@@ -69,19 +118,9 @@ class ObjectStore:
         await Tortoise.close_connections()
 
     async def retrieve(self, retriever, object_id, include=[]):
-        result = await StoredJsonObject.get_or_none(id=object_id).prefetch_related(
-            "visible_to"
+        return await retrieve_remote_object(retriever, object_id, include=include)
+
+    async def store(self, owner, item, as_public=False, visible_to=[]):
+        return await store_remote_object(
+            owner, item, as_public=as_public, visible_to=visible_to
         )
-        if not await has_access(result, retriever):
-            return None
-
-        data = result.content
-        if len(include) == 0:
-            return data
-
-        items = await asyncio.gather(
-            *[StoredJsonObject.get_or_none(id=data[key]) for key in include]
-        )
-        items = [obj.content for obj in items if obj]
-
-        return combine_items(data, items)

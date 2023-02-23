@@ -26,6 +26,12 @@ class ProcessingItem:
 
         return self.data
 
+    def set_data(self, data):
+        self.data = None
+        self.body = json.dumps(data)
+        self.object_id()
+        return self
+
     def object_id(self):
         data = self.get_data()
         object_id = data.get("id")

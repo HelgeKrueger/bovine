@@ -1,4 +1,6 @@
 def actor_for_object(data):
+    if "attributedTo" in data:
+        return data.get("attributedTo")
     return data.get("actor", "__NO__ACTOR__")
 
 

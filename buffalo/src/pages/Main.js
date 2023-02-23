@@ -18,11 +18,12 @@ const Main = () => {
     for (let update of toUpdate) {
       await db.activity.update(update["id"], { seen: 1, displayed: 0 });
     }
-    const newEntry = await db.activity
-      .where("seen")
-      .equals(0)
-      .limit(1)
-      .toArray();
+    let newEntry = await db.activity.where("seen").equals(0).limit(1).toArray();
+
+    while (["Delete", "Tombstone"].indexOf(newEntry[0]["data"]["type"]) > -1) {
+      await db.activity.update(newEntry[0]["id"], { seen: 1, displayed: 0 });
+      newEntry = await db.activity.where("seen").equals(0).limit(1).toArray();
+    }
 
     if (newEntry.length === 0) {
       setEntry({});

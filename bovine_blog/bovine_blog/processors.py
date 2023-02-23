@@ -10,6 +10,7 @@ from bovine_store.processors.content.store_incoming import (
     add_incoming_to_inbox,
     store_incoming,
 )
+from bovine_store.processors.fetch.incoming_actor import incoming_actor
 
 # from bovine_tortoise.processors.inbox import (
 #     remove_from_database,
@@ -44,6 +45,7 @@ default_inbox_process = (
     # .add(store_in_database)
     .add(store_incoming)
     .add(add_incoming_to_inbox)
+    .add(incoming_actor)
     .add(add_to_queue)
     .apply
 )

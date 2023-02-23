@@ -1,6 +1,11 @@
 import uuid
 import logging
 
+from quart import current_app
+
+from bovine_core.clients.activity_pub import ActivityPubClient
+
+
 from .base_count_and_items import BaseCountAndItems
 from .processing_item import ProcessingItem
 
@@ -31,6 +36,12 @@ class LocalActor:
 
         self.collection_items = None
         self.collection_item_count = None
+
+    def client(self):
+        session = current_app.config["session"]
+        return ActivityPubClient(
+            session, self.get_public_key_url(), self.private_key, self.url
+        )
 
     def set_stream(self, stream_name, obj):
         self.streams[stream_name] = obj
@@ -76,11 +87,14 @@ class LocalActor:
 
     def item_count_for(self, stream_name: str):
         if self.collection_item_count and stream_name == "inbox":
+            logger.warning("using new interface")
 
-            async def item_count():
+            async def item_count_new():
                 return await self.collection_item_count(
                     self.url, self.url + "/" + stream_name
                 )
+
+            return item_count_new
 
         else:
 
@@ -90,12 +104,14 @@ class LocalActor:
         return item_count
 
     def items_for(self, stream_name: str):
-        if self.collection_item_count and stream_name == "inbox":
+        if self.collection_items and stream_name == "inbox":
 
-            async def items(**kwargs):
+            async def items_new(**kwargs):
                 return await self.collection_items(
                     self.url, self.url + "/" + stream_name, **kwargs
                 )
+
+            return items_new
 
         else:
 

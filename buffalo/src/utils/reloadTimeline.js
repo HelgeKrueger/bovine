@@ -2,6 +2,7 @@ import { db } from "../database";
 import { transformActivity } from "./transformInboxEntry";
 
 import config from "../config";
+import { sendFetch } from "../client";
 
 const fetchFromResult = async (url, type) => {
   fetch(url, {
@@ -15,7 +16,19 @@ const fetchFromResult = async (url, type) => {
       console.log(result);
       if (result?.prev && result?.orderedItems?.length > 0) {
         try {
-          await db.activity.bulkAdd(result.orderedItems.map(transformActivity));
+          if (typeof result.orderedItems[0] === "string") {
+            await Promise.all(
+              result.orderedItems.map((x) => sendFetch(x, true))
+            );
+          } else {
+            await db.activity.bulkAdd(
+              result.orderedItems.map(transformActivity)
+            );
+          }
+
+          if (result.prev) {
+            await db.meta.put({ key: `prev${type}`, value: result["prev"] });
+          }
           await fetchFromResult(result.prev, type);
         } catch (error) {
           // console.log(error);

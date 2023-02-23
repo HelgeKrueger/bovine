@@ -13,7 +13,7 @@ const sendToOutbox = (activity) => {
   }).catch(console.error);
 };
 
-const sendFetch = (url) => {
+const sendFetch = (url, useAdd) => {
   return fetch(config.proxyUrl, {
     method: "POST",
     headers: {
@@ -25,7 +25,11 @@ const sendFetch = (url) => {
     .then((x) => x.json())
     .then(async (data) => {
       const activity = transformActivity(data);
-      await db.activity.put(activity);
+      if (useAdd) {
+        await db.activity.add(activity);
+      } else {
+        await db.activity.put(activity);
+      }
     });
 };
 

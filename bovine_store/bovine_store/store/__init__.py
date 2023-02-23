@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from tortoise import Tortoise
 
@@ -8,8 +9,12 @@ from bovine_store.models import (
     VisibleTo,
 )
 
-from bovine_store.jsonld import split_into_objects, combine_items
-from bovine_store.permissions import has_access
+from bovine_store.jsonld import split_into_objects
+
+from .retrieve_object import retrieve_remote_object
+
+
+logger = logging.getLogger(__name__)
 
 
 async def store_remote_object(owner, item, as_public=False, visible_to=[]):
@@ -76,25 +81,6 @@ async def update_remote_object(owner, item):
     items = await asyncio.gather(*tasks)
 
     return items
-
-
-async def retrieve_remote_object(retriever, object_id, include=[]):
-    result = await StoredJsonObject.get_or_none(id=object_id).prefetch_related(
-        "visible_to"
-    )
-    if not await has_access(result, retriever):
-        return None
-
-    data = result.content
-    if len(include) == 0:
-        return data
-
-    items = await asyncio.gather(
-        *[StoredJsonObject.get_or_none(id=data[key]) for key in include]
-    )
-    items = [obj.content for obj in items if obj]
-
-    return combine_items(data, items)
 
 
 async def remove_remote_object(remover, object_id):

@@ -33,7 +33,11 @@ const transformInboxEntry = (entry) => {
 
 const transformActivity = (data, entryId) => {
   if (data.type === "Create" || data.type === "Update") {
+    const actor = data?.actor;
     data = data?.object;
+    if (data.attributedTo === actor?.id) {
+      data.attributedTo = actor;
+    }
   }
   const id = data?.id;
   const conversation = data?.conversation;
@@ -44,6 +48,10 @@ const transformActivity = (data, entryId) => {
     if (!data.object.startsWith("https://mymath")) {
       seen = 1;
     }
+  }
+
+  if (["Tombstone", "Delete"].indexOf(data.type) > -1) {
+    seen = 1;
   }
 
   let updated = data?.updated;

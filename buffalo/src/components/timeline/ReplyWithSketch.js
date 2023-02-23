@@ -27,9 +27,12 @@ const ReplyWithSketch = ({ entry }) => {
     let newHashtags = [];
     let newMentions = [];
 
-    const tags = entry?.tag;
+    let tags = entry?.tag;
 
     try {
+      if (typeof tags == "object" && !(0 in tags)) {
+        tags = [tags];
+      }
       if (tags) {
         for (let tag of tags) {
           if (tag?.type === "Mention") {

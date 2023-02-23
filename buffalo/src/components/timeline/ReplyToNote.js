@@ -22,9 +22,12 @@ const ReplyToNote = ({ entry }) => {
     let newHashtags = [];
     let newMentions = [];
 
-    const tags = entry?.tag;
+    let tags = entry?.tag;
 
     if (tags) {
+      if (typeof tags == "object" && !(0 in tags)) {
+        tags = [tags];
+      }
       try {
         for (let tag of tags) {
           if (tag?.type === "Mention") {
@@ -40,7 +43,11 @@ const ReplyToNote = ({ entry }) => {
     }
 
     if (entry?.attributedTo) {
-      newMentions.push(entry?.attributedTo);
+      let attributedTo = entry?.attributedTo;
+      if (typeof attributedTo === "object") {
+        attributedTo = attributedTo?.id;
+      }
+      newMentions.push(attributedTo);
     }
     setHashtags(newHashtags.join(", "));
     setMentions(newMentions.join(", "));

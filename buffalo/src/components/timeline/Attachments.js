@@ -24,7 +24,6 @@ const Attachments = ({ attachments }) => {
   // FIXME
 
   if (Object.keys(attachments)[0] !== "0") {
-    console.log(attachments);
     return <Attachment entry={attachments} key={attachments?.url} />;
   }
 

@@ -2,7 +2,7 @@ import json
 
 import tomli
 
-from .signed_http import signed_event_source, signed_get, signed_post
+import bovine_core.clients.signed_http
 
 
 class ActivityPubClient:
@@ -18,12 +18,12 @@ class ActivityPubClient:
         return self
 
     async def get(self, url, headers={}):
-        return await signed_get(
+        return await bovine_core.clients.signed_http.signed_get(
             self.session, self.public_key_url, self.private_key, url, headers
         )
 
     async def post(self, url, body, headers={}):
-        return await signed_post(
+        return await bovine_core.clients.signed_http.signed_post(
             self.session, self.public_key_url, self.private_key, url, body, headers
         )
 
@@ -62,7 +62,7 @@ class ActivityPubClient:
         return {"total_items": total_number_of_items, "items": items}
 
     def server_sent_events(self):
-        return signed_event_source(
+        return bovine_core.clients.signed_http.event_source(
             self.session,
             self.public_key_url,
             self.private_key,

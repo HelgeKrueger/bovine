@@ -2,19 +2,48 @@ import { Link } from "@mui/material";
 import React from "react";
 
 const Actor = ({ name, short }) => {
-  if (Array.isArray(name)) {
-    console.log(name);
-    name = name[0].id;
-  }
+  let actorName = "";
+  let username;
+  let url;
 
-  const hostname = new URL(name).hostname;
-  const pieces = name.split("/");
-  const username = pieces[pieces.length - 1];
+  if (typeof name === "object" && "name" in name) {
+    actorName = name["name"];
+    username = name["preferredUsername"];
+    url = name["id"];
+  } else {
+    if (Array.isArray(name)) {
+      name = name[0].id;
+    }
+
+    url = name;
+
+    const pieces = name.split("/");
+    username = pieces[pieces.length - 1];
+  }
+  const hostname = new URL(url).hostname;
 
   if (short) {
+    if (actorName !== "") {
+      return (
+        <Link href={name} target="_blank">
+          {actorName}
+        </Link>
+      );
+    }
     return (
       <Link href={name} target="_blank">
         {username}
+      </Link>
+    );
+  }
+
+  if (actorName !== "") {
+    return (
+      <Link href={name} target="_blank">
+        <b>{actorName}</b>:{" "}
+        <small>
+          <b>{username}</b>@{hostname}
+        </small>
       </Link>
     );
   }

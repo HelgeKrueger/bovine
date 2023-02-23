@@ -3,7 +3,6 @@ import json
 import logging
 
 import werkzeug
-from bovine_core.clients.signed_http import signed_get
 from quart import Blueprint, current_app, g, request, abort, make_response
 from quart_cors import route_cors
 
@@ -207,16 +206,11 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
     object_store = current_app.config["object_store"]
 
     if object_store:
-        data = await object_store.retrieve(local_user.url, url)
+        data = await object_store.retrieve(local_user.url, url, include=["object"])
         if data:
             return data, 200
 
-    response = await signed_get(
-        current_app.config["session"],
-        local_user.get_public_key_url(),
-        local_user.private_key,
-        url,
-    )
+    response = await local_user.client().get(url)
 
     data = json.loads(await response.text())
 

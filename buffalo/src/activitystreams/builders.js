@@ -9,6 +9,14 @@ const defaults = {
 
 const currentDate = () => new Date().toISOString();
 
+const getAuthor = (object) => {
+  const attributedTo = object?.attributedTo;
+  if (typeof attributedTo === "object") {
+    return attributedTo?.id;
+  }
+  return attributedTo;
+};
+
 const buildLike = (actor, object) => {
   return {
     "@context": "https://www.w3.org/ns/activitystreams",
@@ -17,7 +25,7 @@ const buildLike = (actor, object) => {
     actor: actor,
     content: defaults.likeEmoji,
     object: object?.id,
-    to: [object?.attributedTo],
+    to: [getAuthor(object)],
     cc: [defaults.public],
     published: currentDate(),
   };

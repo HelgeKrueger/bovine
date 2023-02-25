@@ -1,15 +1,14 @@
 import asyncio
 
+from bovine_store.utils.test import store  # noqa F401
+
+from . import store_remote_object
 from .collection import (
-    remove_from_collection,
     add_to_collection,
     collection_count,
     collection_items,
+    remove_from_collection,
 )
-
-from . import store_remote_object
-from bovine_store.utils.test import store  # noqa F401
-
 
 first_id = "https://my_domain/first"
 second_id = "https://my_domain/second"

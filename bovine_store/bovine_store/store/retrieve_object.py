@@ -1,11 +1,8 @@
 import asyncio
 import logging
 
-
-from bovine_store.models import StoredJsonObject
-
-
 from bovine_store.jsonld import combine_items
+from bovine_store.models import StoredJsonObject
 from bovine_store.permissions import has_access
 
 logger = logging.getLogger(__name__)

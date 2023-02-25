@@ -37,6 +37,8 @@ class LocalActor:
         self.collection_items = None
         self.collection_item_count = None
 
+        self.collections = {}
+
     def client(self):
         session = current_app.config["session"]
         return ActivityPubClient(
@@ -122,3 +124,9 @@ class LocalActor:
 
     def generate_uuid(self):
         return f"{self.url}/{uuid.uuid4()}"
+
+    def add_collection(self, name, collection_id):
+        if name in self.collections:
+            logger.error("Overwriting collection %s for %s", name, self.url)
+        self.collections[name] = collection_id
+        return self

@@ -1,8 +1,8 @@
-import pytest
 import os
 
-from .models import StoredJsonObject, CollectionItem, VisibleTo
+import pytest
 
+from .models import CollectionItem, StoredJsonObject, VisibleTo
 from .permissions import has_access
 from .store import ObjectStore
 

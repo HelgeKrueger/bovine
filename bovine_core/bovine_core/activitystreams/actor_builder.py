@@ -46,11 +46,18 @@ class ActorBuilder:
         if visibility == Visibility.WEB:
             return {"id": self.account_url}
 
-        return {
+        result = {
             "id": self.account_url,
             "inbox": self.account_url + "/inbox",
             "outbox": self.account_url + "/outbox",
         }
+
+        if visibility == Visibility.OWNER:
+            result["endpoints"] = {
+                "eventSource": self.account_url + "/serverSentEvents"
+            }
+
+        return result
 
     def _build_private_key(self):
         if self.public_key:

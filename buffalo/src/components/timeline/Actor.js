@@ -15,7 +15,14 @@ const Actor = ({ name, short }) => {
       name = name[0].id;
     }
 
+    if (typeof name === "object") {
+      name = name?.id;
+    }
+
     url = name;
+    if (!name) {
+      name = "unknown";
+    }
 
     const pieces = name.split("/");
     username = pieces[pieces.length - 1];
@@ -25,13 +32,13 @@ const Actor = ({ name, short }) => {
   if (short) {
     if (actorName !== "") {
       return (
-        <Link href={name} target="_blank">
+        <Link href={url} target="_blank">
           {actorName}
         </Link>
       );
     }
     return (
-      <Link href={name} target="_blank">
+      <Link href={url} target="_blank">
         {username}
       </Link>
     );
@@ -39,7 +46,7 @@ const Actor = ({ name, short }) => {
 
   if (actorName !== "") {
     return (
-      <Link href={name} target="_blank">
+      <Link href={url} target="_blank">
         <b>{actorName}</b>:{" "}
         <small>
           <b>{username}</b>@{hostname}
@@ -49,7 +56,7 @@ const Actor = ({ name, short }) => {
   }
 
   return (
-    <Link href={name} target="_blank">
+    <Link href={url} target="_blank">
       <b>{username}</b>@{hostname}
     </Link>
   );

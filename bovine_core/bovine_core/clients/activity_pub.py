@@ -61,12 +61,9 @@ class ActivityPubClient:
 
         return {"total_items": total_number_of_items, "items": items}
 
-    def server_sent_events(self):
-        return bovine_core.clients.signed_http.event_source(
-            self.session,
-            self.public_key_url,
-            self.private_key,
-            self.account_url + "/serverSentEvents",
+    def event_source(self, url):
+        return bovine_core.clients.signed_http.signed_event_source(
+            self.session, self.public_key_url, self.private_key, url
         )
 
     @staticmethod

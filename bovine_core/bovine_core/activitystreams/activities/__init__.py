@@ -2,6 +2,7 @@ from .accept_builder import AcceptBuilder
 from .create_builder import CreateBuilder
 from .delete_builder import DeleteBuilder
 from .follow_builder import FollowBuilder
+from .like_builder import LikeBuilder
 
 
 def build_follow(domain: str, actor: str, tofollow: str) -> FollowBuilder:
@@ -18,3 +19,7 @@ def build_create(*args) -> CreateBuilder:
 
 def build_delete(actor, object_id):
     return DeleteBuilder(actor, object_id)
+
+
+def build_like(actor, object_id):
+    return LikeBuilder(actor, object_id)

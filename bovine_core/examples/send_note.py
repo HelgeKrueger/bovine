@@ -1,30 +1,26 @@
 import asyncio
-import json
 from argparse import ArgumentParser
 
 import aiohttp
 
+from bovine_core.activitypub import actor_from_file
 from bovine_core.activitystreams.activities import build_create
-from bovine_core.activitystreams.objects import build_note
-from bovine_core.clients.activity_pub import ActivityPubClient
 
 
-async def send_note(client, text):
+async def send_note(config_file, text):
     async with aiohttp.ClientSession() as session:
-        client = client.set_session(session)
+        actor = actor_from_file(config_file, session)
 
-        note = build_note(client.account_url, "", text).as_public().build()
+        note = actor.note(text).as_public().build()
         create = build_create(note).build()
 
-        await client.post(client.account_url + "/outbox", json.dumps(create))
+        await actor.send_to_outbox(create)
 
 
 parser = ArgumentParser()
 parser.add_argument("text")
+parser.add_argument("--config_file", default="helge.toml")
 
 args = parser.parse_args()
 
-with open("helge.toml", "rb") as f:
-    client = ActivityPubClient.from_toml_file(f)
-
-asyncio.run(send_note(client, args.text))
+asyncio.run(send_note(args.config_file, args.text))

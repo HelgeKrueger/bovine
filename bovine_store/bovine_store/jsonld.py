@@ -1,5 +1,5 @@
-import logging
 import json
+import logging
 
 import requests_cache
 from pyld import jsonld

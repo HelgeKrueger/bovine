@@ -51,6 +51,12 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     if has_authorization():
         visibility = Visibility.PUBLIC
 
+    if (
+        g.get("authorized_user") == account_name
+        or g.get("signature_result") == user_info.get_public_key_url()
+    ):
+        visibility = Visibility.OWNER
+
     return (
         (
             build_actor(account_name, actor_type=user_info.actor_type)

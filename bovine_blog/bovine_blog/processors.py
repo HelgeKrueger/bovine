@@ -18,9 +18,8 @@ from bovine_store.processors.fetch.incoming_actor import incoming_actor
 #     update_in_database,
 # )
 from bovine_tortoise.processors.inbox_follow import (
-    accept_follow_request,
     record_accept_follow,
-)
+)  # accept_follow_request,
 from bovine_tortoise.processors.outbox import (
     create_outbox_entry,
     delete_outbox_entry,
@@ -37,7 +36,7 @@ default_inbox_process = (
         # Update=update_in_database,
         # Delete=incoming_delete,
         # Delete=ProcessorList(on_object=True).add(remove_from_database).apply,
-        Follow=accept_follow_request,
+        # Follow=accept_follow_request,
         # Undo=ProcessorList(on_object=True)
         # .add_for_types(Like=remove_from_inbox, Announce=remove_from_inbox)
         # .apply,

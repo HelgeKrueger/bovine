@@ -35,3 +35,9 @@ to send a quick message. Example usage:
 ```shell
 poetry run python examples/send_note.py 'Hello World! via send_note.py and AP-C2S.'
 ```
+
+Similary the script `examples/send_like.py` can be used to like a remote object
+
+```shell
+poetry run python examples/like.py ID_OF_REMOTE_OBJECT
+```

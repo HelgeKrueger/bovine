@@ -1,4 +1,4 @@
-from .models import VisibilityTypes, CollectionItem
+from .models import CollectionItem, VisibilityTypes
 
 
 async def has_access(entry, retriever):

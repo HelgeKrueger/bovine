@@ -20,15 +20,15 @@ const fetchFromResult = async (url, type) => {
             await Promise.all(
               result.orderedItems.map((x) => sendFetch(x, true))
             );
+            if (result.prev) {
+              await db.meta.put({ key: `prev${type}`, value: result["prev"] });
+            }
           } else {
             await db.activity.bulkAdd(
               result.orderedItems.map(transformActivity)
             );
           }
 
-          if (result.prev) {
-            await db.meta.put({ key: `prev${type}`, value: result["prev"] });
-          }
           await fetchFromResult(result.prev, type);
         } catch (error) {
           // console.log(error);

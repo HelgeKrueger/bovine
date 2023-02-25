@@ -13,6 +13,20 @@ class Actor(Model):
     public_key = fields.TextField()
 
 
+class ActorObjects(Model):
+    id = fields.IntField(pk=True)
+    actor = fields.ForeignKeyField("models.Actor", related_name="objects")
+    name = fields.CharField(max_length=255)
+    object_id = fields.CharField(max_length=255)
+
+
+class ActorProperties(Model):
+    id = fields.IntField(pk=True)
+    actor = fields.ForeignKeyField("models.Actor", related_name="properties")
+    name = fields.CharField(max_length=255)
+    value = fields.JSONField()
+
+
 class Follower(Model):
     id = fields.IntField(pk=True)
     actor = fields.ForeignKeyField("models.Actor", related_name="followers")

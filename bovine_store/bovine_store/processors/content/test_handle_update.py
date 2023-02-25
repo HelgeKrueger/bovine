@@ -1,6 +1,7 @@
 import json
 
 from bovine.types import LocalActor, ProcessingItem
+
 from bovine_store.utils.test import store  # noqa F401
 
 from .handle_update import handle_update

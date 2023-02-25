@@ -1,6 +1,6 @@
-from . import store_remote_object
-
 from bovine_store.utils.test import store  # noqa F401
+
+from . import store_remote_object
 
 
 async def test_store_retrieval(store):  # noqa F811

@@ -14,10 +14,16 @@ const NoteContent = ({ collapse, note }) => {
     return <></>;
   }
 
+  let content = note?.content;
+  if (!content) {
+    const keys = Object.keys(note?.contentMap);
+    content = note?.contentMap[keys[0]];
+  }
+
   return (
     <>
       <Divider />
-      <div dangerouslySetInnerHTML={{ __html: note.content }} />
+      <div dangerouslySetInnerHTML={{ __html: content }} />
       <Attachments attachments={note.attachment} />
     </>
   );

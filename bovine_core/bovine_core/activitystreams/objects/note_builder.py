@@ -18,6 +18,7 @@ class NoteBuilder:
         self.source: dict | None = None
 
     def as_public(self):
+        # FIXME: Broken in the way followers is added
         self.to.add("https://www.w3.org/ns/activitystreams#Public")
         self.cc.add(f"{self.account}/followers")
         return self

@@ -5,14 +5,13 @@ from datetime import datetime
 import aiohttp
 import bleach
 
-from bovine_core.clients.activity_pub import ActivityPubClient
+from bovine_core.activitypub.actor import ActivityPubActor
 
 
-async def sse(client):
+async def sse(config_file):
     async with aiohttp.ClientSession() as session:
-        client = client.set_session(session)
-        event_source = client.server_sent_events()
-
+        actor = ActivityPubActor.from_file(config_file, session)
+        event_source = await actor.event_source()
         async for event in event_source:
             data = json.loads(event.data)
 
@@ -26,7 +25,4 @@ async def sse(client):
                 print(json.dumps(data, indent=2))
 
 
-with open("helge.toml", "rb") as f:
-    client = ActivityPubClient.from_toml_file(f)
-
-asyncio.run(sse(client))
+asyncio.run(sse("helge.toml"))

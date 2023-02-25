@@ -1,8 +1,9 @@
-from unittest.mock import patch, AsyncMock
 import json
+from unittest.mock import AsyncMock, patch
 
 from bovine.types import LocalActor, ProcessingItem
 from bovine.utils.test.in_memory_test_app import app
+
 from bovine_store.utils.test import store  # noqa F401
 
 from .incoming_actor import incoming_actor

@@ -10,4 +10,13 @@ class AcceptBuilder:
             "type": "Accept",
             "actor": self.account,
             "object": self.obj,
+            "to": [self.determine_to()],
         }
+
+    def determine_to(self) -> str:
+        actor = self.obj["actor"]
+
+        if isinstance(actor, dict):
+            actor = actor.get("id")
+
+        return actor

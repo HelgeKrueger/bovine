@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "mechanical-bull"
+version = "0.0.1"
+description = ""
+authors = ["Helge <helge.krueger@gmail.com>"]
+readme = "README.md"
+packages = [{include = "mechanical_bull"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+bovine-core = {path = "../bovine_core", develop = true}
+tomli = "^2.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+pytest-asyncio = "^0.20.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+asyncio_mode="auto"
+log_cli= 1
+log_cli_level="info"

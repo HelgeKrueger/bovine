@@ -3,16 +3,10 @@ import logging
 
 from tortoise import Tortoise
 
-from bovine_store.models import (
-    StoredJsonObject,
-    VisibilityTypes,
-    VisibleTo,
-)
-
 from bovine_store.jsonld import split_into_objects
+from bovine_store.models import StoredJsonObject, VisibilityTypes, VisibleTo
 
 from .retrieve_object import retrieve_remote_object
-
 
 logger = logging.getLogger(__name__)
 

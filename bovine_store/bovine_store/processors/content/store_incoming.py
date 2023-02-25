@@ -1,11 +1,10 @@
 import logging
 
 from bovine.types import LocalActor, ProcessingItem
+from bovine_core.activitystreams.utils import actor_for_object, recipients_for_object
 
 from bovine_store.store import store_remote_object
 from bovine_store.store.collection import add_to_collection
-
-from bovine_store.utils.activitystreams import actor_for_object, recipients_for_object
 
 logger = logging.getLogger(__name__)
 

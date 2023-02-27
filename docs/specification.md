@@ -366,14 +366,14 @@ The side effect of receiving this is that (assuming the object is owned by the s
 
 #### ap-s2s-follow
 
-- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L20)
-- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L34)
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L23)
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L37)
 
 The side effect of receiving this in an inbox is that the server SHOULD generate either an Accept or Reject activity with the Follow as the object and deliver it to the actor of the Follow. The Accept or Reject MAY be generated automatically, or MAY be the result of user input (possibly after some delay in which the user reviews). Servers MAY choose to not explicitly send a Reject in response to a Follow, though implementors ought to be aware that the server sending the request could be left in an intermediate state. For example, a server might not send a Reject to protect a user's privacy.
 
 #### ap-s2s-follow-accept
 
-- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L34)
+- [test_accept_follow_request.py](../tests/tests/inbox/test_accept_follow_request.py#L37)
 
 In the case of receiving an Accept referencing this Follow as the object, the server SHOULD add the actor to the object actor's Followers Collection. In the case of a Reject, the server MUST NOT add the actor to the object actor's Followers Collection.
 

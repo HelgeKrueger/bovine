@@ -1,0 +1,8 @@
+[bovine]
+
+host = "http://localhost:5000"
+secret_key = "some non weak key"
+
+[bovine_user]
+
+hello_client_id = "your uuid"

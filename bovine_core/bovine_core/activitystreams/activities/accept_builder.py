@@ -14,7 +14,7 @@ class AcceptBuilder:
         }
 
     def determine_to(self) -> str:
-        actor = self.obj["actor"]
+        actor = self.obj.get("actor")
 
         if isinstance(actor, dict):
             actor = actor.get("id")

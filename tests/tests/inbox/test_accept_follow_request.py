@@ -1,12 +1,15 @@
 import asyncio
 import json
 
+import pytest
+
 from bovine_tortoise.models import Follower
 
 from utils import get_activity_from_json
 from utils.blog_test_env import blog_test_env  # noqa: F401
 
 
+@pytest.mark.skip("This is no longer the behavior as mechanical_bull does it")
 async def test_mastodon_follow_request_is_accepted(blog_test_env):  # noqa: F811
     item = get_activity_from_json("data/mastodon_follow_1.json")
 

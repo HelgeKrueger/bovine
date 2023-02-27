@@ -12,3 +12,4 @@ resisa.toml
 .ipynb_checkpoints
 helge.toml
 context_cache.sqlite
+bovine_config.toml

@@ -19,6 +19,8 @@ class ActivityPubActor:
 
         self.client = ActivityPubClient(session, public_key_url, private_key)
 
+        return self
+
     async def load(self):
         if self.client is None:
             raise Exception("Client not set in ActivityPubActor")

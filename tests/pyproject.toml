@@ -12,6 +12,7 @@ bovine = {path = "../bovine", develop=true}
 bovine-tortoise = {path = "../bovine_tortoise", develop=true}
 bovine-blog = {path = "../bovine_blog", develop = true}
 bovine-store = {path = "../bovine_store", develop = true}
+bovine-user = {path = "../bovine_user", develop = true}
 
 
 [build-system]

@@ -15,6 +15,7 @@ markdown = "^3.4.1"
 python-markdown-math = "^0.8"
 aerich = "^0.7.1"
 bovine-store = {path = "../bovine_store", develop = true}
+bovine-user = {path = "../bovine_user", develop = true}
 
 [tool.aerich]
 tortoise_orm = "bovine_blog.TORTOISE_ORM"

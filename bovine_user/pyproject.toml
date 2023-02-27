@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "bovine-user"
+version = "0.0.1"
+description = "User management for bovine"
+authors = ["Helge <helge.krueger@gmail.com>"]
+readme = "README.md"
+packages = [{include = "bovine_user"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+quart = "^0.18.3"
+aiohttp = "^3.8.4"
+tortoise-orm = "^0.19.3"
+quart-auth = "^0.8.0"
+bovine-core = {path = "../bovine_core", develop = true}
+tomli-w = "^1.0.0"
+
+
+[tool.poetry.group.env.dependencies]
+flake8 = "^6.0.0"
+black = "^23.1.0"
+flake8-black = "^0.3.6"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+pytest-asyncio = "^0.20.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+asyncio_mode="auto"
+log_cli= 1

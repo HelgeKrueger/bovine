@@ -2,6 +2,12 @@ import logging
 import os
 
 import aiohttp
+
+from quart import Quart
+from quart_auth import AuthManager
+from tortoise.contrib.quart import register_tortoise
+
+
 from bovine.server import default_configuration
 from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
@@ -10,8 +16,9 @@ from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine_tortoise.storage import storage_blueprint
 from bovine_tortoise.storage.storage import Storage
-from quart import Quart
-from tortoise.contrib.quart import register_tortoise
+from bovine_user.config import configure_bovine_user
+from bovine_user.server import server
+
 
 from .build_store import build_get_user
 from .html import html_blueprint
@@ -28,6 +35,7 @@ domain = os.environ.get("DOMAIN", "my_domain")
 bovine_user, get_user = build_get_user(domain)
 
 app = Quart(__name__)
+AuthManager(app)
 
 
 @app.before_serving
@@ -41,6 +49,8 @@ async def startup():
 
     app.config["queue_manager"] = QueueManager()
     app.config["object_store"] = ObjectStore()
+
+    await configure_bovine_user(app)
 
 
 async def account_name_or_none_for_token(token):
@@ -67,6 +77,8 @@ app.register_blueprint(outbox_blueprint, url_prefix="/testing_notes")
 app.register_blueprint(outbox_blueprint, url_prefix="/activitypub")
 app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
+app.register_blueprint(server, url_prefix="/bovine_user")
+
 
 TORTOISE_ORM = {
     "connections": {"default": "sqlite://db.sqlite3"},
@@ -75,6 +87,7 @@ TORTOISE_ORM = {
             "models": [
                 "bovine_tortoise.models",
                 "bovine_store.models",
+                "bovine_user.models",
                 "aerich.models",
             ],
             "default_connection": "default",

@@ -361,6 +361,28 @@ type = "directory"
 url = "../bovine_tortoise"
 
 [[package]]
+name = "bovine-user"
+version = "0.0.1"
+description = "User management for bovine"
+category = "main"
+optional = false
+python-versions = "^3.10"
+files = []
+develop = true
+
+[package.dependencies]
+aiohttp = "^3.8.4"
+bovine-core = {path = "../bovine_core", develop = true}
+quart = "^0.18.3"
+quart-auth = "^0.8.0"
+tomli-w = "^1.0.0"
+tortoise-orm = "^0.19.3"
+
+[package.source]
+type = "directory"
+url = "../bovine_user"
+
+[[package]]
 name = "cachetools"
 version = "5.3.0"
 description = "Extensible memoizing collections and decorators"
@@ -1784,6 +1806,18 @@ files = [
 ]
 
 [[package]]
+name = "tomli-w"
+version = "1.0.0"
+description = "A lil' TOML writer"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tomli_w-1.0.0-py3-none-any.whl", hash = "sha256:9f2a07e8be30a0729e533ec968016807069991ae2fd921a78d42f429ae5f4463"},
+    {file = "tomli_w-1.0.0.tar.gz", hash = "sha256:f463434305e0336248cac9c2dc8076b707d8a12d019dd349f5c1e382dd1ae1b9"},
+]
+
+[[package]]
 name = "tomlkit"
 version = "0.11.6"
 description = "Style preserving TOML library"
@@ -1989,4 +2023,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c9f55f87cb58fb8cfa3aab7c3a47e3e412585104ee40d83b71d8466cc4cb324c"
+content-hash = "914e74087afcd0577edabd12ed4dd681f5610b832cc6a0f4578742b3325e541d"

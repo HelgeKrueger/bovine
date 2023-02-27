@@ -2,12 +2,6 @@ import logging
 import os
 
 import aiohttp
-
-from quart import Quart
-from quart_auth import AuthManager
-from tortoise.contrib.quart import register_tortoise
-
-
 from bovine.server import default_configuration
 from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
@@ -18,9 +12,12 @@ from bovine_tortoise.storage import storage_blueprint
 from bovine_tortoise.storage.storage import Storage
 from bovine_user.config import configure_bovine_user
 from bovine_user.server import server
-
+from quart import Quart
+from quart_auth import AuthManager
+from tortoise.contrib.quart import register_tortoise
 
 from .build_store import build_get_user
+from .endpoints import endpoints
 from .html import html_blueprint
 from .stores.tortoise import TortoiseStore
 from .utils import rewrite_activity_request
@@ -78,6 +75,7 @@ app.register_blueprint(outbox_blueprint, url_prefix="/activitypub")
 app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")
+app.register_blueprint(endpoints, url_prefix="/endpoints")
 
 
 TORTOISE_ORM = {

@@ -1,7 +1,7 @@
-from bovine_user.utils.test import db_url  # noqa F401
 from bovine_core.activitypub.actor import ActivityPubActor
 from bovine_core.activitystreams.actor_builder import ActorBuilder
 
+from bovine_user.utils.test import db_url  # noqa F401
 from examples.basic_app import app
 
 from .manager import BovineUserManager
@@ -18,6 +18,7 @@ async def test_bovine_user_manager(db_url):  # noqa F811
     assert user.handle_name == "handle"
 
     assert await manager.get(uuid) == user
+    assert await manager.get_user_for_name("handle")
 
 
 async def test_endpoint(db_url):  # noqa F811

@@ -1,11 +1,10 @@
 import secrets
 from urllib.parse import urljoin
 
-from quart import current_app
-
-from bovine_core.utils.crypto import generate_public_private_key
 from bovine_core.activitypub.actor import ActivityPubActor
 from bovine_core.activitystreams import build_actor
+from bovine_core.utils.crypto import generate_public_private_key
+from quart import current_app
 
 from .models import BovineUser, BovineUserEndpoint, BovineUserKeyPair
 from .types import EndpointType
@@ -49,6 +48,12 @@ class BovineUserManager:
         )
 
         return activity_pub_actor, actor
+
+    async def get_user_for_name(self, handle_name):
+        user = await BovineUser.get_or_none(handle_name=handle_name).prefetch_related(
+            "endpoints", "keypairs"
+        )
+        return user
 
     async def register(self, hello_sub, handle_name):
         user, _ = await BovineUser.get_or_create(

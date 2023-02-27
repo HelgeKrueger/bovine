@@ -1,6 +1,7 @@
 import logging
-from quart import Blueprint, redirect, url_for, current_app, render_template, request
-from quart_auth import login_required, Unauthorized, current_user
+
+from quart import Blueprint, current_app, redirect, render_template, request, url_for
+from quart_auth import Unauthorized, current_user, login_required
 
 from .hello_auth import hello_auth
 from .utils import create_toml_file

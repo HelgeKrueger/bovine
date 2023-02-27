@@ -38,14 +38,12 @@ async def webfinger() -> tuple[dict, int]:
     if not user_info:
         return {"status": "not found"}, 404
 
-    activitypub_profile_url = f"https://{domain}/activitypub/{user_info.name}"
-
     return (
         {
             "subject": f"acct:{user_info.name}@{domain}",
             "links": [
                 {
-                    "href": activitypub_profile_url,
+                    "href": user_info.url,
                     "rel": "self",
                     "type": "application/activity+json",
                 }

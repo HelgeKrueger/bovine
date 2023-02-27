@@ -12,6 +12,7 @@ from bovine_tortoise.utils import init
 from tortoise import Tortoise
 
 from bovine_store.store import ObjectStore
+from bovine_user.config import configure_bovine_user
 
 from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
 
@@ -113,6 +114,10 @@ async def blog_test_env() -> str:
 
     app.config["object_store"] = ObjectStore(db_url=db_url)
     await app.config["object_store"].init_connection()
+
+    await configure_bovine_user(app)
+
+    await app.config["bovine_user_manager"].register("alice", "alice")
 
     client = app.test_client()
 

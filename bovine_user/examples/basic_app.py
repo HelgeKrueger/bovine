@@ -4,8 +4,8 @@ from quart import Quart
 from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
 
-from bovine_user.server import server
 from bovine_user.config import configure_bovine_user
+from bovine_user.server import server
 
 logging.basicConfig(level=logging.INFO)
 

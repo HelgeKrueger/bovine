@@ -319,6 +319,28 @@ type = "directory"
 url = "../bovine_store"
 
 [[package]]
+name = "bovine-user"
+version = "0.0.1"
+description = "User management for bovine"
+category = "main"
+optional = false
+python-versions = "^3.10"
+files = []
+develop = true
+
+[package.dependencies]
+aiohttp = "^3.8.4"
+bovine-core = {path = "../bovine_core", develop = true}
+quart = "^0.18.3"
+quart-auth = "^0.8.0"
+tomli-w = "^1.0.0"
+tortoise-orm = "^0.19.3"
+
+[package.source]
+type = "directory"
+url = "../bovine_user"
+
+[[package]]
 name = "cachetools"
 version = "5.3.0"
 description = "Extensible memoizing collections and decorators"
@@ -1621,6 +1643,18 @@ files = [
 ]
 
 [[package]]
+name = "tomli-w"
+version = "1.0.0"
+description = "A lil' TOML writer"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tomli_w-1.0.0-py3-none-any.whl", hash = "sha256:9f2a07e8be30a0729e533ec968016807069991ae2fd921a78d42f429ae5f4463"},
+    {file = "tomli_w-1.0.0.tar.gz", hash = "sha256:f463434305e0336248cac9c2dc8076b707d8a12d019dd349f5c1e382dd1ae1b9"},
+]
+
+[[package]]
 name = "tortoise-orm"
 version = "0.19.3"
 description = "Easy async ORM for python, built with relations in mind"
@@ -1814,4 +1848,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "8a9c17c04d99f7cad3db096213d60259e96114262f38f0cbad60e02f5f9e9f1e"
+content-hash = "fb5411f9308840682c9dd109fa998cc6d9297a5d5761507b28f72baa9e4f57f2"

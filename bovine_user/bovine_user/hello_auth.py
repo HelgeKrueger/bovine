@@ -1,9 +1,9 @@
+import json
 import logging
 from urllib.parse import urlencode, urljoin
-import json
 
-from quart import Blueprint, redirect, request, current_app
-from quart_auth import login_user, AuthUser
+from quart import Blueprint, current_app, redirect, request
+from quart_auth import AuthUser, login_user
 
 logger = logging.getLogger(__name__)
 

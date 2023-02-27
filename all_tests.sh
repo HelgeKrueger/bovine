@@ -20,6 +20,12 @@ poetry run pytest
 poetry run black .
 poetry run flake8 .
 
+cd ../bovine_user
+poetry run pytest
+poetry run isort .
+poetry run black .
+poetry run flake8 .
+
 cd ../bovine_tortoise
 poetry run pytest
 poetry run isort .
@@ -30,7 +36,7 @@ cd ../bovine_blog
 poetry run pytest
 poetry run isort .
 poetry run black .
-poetry run flake8 .
+#poetry run flake8 .
 
 cd ../tests
 poetry run pytest

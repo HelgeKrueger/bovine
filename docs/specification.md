@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L83)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L84)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L31)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L83)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L84)
 
 Content-Type should be `application/activity+json`
 
@@ -53,12 +53,14 @@ Webfinger is specified in [RFC-7033](https://datatracker.ietf.org/doc/html/rfc70
 #### webfinger-subject
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L18)
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L50)
 
 [Subject](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.1) should be present.
 
 #### webfinger-content-type
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L13)
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L45)
 
 [RFC-7033 Section 10.2](https://datatracker.ietf.org/doc/html/rfc7033#section-10.2) specifies
 that the answer to a webfinger request should have content-type `application/jrd+json`.
@@ -67,6 +69,7 @@ Jrd stands for _JSON Resource Descriptor_.
 #### fedi-webfinger-self
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L21)
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L53)
 
 The [links](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.4) of the webfinger
 response contain an element with `"rel":"self"` and `"type":"application/activity+json"`
@@ -75,6 +78,7 @@ pointing to the activity pub actor profile.
 #### fedi-webfinger-username-is-preferredUsername
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L31)
+- [test_webfinger.py](../tests/tests/test_webfinger.py#L63)
 
 The entry of `preferredUsername` in the actor profile obtained above corresponds
 to the username part of the account used in webfinger.

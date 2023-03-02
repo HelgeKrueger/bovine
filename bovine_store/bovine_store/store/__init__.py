@@ -8,6 +8,8 @@ from bovine_store.models import StoredJsonObject, VisibilityTypes, VisibleTo
 
 from .retrieve_object import retrieve_remote_object
 
+from .local import store_local_object
+
 logger = logging.getLogger(__name__)
 
 
@@ -85,8 +87,9 @@ async def remove_remote_object(remover, object_id):
 
 
 class ObjectStore:
-    def __init__(self, db_url="sqlite://store.db"):
+    def __init__(self, db_url="sqlite://store.db", id_generator=None):
         self.db_url = db_url
+        self.id_generator = id_generator
 
     async def init_connection(self):
         await Tortoise.init(
@@ -102,5 +105,18 @@ class ObjectStore:
 
     async def store(self, owner, item, as_public=False, visible_to=[]):
         return await store_remote_object(
+            owner, item, as_public=as_public, visible_to=visible_to
+        )
+
+    async def store_local(self, owner, item, as_public=False, visible_to=[]):
+        if self.id_generator:
+            return await store_local_object(
+                owner,
+                item,
+                as_public=as_public,
+                visible_to=visible_to,
+                id_generator=self.id_generator,
+            )
+        return await store_local_object(
             owner, item, as_public=as_public, visible_to=visible_to
         )

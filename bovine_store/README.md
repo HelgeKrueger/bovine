@@ -6,8 +6,13 @@ objects.
 
 The goal is two fold:
 
-- Handle permissions
+- Handle visibility and ability to update content
 - Simplify working with json-ld
+
+## Examples
+
+A basic example is contained in `examples/basic_app.py`. Note
+this is a very basic example.
 
 ## Permissions
 

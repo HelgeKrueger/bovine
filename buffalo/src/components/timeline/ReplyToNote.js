@@ -81,6 +81,9 @@ const ReplyToNote = ({ entry }) => {
     });
 
     const data = buildCreateForNote(note);
+
+    debugger;
+
     sendToOutbox(data).then(() => {
       setOpen(false);
     });

@@ -24,7 +24,7 @@ def is_post():
 def is_activity_pub():
     if is_get():
         accept_header = request.headers.get("accept", "*/*")
-        logger.info(f"obtained accept header '{accept_header}'")
+        logger.debug(f"obtained accept header '{accept_header}'")
         if accept_header == "text/event-stream":
             return True
 
@@ -79,11 +79,15 @@ async def rewrite_activity_request():
 
     if is_activity_pub():
         new_request_path = "/activitypub" + new_request_path
-        g.signature_result = await compute_signature_result()
-        g.authorized_user = await retrieve_authorizated_user()
-        logger.info(f"Obtained {g.signature_result} and {g.authorized_user}")
+        await add_authorization_to_request()
 
     if request.path != new_request_path:
         logger.info(f"Rewrote {request.path} to {new_request_path}")
         request.path = new_request_path
         return redirect(new_request_path)
+
+
+async def add_authorization_to_request():
+    g.signature_result = await compute_signature_result()
+    g.authorized_user = await retrieve_authorizated_user()
+    logger.info(f"Obtained {g.signature_result} and {g.authorized_user}")

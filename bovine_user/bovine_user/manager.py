@@ -44,6 +44,7 @@ class BovineUserManager:
             .with_inbox(mapped_endpoints[EndpointType.INBOX].name)
             .with_outbox(mapped_endpoints[EndpointType.OUTBOX].name)
             .with_event_source(mapped_endpoints[EndpointType.EVENT_SOURCE].name)
+            .with_proxy_url(mapped_endpoints[EndpointType.PROXY_URL].name)
             .with_public_key(keypair.public_key, key_name=keypair.name)
         )
 

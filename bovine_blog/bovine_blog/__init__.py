@@ -5,6 +5,7 @@ import aiohttp
 from bovine.server import default_configuration
 from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
+from bovine_store.blueprint import bovine_store_blueprint
 from bovine_store.store import ObjectStore
 from bovine_tortoise.caches import build_public_key_fetcher
 from bovine_tortoise.outbox_blueprint import outbox_blueprint
@@ -76,6 +77,7 @@ app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")
 app.register_blueprint(endpoints, url_prefix="/endpoints")
+app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")
 
 
 TORTOISE_ORM = {

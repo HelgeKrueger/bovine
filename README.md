@@ -2,6 +2,8 @@
 
 Bovine is attempt at creating a modular ActivityPub server.
 
+__FIXME__ A lot of this description is out of date. I'll fix it once the full migration to `bovine_store`, `bovine_user` is done.
+
 ## Implementation notes
 
 - [Actor objects](docs/actor.md)

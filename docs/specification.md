@@ -27,21 +27,21 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L84)
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L31)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L40)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
 server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L84)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
 
 Content-Type should be `application/activity+json`
 
 #### fedi-objects-have-html-representations
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L38)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L51)
 
 By requesting an object with `Accept` header `text/html` (or similar)
 one is redirected to a webpage, featuring said activity.
@@ -210,7 +210,7 @@ Client to server interaction takes place through clients posting Activities to a
 
 #### ap-c2s-new-id
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L28)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L37)
 
 If an Activity is submitted with a value in the id property, servers MUST ignore this and generate a new id for the Activity.
 
@@ -224,7 +224,7 @@ The server MUST remove the bto and/or bcc properties, if they exist, from the Ac
 
 #### ap-c2s-add-to-outbox
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L18)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L22)
 
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
 
@@ -258,7 +258,7 @@ The Update activity is used when updating an already existing object. The side e
 
 #### ap-c2s-delete-activity
 
-- [test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py#L34)
+- [test_create_then_delete.py](../tests/tests/outbox/test_create_then_delete.py#L26)
 
 The Delete activity is used to delete an already existing object. The side effect of this is that the server MAY replace the object with a Tombstone of the object that will be displayed in activities which reference the deleted object. If the deleted object is requested the server SHOULD respond with either the HTTP 410 Gone status code if a Tombstone object is presented as the response body, otherwise respond with a HTTP 404 Not Found.
 
@@ -300,7 +300,7 @@ POST requests (eg. to the inbox) MUST be made with a Content-Type of application
 
 #### ap-s2s-has-object
 
-- [test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py#L49)
+- [test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py#L53)
 
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 

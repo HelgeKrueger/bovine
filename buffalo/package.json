@@ -1,7 +1,7 @@
 {
-  "name": "bovine_admin_webapp",
-  "version": "0.0.2",
-  "description": "Webapp to use bovine admin over port forward",
+  "name": "buffalo",
+  "version": "0.0.3",
+  "description": "Webapp that uses Client To Server",
   "main": "index.js",
   "type": "module",
   "scripts": {

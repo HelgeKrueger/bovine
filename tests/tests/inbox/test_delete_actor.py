@@ -10,7 +10,7 @@ async def test_mastodon_delete_actor(blog_test_env):  # noqa F811
     result = await blog_test_env.send_to_inbox(data)
 
     assert result.status_code == 202
-    assert await InboxEntry.filter(actor=blog_test_env.actor).count() == 0
+    assert await InboxEntry.filter().count() == 0
 
     result_get = await blog_test_env.get_from_inbox()
 

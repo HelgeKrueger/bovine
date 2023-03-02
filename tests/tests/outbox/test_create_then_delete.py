@@ -1,5 +1,4 @@
 from bovine_core.activitystreams.activities import build_delete
-from bovine_tortoise.models import OutboxEntry
 
 from utils import get_activity_from_json
 from utils.blog_test_env import blog_test_env  # noqa: F401
@@ -13,30 +12,26 @@ async def test_create_then_delete(blog_test_env):  # noqa F811
 
     result = await blog_test_env.send_to_outbox(create)
 
-    assert result.status_code == 202
-
-    assert await OutboxEntry.filter(actor=blog_test_env.actor).count() == 1
-    # entry = await OutboxEntry.filter(actor=blog_test_env.actor).get()
-    # assert entry.content == create
-    # assert (
-    #     entry.local_path
-    #     == "/activitypub/munchingcow/9c1d3b44-c6f6-4310-9113-a0c3d3208cac/activity"
-    # )
+    assert result.status_code == 201
 
     result = await blog_test_env.get_from_outbox()
     assert result["type"] == "OrderedCollection"
     assert result["totalItems"] == 1
 
-    item = result["orderedItems"][0]
+    item_id = result["orderedItems"][0]
+    item = await blog_test_env.get_activity(item_id)
 
-    delete = build_delete(blog_test_env.actor.url, item["object"]["id"]).build()
+    delete = build_delete(blog_test_env.local_user.url, item["object"]).build()
 
     # ap-c2s-delete-activity
     result = await blog_test_env.send_to_outbox(delete)
-    assert result.status_code == 202
-
-    assert await OutboxEntry.filter(actor=blog_test_env.actor).count() == 0
+    assert result.status_code == 201
 
     result = await blog_test_env.get_from_outbox()
     assert result["type"] == "OrderedCollection"
-    assert result["totalItems"] == 0
+    assert result["totalItems"] == 2
+
+    first_item = await blog_test_env.get_activity(result["orderedItems"][0])
+    object_item = await blog_test_env.get_activity(first_item["object"])
+
+    assert object_item["type"] == "Tombstone"

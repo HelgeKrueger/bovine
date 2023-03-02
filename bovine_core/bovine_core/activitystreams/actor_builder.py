@@ -11,6 +11,8 @@ class ActorBuilder:
         self.public_key: str | None = None
         self.public_key_name: str | None = None
         self.context_builder = build_context()
+        self.event_source = None
+        self.proxy_url = None
 
     def with_account_url(self, account_url: str):
         self.account_url = account_url
@@ -29,6 +31,10 @@ class ActorBuilder:
 
     def with_event_source(self, event_source):
         self.event_source = event_source
+        return self
+
+    def with_proxy_url(self, proxy_url):
+        self.proxy_url = proxy_url
         return self
 
     def with_public_key(self, public_key: str, key_name: str = "main-key"):
@@ -70,7 +76,11 @@ class ActorBuilder:
         }
 
         if visibility == Visibility.OWNER:
-            result["endpoints"] = {"eventSource": self.event_source}
+            result["endpoints"] = {}
+            if self.event_source:
+                result["endpoints"]["eventSource"] = self.event_source
+            if self.proxy_url:
+                result["endpoints"]["proxyUrl"] = self.proxy_url
 
         return result
 

@@ -18,7 +18,7 @@ async def test_create_many_notes(blog_test_env):  # noqa F811
         create = build_create(note).build()
 
         result = await blog_test_env.send_to_outbox(create)
-        assert result.status_code == 202
+        assert result.status_code == 201
         await asyncio.sleep(0.01)
 
     result = await blog_test_env.get_from_outbox()

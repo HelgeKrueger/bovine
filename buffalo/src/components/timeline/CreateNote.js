@@ -16,8 +16,12 @@ const NoteContent = ({ collapse, note }) => {
 
   let content = note?.content;
   if (!content) {
-    const keys = Object.keys(note?.contentMap);
-    content = note?.contentMap[keys[0]];
+    if (note?.contentMap) {
+      const keys = Object.keys(note?.contentMap);
+      content = note?.contentMap[keys[0]];
+    } else {
+      content = JSON.stringify(note?.source);
+    }
   }
 
   return (

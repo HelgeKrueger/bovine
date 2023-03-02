@@ -5,14 +5,16 @@ from urllib.parse import urlparse
 from unittest.mock import AsyncMock, patch
 
 import pytest
+
 from bovine.utils.queue_manager import QueueManager
 from bovine_blog import app
 from bovine_tortoise import inbox_items_for_actor_from
 from bovine_tortoise.utils import init
 from tortoise import Tortoise
 
-from bovine_store.store import ObjectStore
 from bovine_user.config import configure_bovine_user
+from bovine_store.config import configure_bovine_store
+from bovine_core.types import Visibility
 
 from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
 
@@ -35,14 +37,18 @@ class BlogTestEnv:
         self.mock_signed_post = mock_signed_post
         return self
 
-    def with_user(self, actor, local_user):
+    def with_actor(self, actor):
         self.actor = actor
+        return self
+
+    def with_user(self, local_user):
         self.local_user = local_user
         return self
 
     async def send_to_inbox(self, activity):
         result = await self.client.post(
-            self.local_user.get_inbox(),
+            # self.local_user.get_inbox(),
+            self.actor["inbox"],
             headers=fake_post_headers,
             data=json.dumps(activity),
         )
@@ -50,14 +56,14 @@ class BlogTestEnv:
 
     async def send_to_outbox(self, activity):
         result = await self.client.post(
-            self.local_user.get_outbox(),
+            self.actor["outbox"],
             headers=fake_post_headers,
             data=json.dumps(activity),
         )
         return result
 
     async def proxy(self, url):
-        proxy_url = self.local_user.url + "/proxyUrl"
+        proxy_url = self.actor["endpoints"]["proxyUrl"]
         result = await self.client.post(
             proxy_url, headers=fake_post_headers, form={"id": url}
         )
@@ -91,10 +97,10 @@ class BlogTestEnv:
         return result_json
 
     async def get_from_inbox(self):
-        return await self.get_activity(self.local_user.get_inbox())
+        return await self.get_activity(self.actor["inbox"])
 
     async def get_from_outbox(self):
-        return await self.get_activity(self.local_user.get_outbox())
+        return await self.get_activity(self.actor["outbox"])
 
 
 @pytest.fixture
@@ -107,25 +113,37 @@ async def blog_test_env() -> str:
     app.config["validate_signature"] = AsyncMock()
     app.config["session"] = AsyncMock()
 
-    actor, local_user = await create_actor_and_local_user()
-    app.config["validate_signature"].return_value = local_user.get_public_key_url()
+    _, local_user = await create_actor_and_local_user()
     app.config["queue_manager"] = QueueManager()
     app.config["inbox_lookup"] = inbox_items_for_actor_from
 
-    app.config["object_store"] = ObjectStore(db_url=db_url)
+    # app.config["object_store"] = ObjectStore(db_url=db_url)
+
+    await configure_bovine_store(app, db_url=db_url)
+    app.config["object_store"] = app.config["bovine_store"]
     await app.config["object_store"].init_connection()
 
     await configure_bovine_user(app)
 
+    client = app.test_client()
+
     await app.config["bovine_user_manager"].register("alice", "alice")
 
-    client = app.test_client()
+    async with app.app_context():
+        _, actor = await app.config["bovine_user_manager"].get_activity_pub("alice")
+
+    actor = actor.build(visibility=Visibility.OWNER)
+    public_key_url = actor["publicKey"]["id"]
+
+    app.config["validate_signature"].return_value = public_key_url
 
     with patch("bovine_core.clients.signed_http.signed_post") as mock_signed_post:
         with patch("bovine_core.clients.signed_http.signed_get") as mock_signed_get:
-            yield BlogTestEnv(db_url, client).with_user(actor, local_user).with_mocks(
-                mock_signed_get, mock_signed_post
-            )
+            yield BlogTestEnv(db_url, client).with_user(local_user).with_actor(
+                actor
+            ).with_mocks(mock_signed_get, mock_signed_post)
+
+    await asyncio.sleep(0.1)
 
     await Tortoise.close_connections()
 
@@ -133,12 +151,14 @@ async def blog_test_env() -> str:
 
 
 async def wait_for_number_of_entries_in_inbox(blog_test_env, entry_number):
-    for _ in range(100):
+    for _ in range(10):
         inbox_content = await blog_test_env.get_from_inbox()
+
+        logger.info(json.dumps(inbox_content))
 
         if inbox_content["totalItems"] == entry_number:
             break
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.05)
 
     inbox_content = await blog_test_env.get_from_inbox()
 

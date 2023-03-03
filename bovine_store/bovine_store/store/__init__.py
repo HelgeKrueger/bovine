@@ -40,16 +40,15 @@ async def store_remote_object(owner, item, as_public=False, visible_to=[]):
         return items
 
     for item, created in items:
-        if created:
-            visible_tasks = [
-                VisibleTo.create(
-                    main_object=item,
-                    object_id=actor,
-                )
-                for actor in visible_to
-            ]
-            await asyncio.gather(*visible_tasks)
-        else:
+        visible_tasks = [
+            VisibleTo.get_or_create(
+                main_object=item,
+                object_id=actor,
+            )
+            for actor in visible_to
+        ]
+        await asyncio.gather(*visible_tasks)
+        if not created:
             if item.owner == owner:
                 item.content = id_to_store[item.id]
                 await item.save()

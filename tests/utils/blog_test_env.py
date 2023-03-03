@@ -47,7 +47,6 @@ class BlogTestEnv:
 
     async def send_to_inbox(self, activity):
         result = await self.client.post(
-            # self.local_user.get_inbox(),
             self.actor["inbox"],
             headers=fake_post_headers,
             data=json.dumps(activity),
@@ -120,8 +119,7 @@ async def blog_test_env() -> str:
     # app.config["object_store"] = ObjectStore(db_url=db_url)
 
     await configure_bovine_store(app, db_url=db_url)
-    app.config["object_store"] = app.config["bovine_store"]
-    await app.config["object_store"].init_connection()
+    await app.config["bovine_store"].init_connection()
 
     await configure_bovine_user(app)
 
@@ -139,6 +137,11 @@ async def blog_test_env() -> str:
 
     with patch("bovine_core.clients.signed_http.signed_post") as mock_signed_post:
         with patch("bovine_core.clients.signed_http.signed_get") as mock_signed_get:
+            mock_signed_get.return_value = AsyncMock()
+            mock_signed_get.return_value.raise_for_status = lambda: 1
+            mock_signed_post.return_value = AsyncMock()
+            mock_signed_post.return_value.raise_for_status = lambda: 1
+
             yield BlogTestEnv(db_url, client).with_user(local_user).with_actor(
                 actor
             ).with_mocks(mock_signed_get, mock_signed_post)

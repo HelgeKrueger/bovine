@@ -13,6 +13,8 @@ class ActorBuilder:
         self.context_builder = build_context()
         self.event_source = None
         self.proxy_url = None
+        self.followers = None
+        self.following = None
 
     def with_account_url(self, account_url: str):
         self.account_url = account_url
@@ -27,6 +29,11 @@ class ActorBuilder:
 
     def with_outbox(self, outbox: str):
         self.outbox = outbox
+        return self
+
+    def with_follow(self, followers, following):
+        self.followers = followers
+        self.following = following
         return self
 
     def with_event_source(self, event_source):
@@ -81,6 +88,11 @@ class ActorBuilder:
                 result["endpoints"]["eventSource"] = self.event_source
             if self.proxy_url:
                 result["endpoints"]["proxyUrl"] = self.proxy_url
+
+            if self.followers:
+                result["followers"] = self.followers
+            if self.following:
+                result["following"] = self.following
 
         return result
 

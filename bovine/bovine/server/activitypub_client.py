@@ -203,7 +203,7 @@ async def proxy_url(account_name: str) -> tuple[dict, int]:
 
     logger.info(f"Fetching {url} for {account_name}")
 
-    object_store = current_app.config["object_store"]
+    object_store = current_app.config["bovine_store"]
 
     if object_store:
         data = await object_store.retrieve(local_user.url, url, include=["object"])

@@ -1,14 +1,14 @@
 class AcceptBuilder:
-    def __init__(self, account: str, obj: dict):
-        self.account = account
+    def __init__(self, actor: str, obj: dict):
+        self.actor = actor
         self.obj = obj
 
     def build(self) -> dict:
         return {
             "@context": "https://www.w3.org/ns/activitystreams",
-            "id": self.account + "#accepts/follows/",
+            "id": self.actor + "#accepts/follows/",
             "type": "Accept",
-            "actor": self.account,
+            "actor": self.actor,
             "object": self.obj,
             "to": [self.determine_to()],
         }

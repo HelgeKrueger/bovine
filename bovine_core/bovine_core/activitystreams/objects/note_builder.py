@@ -17,10 +17,13 @@ class NoteBuilder:
         self.reply_to_atom_uri: str | None = None
         self.source: dict | None = None
 
-    def as_public(self):
+    def as_public(self, followers=None):
         # FIXME: Broken in the way followers is added
         self.to.add("https://www.w3.org/ns/activitystreams#Public")
-        self.cc.add(f"{self.account}/followers")
+        if followers:
+            self.cc.add(followers)
+        else:
+            self.cc.add(f"{self.account}/followers")
         return self
 
     def add_cc(self, recipient: str):

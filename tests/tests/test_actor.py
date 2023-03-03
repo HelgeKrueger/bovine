@@ -7,6 +7,7 @@ async def test_actor(blog_test_env):  # noqa: F811
     assert result["type"] == "Person"
     assert "inbox" in result
     assert "outbox" in result
+    assert "endpoints" in result
 
     # LABEL: ap-actor-preferredUsername
     assert isinstance(result["preferredUsername"], str)

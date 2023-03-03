@@ -2,9 +2,14 @@ import json
 
 import aiohttp
 import tomli
+import logging
 
 from bovine_core.activitystreams.objects import build_note
 from bovine_core.clients.activity_pub import ActivityPubClient
+
+from bovine_core.clients.signed_http import signed_post
+
+logger = logging.getLogger(__name__)
 
 
 class ActivityPubActor:
@@ -30,6 +35,8 @@ class ActivityPubActor:
 
         self.information = json.loads(await response.text())
 
+        logger.debug("Retrieved information %s", self.information)
+
         if any(required not in self.information for required in ["inbox", "outbox"]):
             raise Exception("Retrieved incomplete actor data")
 
@@ -37,11 +44,27 @@ class ActivityPubActor:
         if self.information is None:
             await self.load()
 
-        response = await self.client.post(self.information["outbox"], json.dumps(data))
+        return await self.post(self.information["outbox"], data)
+
+    async def post(self, target, data: dict):
+        response = await self.client.post(target, json.dumps(data))
 
         response.raise_for_status()
 
         return response
+
+    async def proxy_element(self, target):
+        return await signed_post(
+            self.client.session,
+            self.client.public_key_url,
+            self.client.private_key,
+            self.information["endpoints"]["proxyUrl"],
+            f"id={target}",
+            content_type="application/x-www-form-urlencoded",
+        )
+
+    async def get_ordered_collection(self, target):
+        return await self.client.get_ordered_collection(target)
 
     async def get(self, target):
         response = await self.client.get(target)

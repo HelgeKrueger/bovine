@@ -2,6 +2,9 @@ import logging
 
 from quart import Blueprint, current_app, redirect, render_template, request, url_for
 from quart_auth import Unauthorized, current_user, login_required
+from quart_cors import route_cors
+
+from bovine_core.types import Visibility
 
 from .hello_auth import hello_auth
 from .utils import create_toml_file
@@ -12,8 +15,15 @@ logger = logging.getLogger(__name__)
 server = Blueprint("server", __name__, template_folder="../templates/")
 server.register_blueprint(hello_auth, url_prefix="/hello")
 
+cors_properties = {
+    "allow_origin": ["http://localhost:*"],
+    "allow_methods": ["GET", "POST"],
+    "allow_headers": ["Authorization", "Content-Type", "Last-Event-Id"],
+}
+
 
 @server.route("/")
+@route_cors(**cors_properties)
 @login_required
 async def manage_user():
     hello_sub = current_user.auth_id
@@ -22,7 +32,7 @@ async def manage_user():
     ap_actor, actor = await manager.get_activity_pub(hello_sub)
 
     if actor:
-        return actor.build()
+        return actor.build(visibility=Visibility.OWNER)
 
     return await render_template(
         "create.html", register_url=url_for("server.register_user")

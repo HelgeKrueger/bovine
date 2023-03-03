@@ -1,8 +1,7 @@
-import json
 import logging
 import traceback
 
-from bovine.types import LocalActor, ProcessingItem
+from bovine.types import ProcessingItem
 from bovine_core.activitystreams.utils import actor_for_object
 from bovine_store.jsonld import combine_items
 from bovine_store.store import retrieve_remote_object, store_remote_object
@@ -10,9 +9,7 @@ from bovine_store.store import retrieve_remote_object, store_remote_object
 logger = logging.getLogger(__name__)
 
 
-async def incoming_actor(
-    item: ProcessingItem, local_actor: LocalActor
-) -> ProcessingItem:
+async def incoming_actor(item: ProcessingItem, activity_pub, actor) -> ProcessingItem:
     data = item.get_data()
     owner = actor_for_object(data)
 
@@ -21,17 +18,16 @@ async def incoming_actor(
         return item
 
     try:
-        actor = await retrieve_remote_object(local_actor.url, owner)
-        if actor:
-            data = combine_items(data, [actor])
+        remote_actor = await retrieve_remote_object(actor["id"], owner)
+        if remote_actor:
+            data = combine_items(data, [remote_actor])
             item = item.set_data(data)
             return item
 
-        response = await local_actor.client().get(owner)
-        actor = json.loads(await response.text())
-        await store_remote_object(owner, actor)
+        remote_actor = await activity_pub.get(owner)
+        await store_remote_object(owner, remote_actor, visible_to=[actor["id"]])
 
-        data = combine_items(data, [actor])
+        data = combine_items(data, [remote_actor])
 
         item = item.set_data(data)
     except Exception as ex:

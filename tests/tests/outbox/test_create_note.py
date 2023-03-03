@@ -13,7 +13,7 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
 
     assert result.status_code == 201
 
-    await asyncio.sleep(1)
+    await asyncio.sleep(0.05)
 
     result = await blog_test_env.get_from_outbox()
     assert result["id"] == blog_test_env.actor["outbox"]

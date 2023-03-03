@@ -14,6 +14,7 @@ tortoise-orm = "^0.19.3"
 quart-auth = "^0.8.0"
 bovine-core = {path = "../bovine_core", develop = true}
 tomli-w = "^1.0.0"
+quart-cors = "^0.6.0"
 
 
 [tool.poetry.group.env.dependencies]

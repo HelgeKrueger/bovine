@@ -96,3 +96,17 @@ async def collection_items(retriever, collection_id, **kwargs) -> dict | None:
     result = sorted(result, key=lambda x: -x["id"])
 
     return {"items": [x["object_id"] for x in result], **next_prev}
+
+
+async def collection_all(retriever, collection_id) -> list:
+    sql_query = f"""SELECT ci.id, ci.object_id
+        {sql_joined_tables}
+        {sql_where}
+    """
+
+    query_args = [collection_id, retriever, retriever, retriever]
+
+    client = Tortoise.get_connection("default")
+    result = await client.execute_query_dict(sql_query, query_args)
+
+    return [x["object_id"] for x in result]

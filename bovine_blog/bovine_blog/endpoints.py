@@ -2,6 +2,7 @@ import json
 import logging
 from urllib.parse import urljoin
 
+from bovine_core.types import Visibility
 from bovine.server.rewrite_request import add_authorization_to_request
 from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
@@ -9,7 +10,7 @@ from bovine_store.store.collection import collection_count, collection_items
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, request
 
-from .process.process import default_outbox_process, process_inbox
+from .process.process import default_outbox_process, process_inbox, send_outbox_item
 
 # from .process.content.store_incoming import add_incoming_to_outbox
 
@@ -41,10 +42,23 @@ async def endpoints_get(identifier):
             {"content-type": "application/activity+json"},
         )
 
+    authorized_user = g.signature_result
+    if authorized_user is None:
+        retriever = "NONE"
+    else:
+        retriever = authorized_user.split("#")[0]
+
     if endpoint_information.endpoint_type == EndpointType.ACTOR:
         activity_pub, actor = await manager.get_activity_pub(
             endpoint_information.bovine_user.hello_sub
         )
+
+        if endpoint_path == retriever:
+            return (
+                actor.build(visibility=Visibility.OWNER),
+                200,
+                {"content-type": "application/activity+json"},
+            )
 
         return (
             actor.build(),
@@ -57,12 +71,6 @@ async def endpoints_get(identifier):
         for name in ["first", "last", "min_id", "max_id"]
         if request.args.get(name) is not None
     }
-
-    authorized_user = g.signature_result
-    if authorized_user is None:
-        retriever = "NONE"
-    else:
-        retriever = authorized_user.split("#")[0]
 
     logger.info("Retrieving %s for %s", endpoint_path, retriever)
 
@@ -100,7 +108,7 @@ async def endpoints_post(identifier):
         endpoint_information.bovine_user.hello_sub
     )
 
-    actor = actor.build()
+    actor = actor.build(visibility=Visibility.OWNER)
 
     if endpoint_type == EndpointType.INBOX:
         current_app.add_background_task(process_inbox, request, activity_pub, actor)
@@ -117,10 +125,11 @@ async def endpoints_post(identifier):
         item = ProcessingItem(json.dumps(data))
         await default_outbox_process(item, activity_pub, actor)
 
-        logger.info(result)
+        current_app.add_background_task(send_outbox_item, item, activity_pub, actor)
+
+        logger.debug(result)
 
         return {"status": "created"}, 201
-        # current_app.add_background_task(process_outbox, request, activity_pub, actor)
 
     if endpoint_type == EndpointType.PROXY_URL:
         return await proxy_url_response(activity_pub, actor)
@@ -134,7 +143,7 @@ async def proxy_url_response(activity_pub, actor):
     logger.info(await request.form)
 
     url = (await request.form)["id"]
-    object_store = current_app.config["object_store"]
+    object_store = current_app.config["bovine_store"]
 
     if object_store:
         data = await object_store.retrieve(actor["id"], url, include=["object"])
@@ -143,9 +152,9 @@ async def proxy_url_response(activity_pub, actor):
 
     response = await activity_pub.get(url)
 
-    data = json.loads(await response.text())
+    # data = json.loads(await response.text())
+    logger.info(response)
 
-    if object_store:
-        await object_store.store("FIXME", data, visible_to=[actor["id"]])
+    await object_store.store("FIXME", response, visible_to=[actor["id"]])
 
-    return data, 200
+    return response, 200

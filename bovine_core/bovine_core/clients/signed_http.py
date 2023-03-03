@@ -84,6 +84,7 @@ async def signed_post(
     url: str,
     body: str,
     headers: dict = {},
+    content_type=None,
 ) -> aiohttp.ClientResponse:
     logger.debug(f"Signed post with {private_key} on {url}")
 
@@ -93,7 +94,8 @@ async def signed_post(
 
     accept = "application/activity+json"
     # LABEL: ap-s2s-content-type
-    content_type = "application/activity+json"
+    if content_type is None:
+        content_type = "application/activity+json"
     date_header = get_gmt_now()
 
     digest = content_digest_sha256(body)

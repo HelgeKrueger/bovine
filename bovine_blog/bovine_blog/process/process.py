@@ -14,6 +14,7 @@ from .content.store_incoming import (
     add_incoming_to_inbox,
     add_incoming_to_outbox,
     store_incoming,
+    store_outgoing,
 )
 from .fetch.incoming_actor import incoming_actor
 from .follow.accept_follow import accept_follow
@@ -35,9 +36,9 @@ default_inbox_process = (
 
 default_outbox_process = (
     ProcessorList()
-    .add_for_types(**default_content_processors)
-    .add(store_incoming)
+    .add(store_outgoing)
     .add(add_incoming_to_outbox)
+    .add_for_types(**default_content_processors)
     .apply
 )
 

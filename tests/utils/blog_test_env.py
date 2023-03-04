@@ -150,7 +150,8 @@ async def blog_test_env() -> str:
 
     await Tortoise.close_connections()
 
-    os.unlink(db_file)
+    if not os.environ.get("KEEP_DB"):
+        os.unlink(db_file)
 
 
 async def wait_for_number_of_entries_in_inbox(blog_test_env, entry_number):

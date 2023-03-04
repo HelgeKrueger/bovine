@@ -216,6 +216,8 @@ If an Activity is submitted with a value in the id property, servers MUST ignore
 
 #### ap-c2s-status-code
 
+- [test_follow_then_accept_added_to_following.py](../tests/tests/outbox/test_follow_then_accept_added_to_following.py#L34)
+
 Servers MUST return a 201 Created HTTP code, and unless the activity is transient, MUST include the new id in the Location header.
 
 #### ap-c2s-no-bto-bcc
@@ -300,7 +302,7 @@ POST requests (eg. to the inbox) MUST be made with a Content-Type of application
 
 #### ap-s2s-has-object
 
-- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L88)
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L86)
 
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 

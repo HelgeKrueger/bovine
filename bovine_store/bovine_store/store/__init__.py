@@ -37,6 +37,10 @@ async def store_remote_object(owner, item, as_public=False, visible_to=[]):
     items = await asyncio.gather(*tasks)
 
     if visibility_type == VisibilityTypes.PUBLIC:
+        for x, c in items:
+            x.visibility = VisibilityTypes.PUBLIC
+            await x.save()
+
         return items
 
     for item, created in items:

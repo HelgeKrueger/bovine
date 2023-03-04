@@ -2,22 +2,40 @@ import json
 import logging
 from urllib.parse import urljoin
 
-from bovine_core.types import Visibility
 from bovine.server.rewrite_request import add_authorization_to_request
 from bovine.types import ProcessingItem
 from bovine.utils.server import ordered_collection_responder
+from bovine_core.types import Visibility
 from bovine_store.store.collection import collection_count, collection_items
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, request
+from quart_auth import current_user
 
 from .process.process import default_outbox_process, process_inbox, send_outbox_item
 
 # from .process.content.store_incoming import add_incoming_to_outbox
 
+
+async def add_authorization():
+    await add_authorization_to_request()
+
+    g.retriever = "NONE"
+
+    if g.signature_result:
+        g.retriever = g.signature_result.split("#")[0]
+        return
+
+    if current_user.is_authenticated:
+        manager = current_app.config["bovine_user_manager"]
+        _, actor = await manager.get_activity_pub(current_user.auth_id)
+        g.retriever = actor.build()["id"]
+        return
+
+
 logger = logging.getLogger(__name__)
 
 endpoints = Blueprint("endpoint", __name__)
-endpoints.before_request(add_authorization_to_request)
+endpoints.before_request(add_authorization)
 
 
 @endpoints.get("/<identifier>")
@@ -42,11 +60,7 @@ async def endpoints_get(identifier):
             {"content-type": "application/activity+json"},
         )
 
-    authorized_user = g.signature_result
-    if authorized_user is None:
-        retriever = "NONE"
-    else:
-        retriever = authorized_user.split("#")[0]
+    retriever = g.retriever
 
     if endpoint_information.endpoint_type == EndpointType.ACTOR:
         activity_pub, actor = await manager.get_activity_pub(
@@ -111,7 +125,14 @@ async def endpoints_post(identifier):
     actor = actor.build(visibility=Visibility.OWNER)
 
     if endpoint_type == EndpointType.INBOX:
+        if not g.signature_result:
+            return {"status": "unauthorized"}, 401
+
         current_app.add_background_task(process_inbox, request, activity_pub, actor)
+        return {"status": "processing"}, 202
+
+    if g.retriever != actor["id"]:
+        return {"status": "unauthorized"}, 401
 
     if endpoint_type == EndpointType.OUTBOX:
         store = current_app.config["bovine_store"]
@@ -133,8 +154,6 @@ async def endpoints_post(identifier):
 
     if endpoint_type == EndpointType.PROXY_URL:
         return await proxy_url_response(activity_pub, actor)
-
-    return {"status": "processing"}, 202
 
 
 async def proxy_url_response(activity_pub, actor):

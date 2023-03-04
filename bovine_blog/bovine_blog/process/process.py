@@ -2,14 +2,11 @@ import asyncio
 import json
 import logging
 
-from quart import current_app
-
 from bovine.processors.processor_list import ProcessorList
 from bovine.types import ProcessingItem
-
 from bovine_core.activitystreams.utils import recipients_for_object, remove_public
-
 from bovine_store.store.collection import collection_all
+from quart import current_app
 
 from . import default_content_processors
 from .add_to_queue import add_to_queue
@@ -18,8 +15,8 @@ from .content.store_incoming import (
     add_incoming_to_outbox,
     store_incoming,
 )
-from .follow.accept_follow import accept_follow
 from .fetch.incoming_actor import incoming_actor
+from .follow.accept_follow import accept_follow
 
 logger = logging.getLogger(__name__)
 

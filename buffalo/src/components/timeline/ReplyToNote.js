@@ -68,6 +68,11 @@ const ReplyToNote = ({ entry }) => {
   }
 
   const sendPost = () => {
+    let replyToActor = entry?.attributedTo;
+    if (typeof replyToActor !== "string") {
+      replyToActor = replyToActor?.id;
+    }
+
     const note = buildNote(config.actor, content, {
       content: content,
       hashtags: hashtags.split(",").map((x) => x.trim()),
@@ -77,12 +82,10 @@ const ReplyToNote = ({ entry }) => {
       conversation: entry?.conversation,
       inReplyTo: entry?.id,
       inReplyToAtomUri: entry?.atomUri,
-      replyToActor: entry?.attributedTo,
+      replyToActor: replyToActor,
     });
 
     const data = buildCreateForNote(note);
-
-    debugger;
 
     sendToOutbox(data).then(() => {
       setOpen(false);

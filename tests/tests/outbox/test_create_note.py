@@ -19,8 +19,11 @@ async def test_buffalo_create_note(blog_test_env):  # noqa F811
     assert result["id"] == blog_test_env.actor["outbox"]
     assert result["type"] == "OrderedCollection"
 
+    print(result)
+
     # LABEL: ap-c2s-add-to-outbox
     assert result["totalItems"] == 1
+    assert len(result["orderedItems"]) == 1
     created_item_id = result["orderedItems"][0]
 
     created_item = await blog_test_env.get_activity(created_item_id)

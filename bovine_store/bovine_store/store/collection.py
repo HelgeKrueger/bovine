@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 async def add_to_collection(collection_id, object_id):
+    logger.info("Adding %s to %s", object_id, collection_id)
     return await CollectionItem.create(part_of=collection_id, object_id=object_id)
 
 
@@ -43,7 +44,7 @@ AND (
 
 
 async def collection_count(retriever, collection_id):
-    sql_query = f"""SELECT COUNT(*)
+    sql_query = f"""SELECT COUNT (DISTINCT ci.object_id)
         {sql_joined_tables}
         {sql_where}
     """
@@ -53,13 +54,13 @@ async def collection_count(retriever, collection_id):
     result = await client.execute_query_dict(
         sql_query, (collection_id, retriever, retriever, retriever)
     )
-    return result[0]["COUNT(*)"]
+    return result[0]["COUNT (DISTINCT ci.object_id)"]
 
 
 async def collection_items(retriever, collection_id, **kwargs) -> dict | None:
     limit = int(kwargs.get("limit", 10))
 
-    sql_query = f"""SELECT ci.id, ci.object_id
+    sql_query = f"""SELECT DISTINCT ci.id, ci.object_id
         {sql_joined_tables}
         {sql_where}
     """

@@ -1,12 +1,11 @@
 import json
+import logging
 
 import aiohttp
 import tomli
-import logging
 
 from bovine_core.activitystreams.objects import build_note
 from bovine_core.clients.activity_pub import ActivityPubClient
-
 from bovine_core.clients.signed_http import signed_post
 
 logger = logging.getLogger(__name__)

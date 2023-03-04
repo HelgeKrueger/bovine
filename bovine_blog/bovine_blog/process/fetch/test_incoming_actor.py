@@ -1,8 +1,9 @@
 import json
 from unittest.mock import AsyncMock, patch
 
-from bovine.types import LocalActor, ProcessingItem
+from bovine.types import ProcessingItem
 from bovine.utils.test.in_memory_test_app import app
+from bovine_core.activitypub.actor import ActivityPubActor
 from bovine_store.utils.test import store  # noqa F401
 
 from .incoming_actor import incoming_actor
@@ -19,13 +20,9 @@ async def test_incoming_actor_failure_to_retrieve(store):  # noqa F801
             "type": "Like",
         }
 
-        local_actor = LocalActor(
-            "name", "local_actor_url", "public_key", "private_key", "actor_type"
-        )
-
         processing_item = ProcessingItem(json.dumps(item))
 
-        result = await incoming_actor(processing_item, local_actor)
+        result = await incoming_actor(processing_item, {}, {"id": "local_actor_url"})
 
         assert result == processing_item
         assert result.get_data()["actor"] == actor_url
@@ -50,13 +47,13 @@ async def test_incoming_actor_succes(mock_signed_get, store):  # noqa F801
         mock_signed_get.return_value = AsyncMock()
         mock_signed_get.return_value.text.return_value = json.dumps(actor_object)
 
-        local_actor = LocalActor(
-            "name", "local_actor_url", "public_key", "private_key", "actor_type"
-        )
-
         processing_item = ProcessingItem(json.dumps(item))
 
-        result = await incoming_actor(processing_item, local_actor)
+        actor = ActivityPubActor("local_actor_url").with_http_signature(
+            "public_key_url", "private_key"
+        )
+
+        result = await incoming_actor(processing_item, actor, {"id": "local_actor_url"})
 
         assert result == processing_item
         item_actor = result.get_data()["actor"]

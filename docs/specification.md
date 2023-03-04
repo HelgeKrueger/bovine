@@ -27,21 +27,21 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L40)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L43)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
 server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
 
 Content-Type should be `application/activity+json`
 
 #### fedi-objects-have-html-representations
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L51)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L54)
 
 By requesting an object with `Accept` header `text/html` (or similar)
 one is redirected to a webpage, featuring said activity.
@@ -89,7 +89,7 @@ to the username part of the account used in webfinger.
 
 #### ap-actor-inbox
 
-- [test_actor.py](../tests/tests/test_actor.py#L15)
+- [test_actor.py](../tests/tests/test_actor.py#L16)
 
 A reference to an ActivityStreams OrderedCollection comprised of all the messages received by the actor.
 See [5.2 Inbox](https://www.w3.org/TR/activitypub/#inbox)
@@ -108,7 +108,7 @@ Non-federated servers SHOULD return a 405 Method Not Allowed upon receipt of a P
 
 #### ap-actor-outbox
 
-- [test_actor.py](../tests/tests/test_actor.py#L19)
+- [test_actor.py](../tests/tests/test_actor.py#L20)
 
 An ActivityStreams OrderedCollection comprised of all the messages produced by the actor;
 see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox).
@@ -158,7 +158,7 @@ __MAY__: A list of supplementary Collections which may be of interest.
 
 #### ap-actor-preferredUsername
 
-- [test_actor.py](../tests/tests/test_actor.py#L11)
+- [test_actor.py](../tests/tests/test_actor.py#L12)
 
 __MAY__: A short username which may be used to refer to the actor
 
@@ -210,7 +210,7 @@ Client to server interaction takes place through clients posting Activities to a
 
 #### ap-c2s-new-id
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L37)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L40)
 
 If an Activity is submitted with a value in the id property, servers MUST ignore this and generate a new id for the Activity.
 
@@ -224,7 +224,7 @@ The server MUST remove the bto and/or bcc properties, if they exist, from the Ac
 
 #### ap-c2s-add-to-outbox
 
-- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L22)
+- [test_create_note.py](../tests/tests/outbox/test_create_note.py#L24)
 
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
 
@@ -300,7 +300,7 @@ POST requests (eg. to the inbox) MUST be made with a Content-Type of application
 
 #### ap-s2s-has-object
 
-- [test_create_note_is_send_to_follower.py](../tests/tests/outbox/test_create_note_is_send_to_follower.py#L53)
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L88)
 
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 

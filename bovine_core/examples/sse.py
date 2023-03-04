@@ -1,8 +1,8 @@
 import asyncio
 import json
 import logging
-from datetime import datetime
 from argparse import ArgumentParser
+from datetime import datetime
 
 import aiohttp
 import bleach

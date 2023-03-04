@@ -1,10 +1,9 @@
 import logging
 
+from bovine_core.types import Visibility
 from quart import Blueprint, current_app, redirect, render_template, request, url_for
 from quart_auth import Unauthorized, current_user, login_required
 from quart_cors import route_cors
-
-from bovine_core.types import Visibility
 
 from .hello_auth import hello_auth
 from .utils import create_toml_file

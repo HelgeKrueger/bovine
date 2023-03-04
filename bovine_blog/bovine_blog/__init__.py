@@ -76,7 +76,7 @@ app.register_blueprint(outbox_blueprint, url_prefix="/activitypub")
 app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")
-# app.register_blueprint(endpoints, url_prefix="/endpoints")
+app.register_blueprint(endpoints, url_prefix="/endpoints")
 app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")
 
 

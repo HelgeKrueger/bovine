@@ -22,9 +22,11 @@ async def rewrite_activity_request():
     return
 
 
-async def update_id(data, id_generator):
-    data["id"] = await id_generator()
+async def update_id(data, retriever, store):
+    data["id"] = await store.id_generator()
     if "object" in data and isinstance(data["object"], dict):
-        data["object"]["id"] = await id_generator()
+        obj_in_store = await store.retrieve(retriever, data["object"]["id"])
+        if not obj_in_store:
+            data["object"]["id"] = await store.id_generator()
 
     return data

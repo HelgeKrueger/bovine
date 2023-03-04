@@ -14,3 +14,4 @@ helge.toml
 context_cache.sqlite
 /bovine_config.toml
 store.db*
+h.toml

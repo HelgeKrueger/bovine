@@ -142,7 +142,7 @@ async def endpoints_post(identifier):
         store = current_app.config["bovine_store"]
         data = await request.get_json()
 
-        data = await update_id(data, store.id_generator)
+        data = await update_id(data, actor["id"], store)
 
         new_id = data["id"]
 
@@ -169,7 +169,9 @@ async def proxy_url_response(activity_pub, actor):
     object_store = current_app.config["bovine_store"]
 
     if object_store:
-        data = await object_store.retrieve(actor["id"], url, include=["object"])
+        data = await object_store.retrieve(
+            actor["id"], url, include=["object", "actor"]
+        )
         if data:
             return data, 200
 

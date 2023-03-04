@@ -42,8 +42,17 @@ async def test_on_accept_is_added_to_followers(blog_test_env):  # noqa F811
     accept = build_accept(actor_id, follow).build()
 
     result = await blog_test_env.send_to_outbox(accept)
-
     assert result.status_code == 201
+
+    assert "location" in result.headers
+    new_location = result.headers["location"]
+
+    accept_from_server = await blog_test_env.get(new_location)
+    accept_from_server = await accept_from_server.get_json()
+
+    assert accept_from_server["object"] == follow["id"]
+
+    accept_from_server = await blog_test_env.proxy(new_location)
 
     await asyncio.sleep(0.3)
 
@@ -70,10 +79,6 @@ async def test_on_accept_is_added_to_followers(blog_test_env):  # noqa F811
 
     assert result["totalItems"] == 2
     assert result["orderedItems"][0] != create["id"]
-
-    # blog_test_env.mock_signed_post.assert_awaited_once()
-
-    print(blog_test_env.mock_signed_post.await_args)
 
     args = blog_test_env.mock_signed_post.await_args[0]
     assert args[3] == f"{remote_actor}/inbox"

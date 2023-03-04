@@ -57,6 +57,9 @@ async def userinfo(account_name: str) -> tuple[dict, int] | werkzeug.Response:
     ):
         visibility = Visibility.OWNER
 
+    if user_info.actor_type == "Tombstone":
+        visibility = Visibility.WEB
+
     return (
         (
             build_actor(account_name, actor_type=user_info.actor_type)

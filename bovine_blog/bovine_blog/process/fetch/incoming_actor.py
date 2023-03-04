@@ -17,6 +17,9 @@ async def incoming_actor(item: ProcessingItem, activity_pub, actor) -> Processin
         logger.warning("Retrieved object without actor %s", item.body)
         return item
 
+    if data["type"] == "Delete":
+        return item
+
     try:
         remote_actor = await retrieve_remote_object(actor["id"], owner)
         if remote_actor:

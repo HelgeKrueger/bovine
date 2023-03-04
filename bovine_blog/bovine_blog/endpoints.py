@@ -12,6 +12,7 @@ from quart import Blueprint, current_app, g, request
 from quart_auth import current_user
 
 from .process.process import default_outbox_process, process_inbox, send_outbox_item
+from .utils import update_id
 
 # from .process.content.store_incoming import add_incoming_to_outbox
 
@@ -28,8 +29,11 @@ async def add_authorization():
     if current_user.is_authenticated:
         manager = current_app.config["bovine_user_manager"]
         _, actor = await manager.get_activity_pub(current_user.auth_id)
-        g.retriever = actor.build()["id"]
-        return
+        if actor:
+            g.retriever = actor.build()["id"]
+            return
+
+        logging.warning("Unknown auth id %s", current_user.auth_id)
 
 
 logger = logging.getLogger(__name__)
@@ -138,9 +142,9 @@ async def endpoints_post(identifier):
         store = current_app.config["bovine_store"]
         data = await request.get_json()
 
-        data["id"] = await store.id_generator()
-        if "object" in data:
-            data["object"]["id"] = await store.id_generator()
+        data = await update_id(data, store.id_generator)
+
+        new_id = data["id"]
 
         result = await store.store(actor["id"], data)
         item = ProcessingItem(json.dumps(data))
@@ -150,7 +154,7 @@ async def endpoints_post(identifier):
 
         logger.debug(result)
 
-        return {"status": "created"}, 201
+        return {"status": "created"}, 201, {"location": new_id}
 
     if endpoint_type == EndpointType.PROXY_URL:
         return await proxy_url_response(activity_pub, actor)

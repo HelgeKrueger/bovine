@@ -17,15 +17,14 @@ from .content.store_incoming import (
 )
 from .fetch.incoming_actor import incoming_actor
 from .follow.accept_follow import accept_follow
+from .follow.follow_accept import follow_accept
 
 logger = logging.getLogger(__name__)
 
 
 default_inbox_process = (
     ProcessorList()
-    .add_for_types(
-        **default_content_processors,
-    )
+    .add_for_types(**default_content_processors, Accept=follow_accept)
     .add(store_incoming)
     .add(add_incoming_to_inbox)
     .add(incoming_actor)

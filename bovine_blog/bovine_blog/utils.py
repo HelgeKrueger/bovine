@@ -20,3 +20,11 @@ async def rewrite_activity_request():
                 return redirect(new_path)
 
     return
+
+
+async def update_id(data, id_generator):
+    data["id"] = await id_generator()
+    if "object" in data and isinstance(data["object"], dict):
+        data["object"]["id"] = await id_generator()
+
+    return data

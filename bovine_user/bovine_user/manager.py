@@ -16,7 +16,7 @@ class BovineUserManager:
 
     async def get(self, hello_sub):
         user = await BovineUser.get_or_none(hello_sub=hello_sub).prefetch_related(
-            "endpoints", "keypairs"
+            "endpoints", "keypairs", "properties"
         )
 
         return user
@@ -51,6 +51,10 @@ class BovineUserManager:
             .with_proxy_url(mapped_endpoints[EndpointType.PROXY_URL].name)
             .with_public_key(keypair.public_key, key_name=keypair.name)
         )
+
+        for p in user.properties:
+            if p.name == "name":
+                actor.display_name = p.value
 
         return activity_pub_actor, actor
 

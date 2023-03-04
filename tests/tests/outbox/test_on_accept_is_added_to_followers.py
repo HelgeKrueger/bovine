@@ -60,8 +60,6 @@ async def test_on_accept_is_added_to_followers(blog_test_env):  # noqa F811
 
     create = build_create(note).build()
 
-    print(create)
-
     result = await blog_test_env.send_to_outbox(create)
 
     assert result.status_code == 201

@@ -6,6 +6,7 @@ from .common import build_context
 class ActorBuilder:
     def __init__(self, name: str, actor_type: str = "Person"):
         self.name = name
+        self.display_name = name
         self.actor_type = actor_type
         self.account_url: str | None = None
         self.public_key: str | None = None
@@ -53,7 +54,7 @@ class ActorBuilder:
     def build(self, visibility=Visibility.PUBLIC):
         return {
             "@context": self.context_builder.build(),
-            "name": self.name,
+            "name": self.display_name,
             "preferredUsername": self.name,
             "type": self.actor_type,
             **self._build_account_urls(visibility),

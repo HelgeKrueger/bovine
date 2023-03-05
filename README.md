@@ -14,7 +14,11 @@ __FIXME__ A lot of this description is out of date. I'll fix it once the full mi
 
 ## Development
 
-Code is tested with `pytest`. Linted with `flake8`. Formatted with `black`. Furthermore some typing is enforced with `mypy`. Imports are sorted using `isort`.
+Code is tested with `pytest`. Linted with `flake8`. Formatted with `black`. Furthermore some typing is enforced with `mypy`. Imports are sorted using `isort`. All the tests can be run via
+
+```bash
+./all_tests.sh
+```
 
 ## Structure
 
@@ -90,26 +94,3 @@ poetry run python bovine_blog/scripts/add_user.py USERNAME
 ```
 
 can be used to create new users including public/private keys.
-
-### buffalo
-
-The `buffalo` package is an attempt at writing a webapp able to interact with bovine through ActivityPub Client to Server.
-It uses ReactJS for frontend management and JSX to give the code some kind of structure. Data is stored
-client side using dexie.js. Features include:
-
-- Threaded conversation view. Already seen elements are collapsed
-- On mobile: Swipe left for next conversation
-- Composing both replies / and new new posts
-- Liking
-
-ActivityPub activities are currently created in the frontend.
-
-#### Configuration
-
-Currently, the authorization and user are hardcoded in `buffalo/src/config.js`.
-
-#### Development
-
-`npm` is used for package management. The root directory with the package files is `buffalo`.
-
-There are some `jest` tests. Code is formatted with `prettier`. Source can be linted with `eslint`.

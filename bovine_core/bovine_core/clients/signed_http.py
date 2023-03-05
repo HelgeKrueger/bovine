@@ -20,7 +20,7 @@ async def signed_get(
     url: str,
     headers: dict = {},
 ) -> aiohttp.ClientResponse:
-    logger.debug(f"Signed get with {private_key} on {url}")
+    logger.debug(f"Signed get with {public_key_url} on {url}")
 
     parsed_url = urlparse(url)
     host = parsed_url.netloc
@@ -53,7 +53,7 @@ def signed_event_source(
     url: str,
     headers: dict = {},
 ):
-    logger.debug(f"Signed event source with {private_key} on {url}")
+    logger.debug(f"Signed event source with {public_key_url} on {url}")
 
     parsed_url = urlparse(url)
     host = parsed_url.netloc
@@ -86,7 +86,7 @@ async def signed_post(
     headers: dict = {},
     content_type=None,
 ) -> aiohttp.ClientResponse:
-    logger.debug(f"Signed post with {private_key} on {url}")
+    logger.debug(f"Signed post with {public_key_url} on {url}")
 
     parsed_url = urlparse(url)
     host = parsed_url.netloc

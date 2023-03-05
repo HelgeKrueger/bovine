@@ -23,7 +23,9 @@ async def add_to_queue(
     # If I do this, I could also access the session in a similar way
     # This would simplify the processor interface
 
-    queues = current_app.config["queue_manager"].get_queues_for_actor(actor["id"])
+    event_source = actor["endpoints"]["eventSource"]
+
+    queues = current_app.config["queue_manager"].get_queues_for_actor(event_source)
 
     logging.debug(f"Adding items to {len(queues)} queues")
 

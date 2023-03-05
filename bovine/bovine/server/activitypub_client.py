@@ -141,14 +141,13 @@ async def server_sent_events(actor_name: str):
     if "text/event-stream" not in request.accept_mimetypes:
         abort(400)
 
-    queue_manager = current_app.config["queue_manager"]
-
     local_user = await current_app.config["get_user"](actor_name)
     if not has_authorization(local_user):
         return {"status": "access denied"}, 401
 
     logger.info(f"Opening stream for {actor_name}")
 
+    queue_manager = current_app.config["queue_manager"]
     queue_id, queue = queue_manager.new_queue_for_actor(actor_name)
 
     async def send_events():

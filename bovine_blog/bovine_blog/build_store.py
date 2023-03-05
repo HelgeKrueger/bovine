@@ -26,6 +26,9 @@ async def get_user_from_bovine_user_manager(name):
 
     user = await manager.get_user_for_name(name)
 
+    if user is None:
+        return
+
     endpoints = [x for x in user.endpoints if x.endpoint_type == EndpointType.ACTOR]
     keypair = user.keypairs[0]
 

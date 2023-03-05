@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from urllib.parse import urljoin
@@ -8,7 +9,7 @@ from bovine.utils.server import ordered_collection_responder
 from bovine_core.types import Visibility
 from bovine_store.store.collection import collection_count, collection_items
 from bovine_user.types import EndpointType
-from quart import Blueprint, current_app, g, request
+from quart import Blueprint, current_app, g, make_response, request
 from quart_auth import current_user
 
 from .process.process import default_outbox_process, process_inbox, send_outbox_item
@@ -64,14 +65,12 @@ async def endpoints_get(identifier):
             {"content-type": "application/activity+json"},
         )
 
-    retriever = g.retriever
-
     if endpoint_information.endpoint_type == EndpointType.ACTOR:
         activity_pub, actor = await manager.get_activity_pub(
             endpoint_information.bovine_user.hello_sub
         )
 
-        if endpoint_path == retriever:
+        if endpoint_path == g.retriever:
             return (
                 actor.build(visibility=Visibility.OWNER),
                 200,
@@ -84,19 +83,28 @@ async def endpoints_get(identifier):
             {"content-type": "application/activity+json"},
         )
 
+    if endpoint_information.endpoint_type == EndpointType.EVENT_SOURCE:
+        activity_pub, actor = await manager.get_activity_pub(
+            endpoint_information.bovine_user.hello_sub
+        )
+        actor = actor.build(visibility=Visibility.OWNER)
+        if g.retriever != actor["id"]:
+            return {"status": "unauthorized"}, 401
+        return await handle_event_source(endpoint_path, activity_pub, actor)
+
     arguments = {
         name: request.args.get(name)
         for name in ["first", "last", "min_id", "max_id"]
         if request.args.get(name) is not None
     }
 
-    logger.info("Retrieving %s for %s", endpoint_path, retriever)
+    logger.info("Retrieving %s for %s", endpoint_path, g.retriever)
 
     async def ccount():
-        return await collection_count(retriever, endpoint_path)
+        return await collection_count(g.retriever, endpoint_path)
 
     async def citems(**kwargs):
-        return await collection_items(retriever, endpoint_path, **kwargs)
+        return await collection_items(g.retriever, endpoint_path, **kwargs)
 
     return await ordered_collection_responder(
         endpoint_path,
@@ -183,3 +191,48 @@ async def proxy_url_response(activity_pub, actor):
     await object_store.store("FIXME", response, visible_to=[actor["id"]])
 
     return response, 200
+
+
+async def handle_event_source(endpoint_path, activity_pub, actor):
+    if endpoint_path != actor["endpoints"]["eventSource"]:
+        return {"status": "unauthorized"}, 401
+
+    logger.info("Opening event source for %s", actor["name"])
+
+    queue_manager = current_app.config["queue_manager"]
+    queue_id, queue = queue_manager.new_queue_for_actor(endpoint_path)
+
+    async def send_events():
+        while True:
+            try:
+                try:
+                    event = await asyncio.wait_for(queue.get(), timeout=10)
+                    logger.debug(f"Sending event {event.encode()}")
+                    yield event.encode()
+                    queue.task_done()
+                except asyncio.TimeoutError:
+                    yield (":" + " " * 2048 + "\n").encode("utf-8")
+
+            except asyncio.CancelledError as e:
+                queue_manager.remove_queue_for_actor(endpoint_path, queue_id)
+
+                logger.info("Removing %s from %s", queue_id, actor["name"])
+                raise e
+
+    response = await make_response(
+        send_events(),
+        {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            "Transfer-Encoding": "chunked",
+        },
+    )
+    response.timeout = None
+
+    # last_event_id = request.headers.get("last-event-id")
+    # if last_event_id:
+    #     current_app.add_background_task(
+    #         enqueue_missing_events, queue, last_event_id, actor["name"]
+    #     )
+
+    return response

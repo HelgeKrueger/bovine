@@ -63,3 +63,13 @@ async def test_webfinger_alice(blog_test_env):  # noqa: F811
     # LABEL: fedi-webfinger-username-is-preferredUsername
     actor_result = await blog_test_env.get_activity(self_element["href"])
     assert actor_result["preferredUsername"] == username
+
+
+async def test_webfinger_unknown(blog_test_env):  # noqa: F811
+    username = "unknown"
+    account_name = f"{username}@my_domain"
+
+    result = await blog_test_env.get(
+        f"/.well-known/webfinger?resource=acct:{account_name}"
+    )
+    assert result.status_code == 404

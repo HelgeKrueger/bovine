@@ -53,6 +53,7 @@ async def startup():
 
 app.config.update(
     {
+        "host": f"http://{domain}",
         "DOMAIN": domain,
         "validate_signature": return_true,
         "get_user": data_store.get_user,

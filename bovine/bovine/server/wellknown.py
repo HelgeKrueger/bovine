@@ -52,3 +52,16 @@ async def webfinger() -> tuple[dict, int]:
         200,
         {"content-type": "application/jrd+json"},
     )
+
+
+@wellknown.get("/host-meta")
+async def wellknown_host_meta():
+    host = current_app.config["host"]
+    return (
+        f"""<?xml version="1.0" encoding="UTF-8"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Link rel="lrdd" template="{host}/.well-known/webfinger?resource={{uri}}"/>
+</XRD>""",
+        200,
+        {"content-type": "application/xrd+xml"},
+    )

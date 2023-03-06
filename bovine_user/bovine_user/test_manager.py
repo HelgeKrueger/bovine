@@ -48,3 +48,11 @@ async def test_get_acitivity_pub(db_url):  # noqa F811
 
         assert isinstance(activity_pub_actor, ActivityPubActor)
         assert isinstance(actor, ActorBuilder)
+
+
+async def test_bovine_user_manager_user_count(db_url):  # noqa F811
+    manager = BovineUserManager("https://my_domain")
+    assert await manager.user_count() == 0
+
+    await manager.register("uuid", "handle")
+    assert await manager.user_count() == 1

@@ -101,3 +101,6 @@ class BovineUserManager:
         ).prefetch_related("bovine_user")
 
         return user_endpoint
+
+    async def user_count(self):
+        return await BovineUser.filter().count()

@@ -9,9 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 async def retrieve_remote_object(retriever, object_id, include=[]):
-    result = await StoredJsonObject.get_or_none(id=object_id).prefetch_related(
-        "visible_to"
-    )
+    result = await StoredJsonObject.get_or_none(id=object_id)
+
+    # .prefetch_related(
+    #     "visible_to"
+    # )
+    #
     if not await has_access(result, retriever):
         return None
 

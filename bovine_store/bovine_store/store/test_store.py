@@ -3,6 +3,13 @@ from bovine_store.utils.test import store  # noqa F401
 from . import store_remote_object
 
 
+# FIXME Collections should not be stored
+
+# FIXME Local / Remote is notspecified i.e. the ObjectType property
+# FIXME The ObjectType is necessary to effectively clean up remote
+# FIXME objects after say a few days
+
+
 async def test_store_retrieval(store):  # noqa F811
     first_id = "https://my_domain/first"
     second_id = "https://my_domain/second"

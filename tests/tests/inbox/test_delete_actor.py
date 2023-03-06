@@ -1,5 +1,3 @@
-from bovine_tortoise.models import InboxEntry
-
 from utils import get_activity_from_json
 from utils.blog_test_env import blog_test_env  # noqa F401
 
@@ -10,7 +8,6 @@ async def test_mastodon_delete_actor(blog_test_env):  # noqa F811
     result = await blog_test_env.send_to_inbox(data)
 
     assert result.status_code == 202
-    assert await InboxEntry.filter().count() == 0
 
     result_get = await blog_test_env.get_from_inbox()
 

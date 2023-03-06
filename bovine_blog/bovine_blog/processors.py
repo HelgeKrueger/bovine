@@ -11,15 +11,6 @@ from bovine_store.processors.content.store_incoming import (
     store_incoming,
 )
 from bovine_store.processors.fetch.incoming_actor import incoming_actor
-
-# from bovine_tortoise.processors.inbox import (
-#     remove_from_database,
-#     store_in_database,
-#     update_in_database,
-# )
-from bovine_tortoise.processors.inbox_follow import (
-    record_accept_follow,
-)  # accept_follow_request,
 from bovine_tortoise.processors.outbox import (
     create_outbox_entry,
     delete_outbox_entry,
@@ -27,11 +18,17 @@ from bovine_tortoise.processors.outbox import (
 )
 from markdown import Markdown
 
+# from bovine_tortoise.processors.inbox import (
+#     remove_from_database,
+#     store_in_database,
+#     update_in_database,
+# )
+
+
 default_inbox_process = (
     ProcessorList()
     .add_for_types(
         **default_content_processors,
-        Accept=record_accept_follow,
         Announce=fetch_object_and_process,
         # Update=update_in_database,
         # Delete=incoming_delete,

@@ -1,10 +1,11 @@
 import logging
 
 from bovine.types import LocalActor as LocalActor
+from bovine.types.base_count_and_items import BaseCountAndItems
 from bovine_store.store.collection import collection_count, collection_items
 from tortoise import Tortoise
 
-from bovine_tortoise.models import Actor, InboxEntry, OutboxEntry
+from bovine_tortoise.models import Actor, OutboxEntry
 
 from .utils.count_and_items import CountAndItems
 
@@ -29,7 +30,7 @@ class ManagedDataStore:
         if streams is None:
             self.streams = {
                 "outbox": CountAndItems(OutboxEntry),
-                "inbox": CountAndItems(InboxEntry),
+                "inbox": BaseCountAndItems(),
             }
         else:
             self.streams = streams
@@ -54,9 +55,7 @@ class ManagedDataStore:
             result.private_key,
             result.actor_type,
         )
-        local_user = local_user.set_inbox_process(
-            self.inbox_process
-        ).set_outbox_process(self.outbox_process)
+        local_user = local_user.set_outbox_process(self.outbox_process)
 
         for name, count_and_items in self.streams.items():
             local_user = local_user.set_stream(name, count_and_items)
@@ -77,13 +76,4 @@ class ManagedDataStore:
 
 
 async def inbox_items_for_actor_from(actor_name, last_database_id):
-    actor = await Actor.get_or_none(account=actor_name)
-    if not actor:
-        logger.warning(f"Lookup for unknown actor name {actor_name}")
-        return None
-
-    results = (
-        await InboxEntry.filter(actor=actor, id__gt=last_database_id).limit(100).all()
-    )
-
-    return [{"data": x.content, "id": x.id} for x in results]
+    return []

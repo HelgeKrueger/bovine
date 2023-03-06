@@ -77,7 +77,7 @@ async def test_webfinger_unknown(blog_test_env):  # noqa: F811
     assert result.status_code == 404
 
 
-async def test_webfinger_host_met(blog_test_env):  # noqa: F811
+async def test_webfinger_host_meta(blog_test_env):  # noqa: F811
     result = await blog_test_env.get("/.well-known/host-meta")
 
     assert result.status_code == 200

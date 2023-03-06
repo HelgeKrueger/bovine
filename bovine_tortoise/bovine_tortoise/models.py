@@ -46,17 +46,6 @@ class Following(Model):
     followed_on = fields.DatetimeField()
 
 
-class InboxEntry(Model):
-    id = fields.IntField(pk=True)
-    actor = fields.ForeignKeyField("models.Actor", related_name="inbox_entries")
-    created = fields.DatetimeField()
-    content = fields.JSONField()
-
-    conversation = fields.CharField(max_length=255, null=True)
-    read = fields.BooleanField(default=True)
-    content_id = fields.CharField(max_length=255, null=True)
-
-
 class OutboxEntry(Model):
     id = fields.IntField(pk=True)
     actor = fields.ForeignKeyField("models.Actor", related_name="outbox_entries")

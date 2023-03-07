@@ -29,6 +29,10 @@ black = "^23.1.0"
 jsonschema = "^4.17.3"
 
 
+
+[tool.poetry.group.test.dependencies]
+pytest-cov = "^4.0.0"
+
 [tool.pytest.ini_options]
 asyncio_mode="auto"
 log_cli= 1

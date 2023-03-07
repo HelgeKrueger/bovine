@@ -39,6 +39,8 @@ async def test_on_accept_is_added_to_followers(blog_test_env):  # noqa F811
 
     await wait_for_number_of_entries_in_inbox(blog_test_env, 1)
 
+    # LABEL: ap-s2s-follow
+
     accept = build_accept(actor_id, follow).build()
 
     result = await blog_test_env.send_to_outbox(accept)
@@ -55,6 +57,9 @@ async def test_on_accept_is_added_to_followers(blog_test_env):  # noqa F811
     accept_from_server = await blog_test_env.proxy(new_location)
 
     await asyncio.sleep(0.3)
+
+    # LABLE: ap-s2s-follow-accept
+    # LABEL: ap-c2s-follow-activity
 
     followers = await blog_test_env.get_activity(blog_test_env.actor["followers"])
 

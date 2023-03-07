@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L43)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
 
 Content-Type should be `application/activity+json`
 
@@ -115,10 +115,14 @@ see [5.1 Outbox](https://www.w3.org/TR/activitypub/#outbox).
 
 #### ap-actor-following
 
+- [test_actor.py](../tests/tests/test_actor.py#L23)
+
 A link to an ActivityStreams collection of the actors that this actor is following;
 see [5.4 Following Collection](https://www.w3.org/TR/activitypub/#following)
 
 #### ap-collections-following
+
+- [test_actor.py](../tests/tests/test_actor.py#L25)
 
 The following collection MUST be either an OrderedCollection or a Collection
 
@@ -128,10 +132,14 @@ MAY be filtered on privileges of an authenticated user or as appropriate when no
 
 #### ap-actor-followers
 
+- [test_actor.py](../tests/tests/test_actor.py#L28)
+
 A link to an \[ActivityStreams\] collection of the actors that follow this actor;
 see [5.3 Followers Collection](https://www.w3.org/TR/activitypub/#followers)
 
 #### ap-collections-followers
+
+- [test_actor.py](../tests/tests/test_actor.py#L30)
 
 The followers collection MUST be either an OrderedCollection or a Collection
 
@@ -164,7 +172,12 @@ __MAY__: A short username which may be used to refer to the actor
 
 #### ap-actor-endpoints
 
+- [test_actor.py](../tests/tests/test_actor.py#L33)
+- [test_actor.py](../tests/tests/test_actor.py#L36)
+
 #### ap-actor-endpoints-proxyUrl
+
+- [test_actor.py](../tests/tests/test_actor.py#L36)
 
 #### ap-actor-endpoints-oauthAuthorizationEndpoint
 
@@ -179,6 +192,9 @@ __MAY__: A short username which may be used to refer to the actor
 ### [Collections](https://www.w3.org/TR/activitypub/#collections)
 
 #### ap-collections-reverse-chronological-order
+
+- [test_create_many_notes.py](../tests/tests/outbox/test_create_many_notes.py#L35)
+- [test_create_many_notes.py](../tests/tests/outbox/test_create_many_notes.py#L51)
 
 An OrderedCollection MUST be presented consistently in reverse chronological order.
 
@@ -205,6 +221,8 @@ MAY be filtered on privileges of an authenticated user or as appropriate when no
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 
 #### ap-c2s-post
+
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L57)
 
 Client to server interaction takes place through clients posting Activities to an actor's outbox. To do this, clients MUST discover the URL of the actor's outbox from their profile and then MUST make an HTTP POST request to this URL with the Content-Type of application/ld+json; profile="https://www.w3.org/ns/activitystreams". Servers MAY interpret a Content-Type or Accept header of application/activity+json as equivalent to application/ld+json; profile="https://www.w3.org/ns/activitystreams" for client-to-server interactions. The request MUST be authenticated with the credentials of the user to whom the outbox belongs. The body of the POST request MUST contain a single Activity (which MAY contain embedded objects), or a single non-Activity object which will be wrapped in a Create activity by the server.
 
@@ -267,6 +285,8 @@ The Delete activity is used to delete an already existing object. The side effec
 
 #### ap-c2s-follow-activity
 
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L62)
+
 The side effect of receiving this in an outbox is that the server SHOULD add the object to the actor's following Collection when and only if an Accept activity is subsequently received with this Follow activity as its object.
 
 #### ap-c2s-add-activity
@@ -303,7 +323,7 @@ POST requests (eg. to the inbox) MUST be made with a Content-Type of application
 
 #### ap-s2s-has-object
 
-- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L91)
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L96)
 
 Servers performing delivery to the inbox or sharedInbox properties of actors on other servers MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo.
 
@@ -373,13 +393,20 @@ The side effect of receiving this is that (assuming the object is owned by the s
 
 #### ap-s2s-follow
 
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L42)
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L61)
+
 The side effect of receiving this in an inbox is that the server SHOULD generate either an Accept or Reject activity with the Follow as the object and deliver it to the actor of the Follow. The Accept or Reject MAY be generated automatically, or MAY be the result of user input (possibly after some delay in which the user reviews). Servers MAY choose to not explicitly send a Reject in response to a Follow, though implementors ought to be aware that the server sending the request could be left in an intermediate state. For example, a server might not send a Reject to protect a user's privacy.
 
 #### ap-s2s-follow-accept
 
+- [test_on_accept_is_added_to_followers.py](../tests/tests/outbox/test_on_accept_is_added_to_followers.py#L61)
+
 In the case of receiving an Accept referencing this Follow as the object, the server SHOULD add the actor to the object actor's Followers Collection. In the case of a Reject, the server MUST NOT add the actor to the object actor's Followers Collection.
 
 #### ap-s2s-accept
+
+- [test_follow_then_accept_added_to_following_full_accept.py](../tests/tests/outbox/test_follow_then_accept_added_to_following_full_accept.py#L59)
 
 If the object of an Accept received to an inbox is a Follow activity previously sent by the receiver, the server SHOULD add the actor to the receiver's Following Collection.
 

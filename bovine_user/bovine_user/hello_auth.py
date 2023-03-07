@@ -59,4 +59,4 @@ async def hello_id_token():
 
     login_user(AuthUser(sub))
 
-    return redirect("/buffalo")
+    return redirect("/buffalo/")

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bovine-user"
-version = "0.0.1"
+version = "0.1.0-alpha"
 description = "User management for bovine"
 authors = ["Helge <helge.krueger@gmail.com>"]
 readme = "README.md"

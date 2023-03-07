@@ -54,6 +54,7 @@ class BlogTestEnv:
         return result
 
     async def send_to_outbox(self, activity):
+        # LABEL ap-c2s-post
         result = await self.client.post(
             self.actor["outbox"],
             headers=fake_post_headers,

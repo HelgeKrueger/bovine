@@ -56,6 +56,8 @@ async def test_follow_then_accept_is_added_to_following_full_accept(
 
     await wait_for_number_of_entries_in_inbox(blog_test_env, 1)
 
+    # LABEL: ap-s2s-accept
+
     following = await blog_test_env.get_activity(blog_test_env.actor["following"])
 
     assert following["totalItems"] == 1

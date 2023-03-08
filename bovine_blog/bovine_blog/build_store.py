@@ -37,7 +37,7 @@ async def get_user_from_bovine_user_manager(name):
         endpoints[0].name,
         keypair.public_key,
         keypair.private_key,
-        "Person",
+        "Tombstone",
     )
 
 

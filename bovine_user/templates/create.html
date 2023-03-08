@@ -2,11 +2,31 @@
   <body>
     <h1>Welcome to Bovine</h1>
 
-    Please choose a handle name.
+    Please note
+    <ul>
+      <li>
+        This server is in active development. All data might be deleted because
+        an incorrectly implemented cleanup procedure. Inbox data will be deleted
+        after a few days (like 3).
+      </li>
+      <li><a href="https://github.com/HelgeKrueger/bovine">Bovine Code</a></li>
+      <li><a href="https://codeberg.org/helge/Buffalo">Buffalo Code</a></li>
+    </ul>
+
+    Please choose a handle name. This handle will be used for your account in
+    the form of "handle_name@domain".
 
     <form action="{{ register_url }}" method="post">
       <input type="text" name="handle" />
       <input type="submit" value="OK" />
     </form>
+
+    <h2>Rules</h2>
+    <ol>
+      <li>Don't cause trouble</li>
+      <li>Don't do anything illegal</li>
+      <li>Generally be a nice person</li>
+      <li>Help development</li>
+    </ol>
   </body>
 </html>

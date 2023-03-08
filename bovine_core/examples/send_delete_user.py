@@ -15,8 +15,6 @@ async def send_delete(client, target):
 
         shared_inbox = data["endpoints"]["sharedInbox"]
 
-        print(shared_inbox)
-
         account = "https://mymath.rocks/activitypub/test"
 
         delete = {
@@ -28,14 +26,21 @@ async def send_delete(client, target):
             "object": account,
         }
 
-        print(await client.post(shared_inbox, json.dumps(delete)))
+        response = await client.post(shared_inbox, json.dumps(delete))
+        print(shared_inbox, response.status)
 
 
 parser = ArgumentParser()
-parser.add_argument("target")
+parser.add_argument("--config", default="munchingcow.toml")
 args = parser.parse_args()
 
-with open("test.toml", "rb") as f:
+with open(args.config, "rb") as f:
     client = ActivityPubClient.from_toml_file(f)
 
-asyncio.run(send_delete(client, args.target))
+with open("server_list") as f:
+    for line in f:
+        try:
+            asyncio.run(send_delete(client, line.strip()))
+        except Exception as e:
+            print(e)
+            pass

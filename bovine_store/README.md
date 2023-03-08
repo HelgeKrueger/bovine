@@ -4,42 +4,23 @@
 local ActivityPub objects and caching of remote ActivityPub
 objects.
 
-The goal is two fold:
+Some goals and design decisions:
 
-- Handle visibility and ability to update content
-- Simplify working with json-ld
+- Objects with an id are stored separately and can be looked up via this id. This is done by json-ld magic.
+- Collections are not stored. Instead for local items, the information that the item belongs to a collection is stored. `bovine_store.store.collection` contains the coroutines necessary to build the collection from this information. All collections are assumed to ActivityStreams 2 `OrderedCollection` and ordered by the database id.
+- Every object is currently assigned an `owner`. The idea was that an activity is owner by its actor. This can then be propagated to the subobjects, e.g. the object, attachments, and so on. Unfortunately, this is too naive:
+  - Some implementations include remote objects, e.g. the object being liked in a Like Activity.
+  - Mastodon includes its custom emojis. These have an id and should probably belong to the server.
+- There are three kinds of visibility.
+  - An object is always visible to its owner
+  - Public Objects are assigned `VisibilityType.PUBLIC`. These can viewed by all users providing valid authentication.
+  - Furthemore, by adding actors to the `VisibileTo` list of an object. This can be made visible to the corresponding actors.
+- An item is visible to be inside a collection if and only if said item is visible. This should probably be augmented by visible to the owner of the collection.
+- `bovine_store.blueprint` contains a quart blueprint with the basic retrievel mechanism for the stored objects.
+
+Should the render collection routines be included?
 
 ## Examples
 
 A basic example is contained in `examples/basic_app.py`. Note
 this is a very basic example.
-
-## Permissions
-
-Permissions, i.e. who can view what, are a messy subject.
-The simplest version is that an actor can only view, what
-gets delivered to its inbox. This is broken by the use
-of shared inboxes, fetching remote data, and so on. So one
-needs a model for this. I will try to implement the following
-principles:
-
-- Extract actors from the to, cc, bto, bcc fields
-- Extract collections from these fields
-- Check if public
-
-### Access
-
-- A remote actor can only access objects owned by this store.
-- Any valid actor can access a public object
-- A named actor can access objects, he is named for
-
-Collections are resolved on storage of remote objects.
-
-## Data fetching
-
-Remote content is fetched using appropriate means.
-
-## JSON-LD
-
-json-ld is a mess to store. This implementation will simplify stuff. Generally, objects with an id are stored
-separately.

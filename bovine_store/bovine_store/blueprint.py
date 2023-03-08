@@ -37,7 +37,7 @@ async def retrieve_from_store(uuid):
     return (
         {
             "@context": "https://www.w3.org/ns/activitystreams",
-            "type": "Object",
+            "type": "Tombstone",
             "id": object_path,
             "name": "Ceci n'est pas un object",
         },

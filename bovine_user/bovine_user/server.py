@@ -31,6 +31,8 @@ async def manage_user():
     ap_actor, actor = await manager.get_activity_pub(hello_sub)
 
     if actor:
+        if "json" not in request.headers["accept"]:
+            return redirect("/buffalo/")
         return actor.build(visibility=Visibility.OWNER)
 
     return await render_template(

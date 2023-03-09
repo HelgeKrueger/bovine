@@ -1,12 +1,8 @@
 from bovine import get_bovine_user
 from bovine.types import LocalActor
 from bovine.utils.in_memory_store import InMemoryUserStore
-
-# from bovine_tortoise import ManagedDataStore
 from bovine_user.types import EndpointType
 from quart import current_app
-
-# from .processors import default_inbox_process, default_outbox_process
 
 
 class Chain:

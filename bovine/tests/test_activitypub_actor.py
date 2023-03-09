@@ -100,7 +100,7 @@ async def test_activitypub_actor_inbox() -> None:
         headers={"Accept": "application/activity+json"},
     )
 
-    assert response.status_code == 401
+    assert response.status_code == 405
 
 
 async def test_activitypub_actor_outbox() -> None:

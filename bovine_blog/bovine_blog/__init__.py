@@ -8,7 +8,6 @@ from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_store.blueprint import bovine_store_blueprint
 from bovine_store.config import configure_bovine_store
 from bovine_tortoise.caches import build_public_key_fetcher
-from bovine_tortoise.outbox_blueprint import outbox_blueprint
 from bovine_tortoise.storage import storage_blueprint
 from bovine_tortoise.storage.storage import Storage
 from bovine_user.config import configure_bovine_user
@@ -71,8 +70,6 @@ app.config.update(
 
 app.before_request(rewrite_activity_request)
 app.register_blueprint(default_configuration)
-app.register_blueprint(outbox_blueprint, url_prefix="/testing_notes")
-app.register_blueprint(outbox_blueprint, url_prefix="/activitypub")
 app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")

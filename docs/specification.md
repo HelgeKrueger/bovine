@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L43)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L90)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
 
 Content-Type should be `application/activity+json`
 
@@ -218,7 +218,7 @@ MAY be filtered on privileges of an authenticated user or as appropriate when no
 
 #### ap-c2s-post
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L57)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L56)
 
 Client to server interaction takes place through clients posting Activities to an actor's outbox. To do this, clients MUST discover the URL of the actor's outbox from their profile and then MUST make an HTTP POST request to this URL with the Content-Type of application/ld+json; profile="https://www.w3.org/ns/activitystreams". Servers MAY interpret a Content-Type or Accept header of application/activity+json as equivalent to application/ld+json; profile="https://www.w3.org/ns/activitystreams" for client-to-server interactions. The request MUST be authenticated with the credentials of the user to whom the outbox belongs. The body of the POST request MUST contain a single Activity (which MAY contain embedded objects), or a single non-Activity object which will be wrapped in a Create activity by the server.
 

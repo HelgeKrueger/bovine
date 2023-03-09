@@ -87,41 +87,6 @@ class LocalActor:
         if self.outbox_process:
             await self.outbox_process(activity, self)
 
-    def item_count_for(self, stream_name: str):
-        if self.collection_item_count and stream_name == "inbox":
-            logger.warning("using new interface")
-
-            async def item_count_new():
-                return await self.collection_item_count(
-                    self.url, self.url + "/" + stream_name
-                )
-
-            return item_count_new
-
-        else:
-
-            async def item_count():
-                return await self.streams[stream_name].item_count(self)
-
-        return item_count
-
-    def items_for(self, stream_name: str):
-        if self.collection_items and stream_name == "inbox":
-
-            async def items_new(**kwargs):
-                return await self.collection_items(
-                    self.url, self.url + "/" + stream_name, **kwargs
-                )
-
-            return items_new
-
-        else:
-
-            async def items(**kwargs):
-                return await self.streams[stream_name].items(self, **kwargs)
-
-        return items
-
     def generate_uuid(self):
         return f"{self.url}/{uuid.uuid4()}"
 

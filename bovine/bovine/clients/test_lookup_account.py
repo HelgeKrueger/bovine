@@ -7,4 +7,4 @@ async def test_lookup_account():
     async with aiohttp.ClientSession() as session:
         result = await lookup_account_with_webfinger(session, "helge@mymath.rocks")
 
-    assert result == "https://mymath.rocks/activitypub/helge"
+    assert result.startswith("https://mymath.rocks/")

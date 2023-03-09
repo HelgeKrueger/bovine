@@ -53,14 +53,12 @@ Webfinger is specified in [RFC-7033](https://datatracker.ietf.org/doc/html/rfc70
 #### webfinger-subject
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L20)
-- [test_webfinger.py](../tests/tests/test_webfinger.py#L52)
 
 [Subject](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.1) should be present.
 
 #### webfinger-content-type
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L15)
-- [test_webfinger.py](../tests/tests/test_webfinger.py#L47)
 
 [RFC-7033 Section 10.2](https://datatracker.ietf.org/doc/html/rfc7033#section-10.2) specifies
 that the answer to a webfinger request should have content-type `application/jrd+json`.
@@ -69,7 +67,6 @@ Jrd stands for _JSON Resource Descriptor_.
 #### fedi-webfinger-self
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L23)
-- [test_webfinger.py](../tests/tests/test_webfinger.py#L55)
 
 The [links](https://datatracker.ietf.org/doc/html/rfc7033#section-4.4.4) of the webfinger
 response contain an element with `"rel":"self"` and `"type":"application/activity+json"`
@@ -78,7 +75,6 @@ pointing to the activity pub actor profile.
 #### fedi-webfinger-username-is-preferredUsername
 
 - [test_webfinger.py](../tests/tests/test_webfinger.py#L33)
-- [test_webfinger.py](../tests/tests/test_webfinger.py#L65)
 
 The entry of `preferredUsername` in the actor profile obtained above corresponds
 to the username part of the account used in webfinger.

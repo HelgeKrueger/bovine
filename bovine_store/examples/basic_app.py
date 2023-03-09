@@ -4,7 +4,10 @@ from quart import Quart, g
 from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
 
+from bovine_store.store.collection import add_to_collection
 from bovine_store.config import configure_bovine_store
+from bovine_store.blueprint import bovine_store_blueprint
+from bovine_store.collection import collection_response
 
 logging.basicConfig(level=logging.INFO)
 
@@ -46,14 +49,25 @@ async def startup():
         },
     )
 
+    await add_to_collection("/endpoint", result[0]["id"])
+
     print()
     print(f"Open {result[0]['id']} to see a document in the store")
+    print("Open http://localhost:5000/collection to see a collection")
     print()
 
 
 @app.before_request
 async def add_actor():
-    g.actor_id = "owner"
+    g.retriever = "owner"
+
+
+app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")
+
+
+@app.get("/collection")
+async def collection():
+    return await collection_response("/endpoint")
 
 
 if __name__ == "__main__":

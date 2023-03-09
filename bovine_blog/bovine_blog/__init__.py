@@ -18,7 +18,7 @@ from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
 
 from .build_store import build_get_user
-from .endpoints import endpoints
+from .endpoints import add_authorization, endpoints
 from .html import html_blueprint
 from .stores.tortoise import TortoiseStore
 from .utils import rewrite_activity_request
@@ -77,6 +77,8 @@ app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")
 app.register_blueprint(endpoints, url_prefix="/endpoints")
+
+bovine_store_blueprint.before_request(add_authorization)
 app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")
 
 

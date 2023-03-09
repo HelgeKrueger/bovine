@@ -5,9 +5,8 @@ from urllib.parse import urljoin
 
 from bovine.server.rewrite_request import add_authorization_to_request
 from bovine.types import ProcessingItem
-from bovine.utils.server import ordered_collection_responder
 from bovine_core.types import Visibility
-from bovine_store.store.collection import collection_count, collection_items
+from bovine_store.collection import collection_response
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, make_response, request
 from quart_auth import current_user
@@ -92,26 +91,7 @@ async def endpoints_get(identifier):
             return {"status": "unauthorized"}, 401
         return await handle_event_source(endpoint_path, activity_pub, actor)
 
-    arguments = {
-        name: request.args.get(name)
-        for name in ["first", "last", "min_id", "max_id"]
-        if request.args.get(name) is not None
-    }
-
-    logger.info("Retrieving %s for %s", endpoint_path, g.retriever)
-
-    async def ccount():
-        return await collection_count(g.retriever, endpoint_path)
-
-    async def citems(**kwargs):
-        return await collection_items(g.retriever, endpoint_path, **kwargs)
-
-    return await ordered_collection_responder(
-        endpoint_path,
-        ccount,
-        citems,
-        **arguments,
-    )
+    return await collection_response(endpoint_path)
 
 
 @endpoints.post("/<identifier>")
@@ -184,9 +164,6 @@ async def proxy_url_response(activity_pub, actor):
             return data, 200
 
     response = await activity_pub.get(url)
-
-    # data = json.loads(await response.text())
-    logger.info(response)
 
     await object_store.store("FIXME", response, visible_to=[actor["id"]])
 

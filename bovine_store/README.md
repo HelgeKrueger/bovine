@@ -17,10 +17,20 @@ Some goals and design decisions:
   - Furthemore, by adding actors to the `VisibileTo` list of an object. This can be made visible to the corresponding actors.
 - An item is visible to be inside a collection if and only if said item is visible. This should probably be augmented by visible to the owner of the collection.
 - `bovine_store.blueprint` contains a quart blueprint with the basic retrievel mechanism for the stored objects.
-
-Should the render collection routines be included?
+- `bovine_store.collection` contains the helper routine for collection responses.
 
 ## Examples
 
-A basic example is contained in `examples/basic_app.py`. Note
-this is a very basic example.
+A demonstration webserver can be seen using
+
+```bash
+poetry run python examples/create_table.py
+poetry run python examples/basic_app.py
+```
+
+Note this is a very basic example. Instructions what the example does are
+printed to the command line after start.
+
+Note: This example creates two files `db.sqlite3`, which contains the
+database and `context_cache.sqlite`, which contains the cache of json-ld
+contexts. Furthemore configuration values are read from `bovine_config.toml`.

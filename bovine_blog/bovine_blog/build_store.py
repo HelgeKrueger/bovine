@@ -1,11 +1,12 @@
 from bovine import get_bovine_user
 from bovine.types import LocalActor
 from bovine.utils.in_memory_store import InMemoryUserStore
-from bovine_tortoise import ManagedDataStore
+
+# from bovine_tortoise import ManagedDataStore
 from bovine_user.types import EndpointType
 from quart import current_app
 
-from .processors import default_inbox_process, default_outbox_process
+# from .processors import default_inbox_process, default_outbox_process
 
 
 class Chain:
@@ -47,16 +48,16 @@ def build_get_user(domain: str):
     bovine_store = InMemoryUserStore()
     bovine_store.add_user(bovine_user)
 
-    data_store = ManagedDataStore(
-        inbox_process=default_inbox_process,
-        outbox_process=default_outbox_process,
-    )
+    # data_store = ManagedDataStore(
+    #     inbox_process=default_inbox_process,
+    #     outbox_process=default_outbox_process,
+    # )
 
     return (
         bovine_user,
         Chain(
             bovine_store.get_user,
-            data_store.get_user,
+            # data_store.get_user,
             get_user_from_bovine_user_manager,
         ).execute,
     )

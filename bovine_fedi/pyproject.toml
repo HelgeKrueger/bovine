@@ -9,7 +9,6 @@ packages = [{include = "bovine_fedi"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "^3.8.3"
-bovine = {path = "../bovine", develop=true}
 markdown = "^3.4.1"
 python-markdown-math = "^0.8"
 aerich = "^0.7.1"
@@ -34,6 +33,10 @@ isort = "^5.12.0"
 black = "^23.1.0"
 rich = "^13.3.1"
 
+
+
+[tool.poetry.group.test.dependencies]
+jsonschema = "^4.17.3"
 
 [tool.pytest.ini_options]
 asyncio_mode="auto"

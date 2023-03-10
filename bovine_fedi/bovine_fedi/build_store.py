@@ -1,8 +1,9 @@
-from bovine import get_bovine_user
-from bovine.types import LocalActor
-from bovine.utils.in_memory_store import InMemoryUserStore
 from bovine_user.types import EndpointType
 from quart import current_app
+
+from bovine_fedi.types import LocalActor
+from bovine_fedi.utils import get_bovine_user
+from bovine_fedi.utils.in_memory_store import InMemoryUserStore
 
 
 class Chain:

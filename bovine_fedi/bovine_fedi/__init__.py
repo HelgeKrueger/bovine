@@ -2,13 +2,11 @@ import logging
 import os
 
 import aiohttp
-from bovine.server import default_configuration
-from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_store.blueprint import bovine_store_blueprint
 from bovine_store.config import configure_bovine_store
 from bovine_user.config import configure_bovine_user
-from bovine_user.server import server
+from bovine_user.server import bovine_user_blueprint
 from quart import Quart
 from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
@@ -16,9 +14,12 @@ from tortoise.contrib.quart import register_tortoise
 from .build_store import build_get_user
 from .caches import build_public_key_fetcher
 from .endpoints import add_authorization, endpoints
+from .server import default_configuration
 from .storage import storage_blueprint
 from .storage.storage import Storage
 from .utils import rewrite_activity_request
+from .utils.queue_manager import QueueManager
+from .version import __version__
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
 logging.basicConfig(
@@ -73,7 +74,7 @@ app.config.update(
 app.before_request(rewrite_activity_request)
 app.register_blueprint(default_configuration)
 app.register_blueprint(storage_blueprint)
-app.register_blueprint(server, url_prefix="/bovine_user")
+app.register_blueprint(bovine_user_blueprint, url_prefix="/bovine_user")
 app.register_blueprint(endpoints, url_prefix="/endpoints")
 
 bovine_store_blueprint.before_request(add_authorization)

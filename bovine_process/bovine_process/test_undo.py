@@ -1,9 +1,9 @@
 import json
 
 from bovine_store.utils.test import store  # noqa F401
-from .types.processing_item import ProcessingItem
 
 from .content.store_incoming import store_incoming
+from .types.processing_item import ProcessingItem
 from .undo import undo
 
 

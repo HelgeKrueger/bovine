@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from bovine.utils.queue_manager import QueueManager
+from bovine_fedi.utils.queue_manager import QueueManager
 from bovine_fedi import app
 from bovine_fedi.utils import init
 from tortoise import Tortoise

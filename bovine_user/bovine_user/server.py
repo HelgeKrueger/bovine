@@ -11,8 +11,8 @@ from .utils import create_toml_file
 logger = logging.getLogger(__name__)
 
 
-server = Blueprint("server", __name__, template_folder="../templates/")
-server.register_blueprint(hello_auth, url_prefix="/hello")
+bovine_user_blueprint = Blueprint("server", __name__, template_folder="../templates/")
+bovine_user_blueprint.register_blueprint(hello_auth, url_prefix="/hello")
 
 cors_properties = {
     "allow_origin": ["http://localhost:*"],
@@ -21,7 +21,7 @@ cors_properties = {
 }
 
 
-@server.route("/")
+@bovine_user_blueprint.route("/")
 @route_cors(**cors_properties)
 @login_required
 async def manage_user():
@@ -40,7 +40,7 @@ async def manage_user():
     )
 
 
-@server.route("/toml")
+@bovine_user_blueprint.route("/toml")
 @login_required
 async def toml_file():
     hello_sub = current_user.auth_id
@@ -58,7 +58,7 @@ async def toml_file():
     )
 
 
-@server.post("/register")
+@bovine_user_blueprint.post("/register")
 @login_required
 async def register_user():
     await request.get_data(parse_form_data=True)
@@ -71,6 +71,6 @@ async def register_user():
     return redirect(url_for("server.manage_user"))
 
 
-@server.errorhandler(Unauthorized)
+@bovine_user_blueprint.errorhandler(Unauthorized)
 async def redirect_to_login(*_: Exception):
     return redirect(url_for("server.hello_auth.hello_login"))

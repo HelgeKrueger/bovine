@@ -50,3 +50,72 @@ async def update_id(data, retriever, store):
             data["object"]["id"] = await store.id_generator()
 
     return data
+
+
+from bovine_fedi.types import LocalActor
+
+__version__ = "0.0.4"
+
+
+def get_bovine_user(
+    domain: str,
+) -> LocalActor:
+    server_public_key, server_private_key = get_server_keys()
+
+    url = f"https://{domain}/activitypub/bovine"
+
+    bovine_user = LocalActor(
+        "bovine",
+        url,
+        server_public_key,
+        server_private_key,
+        "Application",
+        no_auth_fetch=True,
+    ).set_inbox_process(dump_incoming_inbox_to_stdout)
+
+    return bovine_user
+
+
+import os
+
+from bovine_core.utils.crypto import generate_public_private_key
+
+
+async def dump_incoming_inbox_to_stdout(local_user, result):
+    result.dump()
+    return local_user
+
+
+def get_server_keys():
+    public_key_path = ".files/server_public_key.pem"
+    private_key_path = ".files/server_private_key.pem"
+
+    return get_public_private_key_from_files(public_key_path, private_key_path)
+
+
+def get_public_private_key_from_files(public_key_path, private_key_path):
+    public_key = None
+    private_key = None
+
+    if os.path.exists(public_key_path):
+        with open(public_key_path) as f:
+            public_key = f.read()
+    if os.path.exists(private_key_path):
+        with open(private_key_path) as f:
+            private_key = f.read()
+
+    if public_key and private_key:
+        return public_key, private_key
+
+    public_key_pem, private_key_pem = generate_public_private_key()
+
+    if not os.path.exists(".files"):
+        os.mkdir(".files")
+
+    with open(public_key_path, "w") as f:
+        f.write(public_key_pem)
+
+    with open(private_key_path, "w") as f:
+        f.write(private_key_pem)
+
+    return public_key_pem, private_key_pem

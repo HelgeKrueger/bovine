@@ -5,9 +5,7 @@ import logging
 from bovine_core.activitystreams.utils import recipients_for_object, remove_public
 from bovine_store.store.collection import collection_all
 from quart import current_app
-from .types.processing_item import ProcessingItem
 
-from .utils.processor_list import ProcessorList
 from . import default_content_processors
 from .add_to_queue import add_to_queue
 from .content.store_incoming import (
@@ -19,6 +17,8 @@ from .content.store_incoming import (
 from .fetch.incoming_actor import incoming_actor
 from .follow.accept_follow import accept_follow
 from .follow.follow_accept import follow_accept
+from .types.processing_item import ProcessingItem
+from .utils.processor_list import ProcessorList
 
 logger = logging.getLogger(__name__)
 

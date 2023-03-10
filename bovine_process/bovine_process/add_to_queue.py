@@ -3,6 +3,7 @@ import logging
 
 from bovine_core.types import ServerSentEvent
 from quart import current_app
+
 from .types.processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)

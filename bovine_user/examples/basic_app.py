@@ -5,14 +5,14 @@ from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
 
 from bovine_user.config import configure_bovine_user
-from bovine_user.server import server
+from bovine_user.server import bovine_user_blueprint
 
 logging.basicConfig(level=logging.INFO)
 
 app = Quart(__name__)
 AuthManager(app)
 
-app.register_blueprint(server)
+app.register_blueprint(bovine_user_blueprint)
 
 
 TORTOISE_ORM = {

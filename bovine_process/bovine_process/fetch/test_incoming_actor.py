@@ -1,12 +1,22 @@
 import json
 from unittest.mock import AsyncMock, patch
 
-from bovine.utils.test.in_memory_test_app import app
+import aiohttp
+
 from bovine_core.activitypub.actor import ActivityPubActor
 from bovine_store.utils.test import store  # noqa F401
+from quart import Quart
+
 from bovine_process.types.processing_item import ProcessingItem
 
 from .incoming_actor import incoming_actor
+
+app = Quart(__name__)
+
+
+@app.before_serving
+async def startup():
+    app.config["session"] = aiohttp.ClientSession()
 
 
 async def test_incoming_actor_failure_to_retrieve(store):  # noqa F801

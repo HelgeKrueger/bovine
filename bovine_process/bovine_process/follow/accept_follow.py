@@ -3,6 +3,7 @@ import logging
 from bovine_core.activitystreams.utils import actor_for_object
 from bovine_store.store import retrieve_remote_object
 from bovine_store.store.collection import add_to_collection
+
 from bovine_process.types.processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)

@@ -2,8 +2,9 @@ import json
 
 from bovine_store.utils.test import store  # noqa F401
 
-from .store_incoming import store_incoming
 from bovine_process.types.processing_item import ProcessingItem
+
+from .store_incoming import store_incoming
 
 
 async def test_store_incoming(store):  # noqa F801

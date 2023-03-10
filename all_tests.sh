@@ -26,13 +26,7 @@ poetry run isort .
 poetry run black .
 poetry run flake8 .
 
-cd ../bovine_tortoise
-poetry run pytest
-poetry run isort .
-poetry run black .
-poetry run flake8 .
-
-cd ../bovine_blog
+cd ../bovine_fedi
 poetry run pytest
 poetry run isort .
 poetry run black .

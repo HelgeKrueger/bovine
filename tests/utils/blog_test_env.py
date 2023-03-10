@@ -7,15 +7,15 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from bovine.utils.queue_manager import QueueManager
-from bovine_blog import app
-from bovine_tortoise.utils import init
+from bovine_fedi import app
+from bovine_fedi.utils import init
 from tortoise import Tortoise
 
 from bovine_user.config import configure_bovine_user
 from bovine_store.config import configure_bovine_store
 from bovine_core.types import Visibility
 
-from . import create_actor_and_local_user, fake_post_headers, fake_get_headers
+from . import fake_post_headers, fake_get_headers
 
 import logging
 
@@ -112,7 +112,6 @@ async def blog_test_env() -> str:
     app.config["validate_signature"] = AsyncMock()
     app.config["session"] = AsyncMock()
 
-    _, local_user = await create_actor_and_local_user()
     app.config["queue_manager"] = QueueManager()
 
     # app.config["object_store"] = ObjectStore(db_url=db_url)
@@ -141,9 +140,9 @@ async def blog_test_env() -> str:
             mock_signed_post.return_value = AsyncMock()
             mock_signed_post.return_value.raise_for_status = lambda: 1
 
-            yield BlogTestEnv(db_url, client).with_user(local_user).with_actor(
-                actor
-            ).with_mocks(mock_signed_get, mock_signed_post)
+            yield BlogTestEnv(db_url, client).with_actor(actor).with_mocks(
+                mock_signed_get, mock_signed_post
+            )
 
     await asyncio.sleep(0.1)
 

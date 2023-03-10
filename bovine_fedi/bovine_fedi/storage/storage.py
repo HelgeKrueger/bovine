@@ -1,4 +1,4 @@
-from bovine_tortoise.models import StoredObject
+from bovine_fedi.models import StoredObject
 
 
 class Storage:

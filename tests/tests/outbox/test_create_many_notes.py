@@ -10,7 +10,7 @@ async def test_create_many_notes(blog_test_env):  # noqa F811
     for j in range(23):
         note = (
             build_note(
-                blog_test_env.local_user.name, blog_test_env.local_user.url, f"test {j}"
+                blog_test_env.actor["name"], blog_test_env.actor["id"], f"test {j}"
             )
             .as_public()
             .build()

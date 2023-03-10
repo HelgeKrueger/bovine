@@ -9,8 +9,7 @@ readme = "../README.md"
 python = "^3.10"
 bovine-core = {path = "../bovine_core", develop = true}
 bovine = {path = "../bovine", develop=true}
-bovine-tortoise = {path = "../bovine_tortoise", develop=true}
-bovine-blog = {path = "../bovine_blog", develop = true}
+bovine-fedi = {path = "../bovine_fedi", develop = true}
 bovine-store = {path = "../bovine_store", develop = true}
 bovine-user = {path = "../bovine_user", develop = true}
 

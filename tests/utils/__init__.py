@@ -1,23 +1,6 @@
 import json
 
-from bovine.types import ProcessingItem, LocalActor
-from bovine_tortoise.models import Actor
-
-
-async def create_actor_and_local_user():
-    actor = await Actor.create(
-        account="name",
-        url="/activitypub/name",
-        actor_type="Person",
-        private_key="private_key",
-        public_key="public_key",
-    )
-
-    local_user = LocalActor(
-        "name", "/activitypub/name", "public_key", "private_key", "actor_type"
-    )
-
-    return actor, local_user
+from bovine.types import ProcessingItem
 
 
 def build_inbox_item_from_json(json_file_name):

@@ -3,11 +3,10 @@ from urllib.parse import urlparse
 
 import aiohttp
 from bovine.clients.nodeinfo import fetch_nodeinfo
-from tortoise import Tortoise
-
 from bovine_tortoise.models import Peer, PublicKey
 from bovine_tortoise.utils import init
 from bovine_tortoise.utils.peer_type import PeerType
+from tortoise import Tortoise
 
 
 async def update_peers():

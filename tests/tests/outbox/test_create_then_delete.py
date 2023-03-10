@@ -21,7 +21,7 @@ async def test_create_then_delete(blog_test_env):  # noqa F811
     item_id = result["orderedItems"][0]
     item = await blog_test_env.get_activity(item_id)
 
-    delete = build_delete(blog_test_env.local_user.url, item["object"]).build()
+    delete = build_delete(blog_test_env.actor["id"], item["object"]).build()
 
     # ap-c2s-delete-activity
     result = await blog_test_env.send_to_outbox(delete)

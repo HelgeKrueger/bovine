@@ -7,9 +7,6 @@ from bovine.utils.queue_manager import QueueManager
 from bovine_core.utils.signature_checker import SignatureChecker
 from bovine_store.blueprint import bovine_store_blueprint
 from bovine_store.config import configure_bovine_store
-from bovine_tortoise.caches import build_public_key_fetcher
-from bovine_tortoise.storage import storage_blueprint
-from bovine_tortoise.storage.storage import Storage
 from bovine_user.config import configure_bovine_user
 from bovine_user.server import server
 from quart import Quart
@@ -17,9 +14,10 @@ from quart_auth import AuthManager
 from tortoise.contrib.quart import register_tortoise
 
 from .build_store import build_get_user
+from .caches import build_public_key_fetcher
 from .endpoints import add_authorization, endpoints
-from .html import html_blueprint
-from .stores.tortoise import TortoiseStore
+from .storage import storage_blueprint
+from .storage.storage import Storage
 from .utils import rewrite_activity_request
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
@@ -50,6 +48,11 @@ async def startup():
     await configure_bovine_store(app)
 
 
+@app.after_serving
+async def shutdown():
+    await app.config["session"].close()
+
+
 async def account_name_or_none_for_token(token):
     access_token = os.environ.get("ACCESS_TOKEN", None)
     if token == access_token:
@@ -61,7 +64,6 @@ app.config.update(
     {
         "DOMAIN": domain,
         "get_user": get_user,
-        "data_store": TortoiseStore(),
         "domain_name": "mymath.rocks",
         "account_name_or_none_for_token": account_name_or_none_for_token,
         "object_storage": Storage(),
@@ -70,7 +72,6 @@ app.config.update(
 
 app.before_request(rewrite_activity_request)
 app.register_blueprint(default_configuration)
-app.register_blueprint(html_blueprint)
 app.register_blueprint(storage_blueprint)
 app.register_blueprint(server, url_prefix="/bovine_user")
 app.register_blueprint(endpoints, url_prefix="/endpoints")
@@ -84,7 +85,7 @@ TORTOISE_ORM = {
     "apps": {
         "models": {
             "models": [
-                "bovine_tortoise.models",
+                "bovine_fedi.models",
                 "bovine_store.models",
                 "bovine_user.models",
                 "aerich.models",

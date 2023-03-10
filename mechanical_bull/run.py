@@ -10,4 +10,4 @@ logging.basicConfig(
     filename=("mechanical_bull.log"),
 )
 
-asyncio.run(mechanical_bull(["helge.toml", "h.toml"]))
+asyncio.run(mechanical_bull(["h.toml"]))

@@ -1,16 +1,15 @@
 [tool.poetry]
-name = "bovine-blog"
+name = "bovine-fedi"
 version = "0.1.0"
 description = ""
 authors = ["Helge <helge.krueger@gmail.com>"]
 readme = "../README.md"
-packages = [{include = "bovine_blog"}]
+packages = [{include = "bovine_fedi"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "^3.8.3"
 bovine = {path = "../bovine", develop=true}
-bovine-tortoise = {path = "../bovine_tortoise", develop=true}
 markdown = "^3.4.1"
 python-markdown-math = "^0.8"
 aerich = "^0.7.1"
@@ -18,7 +17,7 @@ bovine-store = {path = "../bovine_store", develop = true}
 bovine-user = {path = "../bovine_user", develop = true}
 
 [tool.aerich]
-tortoise_orm = "bovine_blog.TORTOISE_ORM"
+tortoise_orm = "bovine_fedi.TORTOISE_ORM"
 location = "./migrations"
 src_folder = "./."
 

@@ -14,8 +14,8 @@ from utils.blog_test_env import (  # noqa: F401
 async def send_test_with_id_to_inbox(env, test_id):
     note = (
         build_note(
-            env.local_user.name,
-            env.local_user.url,
+            env.actor["name"],
+            env.actor["id"],
             f"test {test_id}",
         )
         .as_public()

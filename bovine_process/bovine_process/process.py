@@ -2,12 +2,12 @@ import asyncio
 import json
 import logging
 
-from bovine.processors.processor_list import ProcessorList
-from bovine.types import ProcessingItem
 from bovine_core.activitystreams.utils import recipients_for_object, remove_public
 from bovine_store.store.collection import collection_all
 from quart import current_app
+from .types.processing_item import ProcessingItem
 
+from .utils.processor_list import ProcessorList
 from . import default_content_processors
 from .add_to_queue import add_to_queue
 from .content.store_incoming import (

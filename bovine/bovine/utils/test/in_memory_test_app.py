@@ -9,7 +9,6 @@ from bovine import get_bovine_user
 from bovine.clients import get_public_key
 from bovine.server import default_configuration
 from bovine.types import LocalActor
-from bovine.processors.processor_list import ProcessorList
 from bovine.utils import dump_incoming_inbox_to_stdout
 from bovine.utils.in_memory_store import InMemoryUserStore, InMemoryObjectStore
 from bovine.utils.queue_manager import QueueManager
@@ -29,7 +28,7 @@ local_actor = LocalActor(
     public_key,
     private_key,
     "Person",
-).set_inbox_process(ProcessorList().add(dump_incoming_inbox_to_stdout).apply)
+).set_inbox_process(dump_incoming_inbox_to_stdout)
 
 data_store = InMemoryUserStore()
 data_store.add_user(local_actor)

@@ -4,14 +4,18 @@ import logging
 from urllib.parse import urljoin
 
 from bovine.server.rewrite_request import add_authorization_to_request
-from bovine.types import ProcessingItem
 from bovine_core.types import Visibility
+from bovine_process.process import (
+    default_outbox_process,
+    process_inbox,
+    send_outbox_item,
+)
+from bovine_process.types.processing_item import ProcessingItem
 from bovine_store.collection import collection_response
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, make_response, request
 from quart_auth import current_user
 
-from .process.process import default_outbox_process, process_inbox, send_outbox_item
 from .utils import update_id
 
 # from .process.content.store_incoming import add_incoming_to_outbox

@@ -1,10 +1,10 @@
 import json
 from unittest.mock import AsyncMock, patch
 
-from bovine.types import ProcessingItem
 from bovine.utils.test.in_memory_test_app import app
 from bovine_core.activitypub.actor import ActivityPubActor
 from bovine_store.utils.test import store  # noqa F401
+from bovine_process.types.processing_item import ProcessingItem
 
 from .incoming_actor import incoming_actor
 

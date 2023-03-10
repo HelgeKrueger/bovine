@@ -7,7 +7,6 @@ from bovine_core.clients.activity_pub import ActivityPubClient
 
 
 from .base_count_and_items import BaseCountAndItems
-from .processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)
 
@@ -79,11 +78,11 @@ class LocalActor:
         logger.info(f"name: {self.name}")
         logger.info(f"type: {self.actor_type}")
 
-    async def process_inbox_item(self, inbox_item: ProcessingItem):
+    async def process_inbox_item(self, inbox_item):
         if self.inbox_process:
             await self.inbox_process(inbox_item, self)
 
-    async def process_outbox_item(self, activity: ProcessingItem):
+    async def process_outbox_item(self, activity):
         if self.outbox_process:
             await self.outbox_process(activity, self)
 

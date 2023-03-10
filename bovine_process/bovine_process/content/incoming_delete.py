@@ -1,6 +1,5 @@
 import logging
 
-from bovine.types import ProcessingItem
 from bovine_core.activitystreams.objects import tombstone
 from bovine_core.activitystreams.utils import actor_for_object
 from bovine_store.store import (
@@ -8,6 +7,7 @@ from bovine_store.store import (
     store_remote_object,
     update_remote_object,
 )
+from bovine_process.types.processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)
 

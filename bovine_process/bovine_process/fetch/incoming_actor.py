@@ -1,10 +1,10 @@
 import logging
 import traceback
 
-from bovine.types import ProcessingItem
 from bovine_core.activitystreams.utils import actor_for_object
 from bovine_store.jsonld import combine_items
 from bovine_store.store import retrieve_remote_object, store_remote_object
+from bovine_process.types.processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)
 

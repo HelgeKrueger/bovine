@@ -1,6 +1,5 @@
 import logging
 
-# from bovine.types import ProcessingItem
 from bovine_core.activitystreams.utils import (
     actor_for_object,
     is_public,

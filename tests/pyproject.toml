@@ -12,6 +12,7 @@ bovine = {path = "../bovine", develop=true}
 bovine-fedi = {path = "../bovine_fedi", develop = true}
 bovine-store = {path = "../bovine_store", develop = true}
 bovine-user = {path = "../bovine_user", develop = true}
+bovine-process = {path = "../bovine_process", develop = true}
 
 
 [build-system]

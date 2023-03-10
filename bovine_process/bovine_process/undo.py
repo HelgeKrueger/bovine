@@ -1,8 +1,8 @@
 import logging
 
-from bovine.types import ProcessingItem
 from bovine_core.activitystreams.utils import actor_for_object
 from bovine_store.store import remove_remote_object
+from .types.processing_item import ProcessingItem
 
 logger = logging.getLogger(__name__)
 

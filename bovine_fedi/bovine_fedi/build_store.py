@@ -44,16 +44,10 @@ def build_get_user(domain: str):
     bovine_store = InMemoryUserStore()
     bovine_store.add_user(bovine_user)
 
-    # data_store = ManagedDataStore(
-    #     inbox_process=default_inbox_process,
-    #     outbox_process=default_outbox_process,
-    # )
-
     return (
         bovine_user,
         Chain(
             bovine_store.get_user,
-            # data_store.get_user,
             get_user_from_bovine_user_manager,
         ).execute,
     )

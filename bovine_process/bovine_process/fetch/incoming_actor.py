@@ -1,7 +1,7 @@
 import logging
 import traceback
 
-from bovine_core.activitystreams.utils import actor_for_object
+from bovine.activitystreams.utils import actor_for_object
 from bovine_store.jsonld import combine_items
 from bovine_store.store import retrieve_remote_object, store_remote_object
 

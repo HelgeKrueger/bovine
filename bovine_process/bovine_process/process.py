@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 
-from bovine_core.activitystreams.utils import recipients_for_object, remove_public
+from bovine.activitystreams.utils import recipients_for_object, remove_public
 from bovine_store.store.collection import collection_all
 from quart import current_app
 

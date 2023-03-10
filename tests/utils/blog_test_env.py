@@ -13,7 +13,7 @@ from tortoise import Tortoise
 
 from bovine_user.config import configure_bovine_user
 from bovine_store.config import configure_bovine_store
-from bovine_core.types import Visibility
+from bovine.types import Visibility
 
 from . import fake_post_headers, fake_get_headers
 
@@ -133,8 +133,8 @@ async def blog_test_env() -> str:
 
     app.config["validate_signature"].return_value = public_key_url
 
-    with patch("bovine_core.clients.signed_http.signed_post") as mock_signed_post:
-        with patch("bovine_core.clients.signed_http.signed_get") as mock_signed_get:
+    with patch("bovine.clients.signed_http.signed_post") as mock_signed_post:
+        with patch("bovine.clients.signed_http.signed_get") as mock_signed_get:
             mock_signed_get.return_value = AsyncMock()
             mock_signed_get.return_value.raise_for_status = lambda: 1
             mock_signed_post.return_value = AsyncMock()

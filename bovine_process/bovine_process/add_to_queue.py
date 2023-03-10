@@ -1,7 +1,7 @@
 import json
 import logging
 
-from bovine_core.types import ServerSentEvent
+from bovine.types import ServerSentEvent
 from quart import current_app
 
 from .types.processing_item import ProcessingItem

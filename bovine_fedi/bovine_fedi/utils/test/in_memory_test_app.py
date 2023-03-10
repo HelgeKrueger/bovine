@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock
 
 import aiohttp
 import pytest
-from bovine_core.utils.signature_checker import SignatureChecker
+from bovine.utils.signature_checker import SignatureChecker
 from quart import Quart
 
 from bovine_fedi.caches import get_public_key

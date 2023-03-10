@@ -1,5 +1,5 @@
-from bovine_core.activitypub.actor import ActivityPubActor
-from bovine_core.activitystreams.actor_builder import ActorBuilder
+from bovine.activitypub.actor import ActivityPubActor
+from bovine.activitystreams.actor_builder import ActorBuilder
 
 from bovine_user.utils.test import db_url  # noqa F401
 from examples.basic_app import app

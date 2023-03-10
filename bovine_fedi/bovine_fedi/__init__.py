@@ -2,7 +2,7 @@ import logging
 import os
 
 import aiohttp
-from bovine_core.utils.signature_checker import SignatureChecker
+from bovine.utils.signature_checker import SignatureChecker
 from bovine_store.blueprint import bovine_store_blueprint
 from bovine_store.config import configure_bovine_store
 from bovine_user.config import configure_bovine_user

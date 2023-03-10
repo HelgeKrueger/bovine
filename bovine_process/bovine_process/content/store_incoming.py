@@ -1,6 +1,6 @@
 import logging
 
-from bovine_core.activitystreams.utils import (
+from bovine.activitystreams.utils import (
     actor_for_object,
     is_public,
     recipients_for_object,

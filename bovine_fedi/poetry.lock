@@ -279,8 +279,8 @@ files = [
 ]
 
 [[package]]
-name = "bovine-core"
-version = "0.0.4"
+name = "bovine"
+version = "0.0.5"
 description = "Core functionality of bovine needed to build client to server applications"
 category = "main"
 optional = false
@@ -295,7 +295,7 @@ python-dateutil = "^2.8.2"
 
 [package.source]
 type = "directory"
-url = "../bovine_core"
+url = "../bovine"
 
 [[package]]
 name = "bovine-process"
@@ -348,7 +348,7 @@ develop = true
 
 [package.dependencies]
 aiohttp = "^3.8.4"
-bovine-core = {path = "../bovine_core", develop = true}
+bovine = {path = "../bovine", develop = true}
 quart = "^0.18.3"
 quart-auth = "^0.8.0"
 quart-cors = "^0.6.0"

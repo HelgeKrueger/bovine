@@ -1,8 +1,8 @@
 import logging
 
 import werkzeug
-from bovine_core.activitystreams import build_actor, build_ordered_collection
-from bovine_core.types import Visibility
+from bovine.activitystreams import build_actor, build_ordered_collection
+from bovine.types import Visibility
 from quart import Blueprint, current_app
 
 activitypub = Blueprint("activitypub", __name__, url_prefix="/activitypub")

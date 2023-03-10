@@ -1,13 +1,13 @@
 import json
 
-from bovine_core.activitystreams.activities import build_create
-from bovine_core.activitystreams.objects import build_note
+from bovine.activitystreams.activities import build_create
+from bovine.activitystreams.objects import build_note
 
 
 import asyncio
 from unittest.mock import AsyncMock
 
-from bovine_core.activitystreams.activities import build_follow, build_accept
+from bovine.activitystreams.activities import build_follow, build_accept
 
 from utils.blog_test_env import (  # noqa: F401
     blog_test_env,

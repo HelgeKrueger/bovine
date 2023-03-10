@@ -1,6 +1,6 @@
 import re
 
-from bovine_core.clients.activity_pub import ActivityPubClient
+from bovine.clients.activity_pub import ActivityPubClient
 
 from bovine_fedi.utils.test.in_memory_test_app import app
 

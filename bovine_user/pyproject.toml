@@ -12,7 +12,7 @@ quart = "^0.18.3"
 aiohttp = "^3.8.4"
 tortoise-orm = "^0.19.3"
 quart-auth = "^0.8.0"
-bovine-core = {path = "../bovine_core", develop = true}
+bovine = {path = "../bovine", develop = true}
 tomli-w = "^1.0.0"
 quart-cors = "^0.6.0"
 

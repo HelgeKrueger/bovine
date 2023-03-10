@@ -1,9 +1,9 @@
 import secrets
 from urllib.parse import urljoin
 
-from bovine_core.activitypub.actor import ActivityPubActor
-from bovine_core.activitystreams import build_actor
-from bovine_core.utils.crypto import generate_public_private_key
+from bovine.activitypub.actor import ActivityPubActor
+from bovine.activitystreams import build_actor
+from bovine.utils.crypto import generate_public_private_key
 from quart import current_app
 
 from .models import BovineUser, BovineUserEndpoint, BovineUserKeyPair

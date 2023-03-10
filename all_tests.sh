@@ -2,7 +2,7 @@
 
 set -eux
 
-cd bovine_core
+cd bovine
 poetry run pytest
 poetry run isort .
 poetry run black .

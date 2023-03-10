@@ -1,4 +1,4 @@
-from bovine_core.activitystreams.activities import build_delete
+from bovine.activitystreams.activities import build_delete
 
 from utils import get_activity_from_json
 from utils.blog_test_env import blog_test_env  # noqa: F401

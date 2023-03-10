@@ -2,8 +2,7 @@ import json
 from unittest.mock import AsyncMock, patch
 
 import aiohttp
-
-from bovine_core.activitypub.actor import ActivityPubActor
+from bovine.activitypub.actor import ActivityPubActor
 from bovine_store.utils.test import store  # noqa F401
 from quart import Quart
 
@@ -38,7 +37,7 @@ async def test_incoming_actor_failure_to_retrieve(store):  # noqa F801
         assert result.get_data()["actor"] == actor_url
 
 
-@patch("bovine_core.clients.signed_http.signed_get")
+@patch("bovine.clients.signed_http.signed_get")
 async def test_incoming_actor_succes(mock_signed_get, store):  # noqa F801
     async with app.app_context():
         first_id = "https://my_domain/first"
@@ -72,7 +71,7 @@ async def test_incoming_actor_succes(mock_signed_get, store):  # noqa F801
         assert item_actor["name"] == "remote actor"
 
 
-@patch("bovine_core.clients.signed_http.signed_get")
+@patch("bovine.clients.signed_http.signed_get")
 async def test_incoming_actor_no_request_for_delete(
     mock_signed_get, store  # noqa F801
 ):

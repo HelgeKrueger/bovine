@@ -2,11 +2,13 @@ import json
 import logging
 
 import aiohttp
-import bovine_core.clients.signed_http
+import bovine.clients.signed_http
 
 from bovine_fedi.types import LocalActor
 
 from .public_key import PublicKeyCache
+
+logger = logging.getLogger(__name__)
 
 
 def build_public_key_fetcher(session: aiohttp.ClientSession, bovine_user: LocalActor):
@@ -23,7 +25,7 @@ async def get_public_key(
 ) -> str | None:
     logger.info(f"getting public key for {key_id}")
 
-    response = await bovine_core.clients.signed_http.signed_get(
+    response = await bovine.clients.signed_http.signed_get(
         session, local_actor.get_public_key_url(), local_actor.private_key, key_id
     )
     text = await response.text()

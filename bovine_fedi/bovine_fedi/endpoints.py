@@ -4,8 +4,8 @@ import logging
 import re
 from urllib.parse import urljoin
 
-from bovine_core.types import Visibility
-from bovine_core.utils.crypto import content_digest_sha256
+from bovine.types import Visibility
+from bovine.utils.crypto import content_digest_sha256
 from bovine_process.process import (
     default_outbox_process,
     process_inbox,

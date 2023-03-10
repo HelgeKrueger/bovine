@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from bovine_core.clients.activity_pub import ActivityPubClient
+from bovine.clients.activity_pub import ActivityPubClient
 from quart import current_app
 
 from .base_count_and_items import BaseCountAndItems

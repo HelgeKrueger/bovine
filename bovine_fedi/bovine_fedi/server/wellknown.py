@@ -1,4 +1,4 @@
-from bovine_core.utils.parse import parse_fediverse_handle
+from bovine.utils.parse import parse_fediverse_handle
 from quart import Blueprint, current_app, request
 
 wellknown = Blueprint("wellknown", __name__, url_prefix="/.well-known")

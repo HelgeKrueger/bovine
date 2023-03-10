@@ -1,5 +1,5 @@
 from urllib.parse import urlencode
-from bovine_core.activitystreams import (
+from bovine.activitystreams import (
     build_ordered_collection,
     build_ordered_collection_page,
 )

@@ -1,14 +1,15 @@
 import logging
+import os
 import re
-
-from quart import redirect, request
-
-logger = logging.getLogger("rewrite")
-
-
 from urllib.parse import urlparse
 
+from bovine.utils.crypto import generate_public_private_key
+from quart import redirect, request
 from tortoise import Tortoise
+
+from bovine_fedi.types import LocalActor
+
+logger = logging.getLogger("rewrite")
 
 
 async def init(db_url: str = "sqlite://db.sqlite3") -> None:
@@ -52,8 +53,6 @@ async def update_id(data, retriever, store):
     return data
 
 
-from bovine_fedi.types import LocalActor
-
 __version__ = "0.0.4"
 
 
@@ -74,11 +73,6 @@ def get_bovine_user(
     ).set_inbox_process(dump_incoming_inbox_to_stdout)
 
     return bovine_user
-
-
-import os
-
-from bovine_core.utils.crypto import generate_public_private_key
 
 
 async def dump_incoming_inbox_to_stdout(local_user, result):

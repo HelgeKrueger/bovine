@@ -1,7 +1,7 @@
 import asyncio
 
-from bovine_core.activitystreams.activities import build_create
-from bovine_core.activitystreams.objects import build_note
+from bovine.activitystreams.activities import build_create
+from bovine.activitystreams.objects import build_note
 
 from utils.blog_test_env import blog_test_env  # noqa: F401
 

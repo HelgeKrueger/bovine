@@ -1,14 +1,6 @@
 import aiohttp
-import IPython
-from bovine_core.clients.activity_pub import ActivityPubClient
+from bovine.activitypub import actor_from_file
 
 
-async def set_session(client):
-    return client.set_session(await aiohttp.ClientSession())
-
-
-with open("helge.toml", "rb") as f:
-    client = ActivityPubClient.from_toml_file(f)
-
-
-IPython.embed()
+async def get_actor():
+    return actor_from_file("h.toml", aiohttp.ClientSession())

@@ -30,6 +30,11 @@ class BlogTestEnv:
         self.client = client
         self.mock_signed_get = None
         self.mock_signed_post = None
+        self.app = None
+
+    def with_app(self, app):
+        self.app = app
+        return self
 
     def with_mocks(self, mock_signed_get, mock_signed_post):
         self.mock_signed_get = mock_signed_get
@@ -142,7 +147,7 @@ async def blog_test_env() -> str:
 
             yield BlogTestEnv(db_url, client).with_actor(actor).with_mocks(
                 mock_signed_get, mock_signed_post
-            )
+            ).with_app(app)
 
     await asyncio.sleep(0.1)
 

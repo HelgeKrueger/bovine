@@ -35,3 +35,15 @@ async def test_actor(blog_test_env):  # noqa: F811
 
     # LABEL: ap-actor-endpoints-proxyUrl
     assert "proxyUrl" in result["endpoints"]
+
+
+async def test_actor_web_visibility(blog_test_env):  # noqa: F811
+    blog_test_env.app.config["validate_signature"].return_value = None
+
+    response = await blog_test_env.client.get(blog_test_env.actor["id"])
+    assert response.status_code == 200
+
+    result = await response.get_json()
+
+    assert "outbox" not in result
+    assert "endpoints" not in result

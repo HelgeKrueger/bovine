@@ -27,7 +27,7 @@ in any spec.
 
 #### fedi-objects-are-accessible-via-id
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L94)
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L43)
 
 So if a note is published via `"id":"https://my_domain/someid"`, your
@@ -35,7 +35,7 @@ server should answer to requests to `https://my_domain/someid`.
 
 #### fedi-objects-are-accessible-via-id-content-type
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L89)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L94)
 
 Content-Type should be `application/activity+json`
 
@@ -164,7 +164,7 @@ __MAY__: A list of supplementary Collections which may be of interest.
 
 - [test_actor.py](../tests/tests/test_actor.py#L12)
 
-__MAY__: A short username which may be used to refer to the actor
+A short username which may be used to refer to the actor. Note due to [fedi-webfinger-username-is-preferredUsername](#fedi-webfinger-username-is-preferredUsername) the preferredUsername must be present for an application to federate.
 
 #### ap-actor-endpoints
 
@@ -214,11 +214,25 @@ The shares collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
+### ActivityPub Client
+
+These are found in [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
+
+#### ap-client-addressing
+
+Clients SHOULD look at any objects attached to the new Activity via the object, target, inReplyTo and/or tag fields, retrieve their actor or attributedTo properties, and MAY also retrieve their addressing properties, and add these to the to or cc fields of the new Activity being created. Clients MAY recurse through attached objects, but if doing so, SHOULD set a limit for this recursion. (Note that this does not suggest that the client should "unpack" collections of actors being addressed as individual recipients).
+
+Clients MAY give the user the chance to amend this addressing in the UI.
+
+#### ap-client-provide-object-target
+
+Clients submitting the following activities to an outbox MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo. Additionally, clients submitting the following activities to an outbox MUST also provide the target property: Add, Remove.
+
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 
 #### ap-c2s-post
 
-- [blog_test_env.py](../tests/utils/blog_test_env.py#L56)
+- [blog_test_env.py](../tests/utils/blog_test_env.py#L61)
 
 Client to server interaction takes place through clients posting Activities to an actor's outbox. To do this, clients MUST discover the URL of the actor's outbox from their profile and then MUST make an HTTP POST request to this URL with the Content-Type of application/ld+json; profile="https://www.w3.org/ns/activitystreams". Servers MAY interpret a Content-Type or Accept header of application/activity+json as equivalent to application/ld+json; profile="https://www.w3.org/ns/activitystreams" for client-to-server interactions. The request MUST be authenticated with the credentials of the user to whom the outbox belongs. The body of the POST request MUST contain a single Activity (which MAY contain embedded objects), or a single non-Activity object which will be wrapped in a Create activity by the server.
 
@@ -244,16 +258,6 @@ The server MUST remove the bto and/or bcc properties, if they exist, from the Ac
 - [test_create_note.py](../tests/tests/outbox/test_create_note.py#L24)
 
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
-
-#### ap-client-addressing
-
-Clients SHOULD look at any objects attached to the new Activity via the object, target, inReplyTo and/or tag fields, retrieve their actor or attributedTo properties, and MAY also retrieve their addressing properties, and add these to the to or cc fields of the new Activity being created. Clients MAY recurse through attached objects, but if doing so, SHOULD set a limit for this recursion. (Note that this does not suggest that the client should "unpack" collections of actors being addressed as individual recipients).
-
-Clients MAY give the user the chance to amend this addressing in the UI.
-
-#### ap-client-provide-object-target
-
-Clients submitting the following activities to an outbox MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo. Additionally, clients submitting the following activities to an outbox MUST also provide the target property: Add, Remove.
 
 #### ap-c2s-create-attributedTo
 

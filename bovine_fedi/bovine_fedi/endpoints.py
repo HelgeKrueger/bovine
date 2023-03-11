@@ -94,6 +94,8 @@ async def endpoints_get(identifier):
             endpoint_information.bovine_user.hello_sub
         )
 
+        logger.info(g.retriever)
+
         if endpoint_path == g.retriever:
             return (
                 actor.build(visibility=Visibility.OWNER),
@@ -101,8 +103,14 @@ async def endpoints_get(identifier):
                 {"content-type": "application/activity+json"},
             )
 
+        if g.retriever is "NONE":
+            return (
+                actor.build(visibility=Visibility.WEB),
+                200,
+                {"content-type": "application/activity+json"},
+            )
         return (
-            actor.build(),
+            actor.build(visibility=Visibility.PUBLIC),
             200,
             {"content-type": "application/activity+json"},
         )

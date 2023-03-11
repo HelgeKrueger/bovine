@@ -135,7 +135,7 @@ __MAY__: A list of supplementary Collections which may be of interest.
 
 #### ap-actor-preferredUsername
 
-__MAY__: A short username which may be used to refer to the actor
+A short username which may be used to refer to the actor. Note due to [fedi-webfinger-username-is-preferredUsername](#fedi-webfinger-username-is-preferredUsername) the preferredUsername must be present for an application to federate.
 
 #### ap-actor-endpoints
 
@@ -177,6 +177,20 @@ The shares collection MUST be either an OrderedCollection or a Collection
 
 MAY be filtered on privileges of an authenticated user or as appropriate when no authentication is given.
 
+### ActivityPub Client
+
+These are found in [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
+
+#### ap-client-addressing
+
+Clients SHOULD look at any objects attached to the new Activity via the object, target, inReplyTo and/or tag fields, retrieve their actor or attributedTo properties, and MAY also retrieve their addressing properties, and add these to the to or cc fields of the new Activity being created. Clients MAY recurse through attached objects, but if doing so, SHOULD set a limit for this recursion. (Note that this does not suggest that the client should "unpack" collections of actors being addressed as individual recipients).
+
+Clients MAY give the user the chance to amend this addressing in the UI.
+
+#### ap-client-provide-object-target
+
+Clients submitting the following activities to an outbox MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo. Additionally, clients submitting the following activities to an outbox MUST also provide the target property: Add, Remove.
+
 ### [Client To Server](https://www.w3.org/TR/activitypub/#client-to-server-interactions)
 
 #### ap-c2s-post
@@ -198,16 +212,6 @@ The server MUST remove the bto and/or bcc properties, if they exist, from the Ac
 #### ap-c2s-add-to-outbox
 
 The server MUST then add this new Activity to the outbox collection. Depending on the type of Activity, servers may then be required to carry out further side effects. (However, there is no guarantee that time the Activity may appear in the outbox. The Activity might appear after a delay or disappear at any period). These are described per individual Activity below.
-
-#### ap-client-addressing
-
-Clients SHOULD look at any objects attached to the new Activity via the object, target, inReplyTo and/or tag fields, retrieve their actor or attributedTo properties, and MAY also retrieve their addressing properties, and add these to the to or cc fields of the new Activity being created. Clients MAY recurse through attached objects, but if doing so, SHOULD set a limit for this recursion. (Note that this does not suggest that the client should "unpack" collections of actors being addressed as individual recipients).
-
-Clients MAY give the user the chance to amend this addressing in the UI.
-
-#### ap-client-provide-object-target
-
-Clients submitting the following activities to an outbox MUST provide the object property in the activity: Create, Update, Delete, Follow, Add, Remove, Like, Block, Undo. Additionally, clients submitting the following activities to an outbox MUST also provide the target property: Add, Remove.
 
 #### ap-c2s-create-attributedTo
 

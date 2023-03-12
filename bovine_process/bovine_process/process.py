@@ -104,7 +104,7 @@ async def send_outbox_item(item, activity_pub, actor):
     ]
     inboxes = [x for x in inboxes if x and x != actor["inbox"]]
 
-    logger.info("Inboxes %s", "-".join(inboxes))
+    logger.info("Inboxes %s", " - ".join(inboxes))
 
     for inbox in inboxes:
         response = await activity_pub.post(inbox, data)

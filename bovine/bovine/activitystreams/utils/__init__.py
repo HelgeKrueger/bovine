@@ -1,7 +1,22 @@
 def actor_for_object(data):
     if "attributedTo" in data:
-        return data.get("attributedTo")
-    return data.get("actor", "__NO__ACTOR__")
+        actor = data.get("attributedTo")
+    else:
+        actor = data.get("actor")
+    actor = id_for_object(actor)
+
+    if actor:
+        return actor
+
+    return "__NO__ACTOR__"
+
+
+def id_for_object(data):
+    if data is None:
+        return None
+    if isinstance(data, str):
+        return data
+    return data.get("id", None)
 
 
 def recipients_for_object(data):

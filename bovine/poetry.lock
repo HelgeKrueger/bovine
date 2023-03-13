@@ -198,6 +198,25 @@ files = [
 ]
 
 [[package]]
+name = "bases"
+version = "0.2.1"
+description = "Python library for general Base-N encodings."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "bases-0.2.1-py3-none-any.whl", hash = "sha256:d030b5e349773ad2a067bfaaf3a9794b70d23a1f923033c15c2e0ce869854f6d"},
+    {file = "bases-0.2.1.tar.gz", hash = "sha256:b0999e14725b59bff38974b00e918629e0e29f3d80a40e022c6f0f8d5cdff9d4"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+typing-validation = "*"
+
+[package.extras]
+dev = ["base58", "mypy", "pylint", "pytest", "pytest-cov"]
+
+[[package]]
 name = "black"
 version = "23.1.0"
 description = "The uncompromising code formatter."
@@ -1067,6 +1086,46 @@ files = [
 ]
 
 [[package]]
+name = "multiformats"
+version = "0.2.1"
+description = "Python implementation of multiformats protocols."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "multiformats-0.2.1-py3-none-any.whl", hash = "sha256:0655fad05cff4cb9eaae3a0f61c4cf8189857fef5a5d0ade6aa25d6b8439e204"},
+    {file = "multiformats-0.2.1.tar.gz", hash = "sha256:4aee6eb5289c3cd00315e3f2b97e36b60db6af9bcec91d65f32d7155942dbef9"},
+]
+
+[package.dependencies]
+bases = "*"
+multiformats-config = "*"
+typing-extensions = "*"
+typing-validation = "*"
+
+[package.extras]
+dev = ["blake3", "mmh3", "mypy", "pycryptodomex", "pylint", "pysha3", "pyskein", "pytest", "pytest-cov"]
+full = ["blake3", "mmh3", "pycryptodomex", "pysha3", "pyskein"]
+
+[[package]]
+name = "multiformats-config"
+version = "0.2.0.post4"
+description = "Pre-loading configuration module for the 'multiformats' package."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "multiformats-config-0.2.0.post4.tar.gz", hash = "sha256:3b5d0be63211681edbcf887abe149fc17b43a79d0c009fb44232af9addf7a309"},
+    {file = "multiformats_config-0.2.0.post4-py3-none-any.whl", hash = "sha256:221a630732f7bb2cd6cb708b94a85da683e29618e4a2055eea1bf4f980feefce"},
+]
+
+[package.dependencies]
+multiformats = "*"
+
+[package.extras]
+dev = ["mypy", "pylint", "pytest", "pytest-cov"]
+
+[[package]]
 name = "mypy"
 version = "0.991"
 description = "Optional static typing for Python"
@@ -1594,13 +1653,28 @@ files = [
 name = "typing-extensions"
 version = "4.4.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
 ]
+
+[[package]]
+name = "typing-validation"
+version = "1.0.0.post2"
+description = "A simple library for runtime type-checking."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "typing-validation-1.0.0.post2.tar.gz", hash = "sha256:6a30dec74373f9dca29db6f79ef65eb765a6934c09d87639cf422288933b2aa4"},
+    {file = "typing_validation-1.0.0.post2-py3-none-any.whl", hash = "sha256:c9f5cb42435ee59fcf5a1a69dc88ccd5dc6f904436e61b5b8c276906a1c9e454"},
+]
+
+[package.extras]
+dev = ["mypy", "pylint", "pytest", "pytest-cov", "rich"]
 
 [[package]]
 name = "urllib3"
@@ -1734,4 +1808,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a75a92397b0ef5ee06054d822d1b18930a89e0957c458cf58edd03e28a580ff5"
+content-hash = "7ee5b9c23345602d80c58be2d58912784e76d5b0c647b33e8c1313ab1f4fd08f"

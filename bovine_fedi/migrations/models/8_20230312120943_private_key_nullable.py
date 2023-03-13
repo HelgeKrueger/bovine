@@ -3,18 +3,6 @@ from tortoise import BaseDBAsyncClient
 
 async def upgrade(db: BaseDBAsyncClient) -> str:
     return """
-        CREATE TABLE IF NOT EXISTS "actorobjects" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "object_id" VARCHAR(255) NOT NULL,
-    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
-);;
-        CREATE TABLE IF NOT EXISTS "actorproperties" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "value" JSON NOT NULL,
-    "actor_id" INT NOT NULL REFERENCES "actor" ("id") ON DELETE CASCADE
-);;
         CREATE TABLE IF NOT EXISTS "bovineuser" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "hello_sub" VARCHAR(255) NOT NULL,
@@ -32,7 +20,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
         CREATE TABLE IF NOT EXISTS "bovineuserkeypair" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "private_key" TEXT NOT NULL,
+    "private_key" TEXT,
     "public_key" TEXT NOT NULL,
     "bovine_user_id" INT NOT NULL REFERENCES "bovineuser" ("id") ON DELETE CASCADE
 );;
@@ -41,13 +29,16 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     "name" VARCHAR(255) NOT NULL,
     "value" JSON NOT NULL,
     "bovine_user_id" INT NOT NULL REFERENCES "bovineuser" ("id") ON DELETE CASCADE
-);;"""
+);;
+        DROP TABLE IF EXISTS "actor";
+        DROP TABLE IF EXISTS "follower";
+        DROP TABLE IF EXISTS "following";
+        DROP TABLE IF EXISTS "inboxentry";
+        DROP TABLE IF EXISTS "outboxentry";"""
 
 
 async def downgrade(db: BaseDBAsyncClient) -> str:
     return """
-        DROP TABLE IF EXISTS "actorobjects";
-        DROP TABLE IF EXISTS "actorproperties";
         DROP TABLE IF EXISTS "bovineuser";
         DROP TABLE IF EXISTS "bovineuserendpoint";
         DROP TABLE IF EXISTS "bovineuserkeypair";

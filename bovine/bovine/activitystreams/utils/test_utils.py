@@ -38,6 +38,10 @@ def test_is_public():
     note = build_note("account", "url", "content").as_unlisted().build()
     assert is_public(note)
 
+    note = build_note("account", "url", "content").add_to("as:Public").build()
+    note["to"] = "as:Public"
+    assert is_public(note)
+
 
 def test_actor_for_object():
     assert actor_for_object({}) == "__NO__ACTOR__"

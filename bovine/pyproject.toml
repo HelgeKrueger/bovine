@@ -13,6 +13,7 @@ aiohttp = "^3.8.3"
 cryptography = "^39.0.0"
 python-dateutil = "^2.8.2"
 tomli = "^2.0.1"
+multiformats = "^0.2.1"
 
 [tool.poetry.group.test.dependencies]
 black = "*"

@@ -19,8 +19,17 @@ def id_for_object(data):
     return data.get("id", None)
 
 
+def property_for_key_as_set(data, key):
+    result = data.get(key, [])
+    if isinstance(result, str):
+        return set([result])
+    return set(result)
+
+
 def recipients_for_object(data):
-    return set.union(*[set(data.get(key, [])) for key in ["to", "cc", "bto", "bcc"]])
+    return set.union(
+        *[property_for_key_as_set(data, key) for key in ["to", "cc", "bto", "bcc"]]
+    )
 
 
 def remove_public(recipients):

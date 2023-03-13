@@ -1,10 +1,11 @@
-from .crypto import (
+from bovine.utils.test import get_user_keys
+
+from . import (
     content_digest_sha256,
     generate_public_private_key,
     sign_message,
     verify_signature,
 )
-from .test import get_user_keys
 
 
 def test_crypto_sign_verify():

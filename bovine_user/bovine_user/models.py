@@ -40,5 +40,5 @@ class BovineUserKeyPair(Model):
 
     name = fields.CharField(max_length=255)
 
-    private_key = fields.TextField()
+    private_key = fields.TextField(null=True)
     public_key = fields.TextField()

@@ -43,7 +43,9 @@ default_outbox_process = (
 )
 
 
-default_async_outbox_process = ProcessorList().add_for_types(Accept=accept_follow).apply
+default_async_outbox_process = (
+    ProcessorList().add_for_types(Accept=accept_follow).add(add_to_queue).apply
+)
 
 
 async def process_inbox(request, activity_pub, actor):

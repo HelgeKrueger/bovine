@@ -27,13 +27,33 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install --upgrade poetry
+    - name: bovine
+      run: |
         cd bovine
         poetry install
-    - name: Lint with flake8
-      run: |
-        cd bovine
         poetry run flake8
-    - name: Test with pytest
+        poetry run pytest
+    - name: bovine_store
       run: |
-        cd bovine
+        cd bovine_store
+        poetry install
+        poetry run flake8
+        poetry run pytest
+    - name: bovine_user
+      run: |
+        cd bovine_user
+        poetry install
+        poetry run flake8
+        poetry run pytest
+    - name: bovine_fedi
+      run: |
+        cd bovine_fedi
+        poetry install
+        poetry run flake8
+        poetry run pytest
+    - name: tests
+      run: |
+        cd tests
+        poetry install
+        poetry run flake8
         poetry run pytest

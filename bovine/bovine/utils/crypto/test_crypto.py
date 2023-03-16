@@ -29,7 +29,7 @@ def test_crypto_sign_verify_failure():
 def test_content_digest_sha256():
     digest = content_digest_sha256("content")
 
-    assert digest.startswith("SHA-256=")
+    assert digest.startswith("sha-256=")
 
 
 def test_generate_public_private_key():

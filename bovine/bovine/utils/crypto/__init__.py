@@ -64,4 +64,4 @@ def content_digest_sha256(content):
         content = content.encode("utf-8")
 
     digest = base64.standard_b64encode(hashlib.sha256(content).digest()).decode("utf-8")
-    return "SHA-256=" + digest
+    return "sha-256=" + digest

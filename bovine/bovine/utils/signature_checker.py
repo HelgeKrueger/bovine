@@ -19,8 +19,10 @@ class SignatureChecker:
             return None
 
         if digest is not None:
-            if request.headers["digest"] != digest:
-                logger.warning("Different diggest")
+            request_digest = request.headers["digest"]
+            request_digest = request_digest[:4].lower() + request_digest[4:]
+            if request_digest != digest:
+                logger.warning("Different digest")
                 return None
 
         try:

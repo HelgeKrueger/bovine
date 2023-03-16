@@ -28,7 +28,7 @@ async def add_to_queue(
 
     queues = current_app.config["queue_manager"].get_queues_for_actor(event_source)
 
-    logging.debug(f"Adding items to {len(queues)} queues")
+    logging.info(f"Adding items to {len(queues)} queues")
 
     for queue in queues:
         await queue.put(event)

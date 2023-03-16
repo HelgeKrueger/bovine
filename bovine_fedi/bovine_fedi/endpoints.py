@@ -51,7 +51,7 @@ async def add_authorization():
         g.retriever = g.signature_result.split("#")[0]
         return
 
-    if current_user.is_authenticated:
+    if await current_user.is_authenticated:
         manager = current_app.config["bovine_user_manager"]
         _, actor = await manager.get_activity_pub(current_user.auth_id)
         if actor:
@@ -93,8 +93,6 @@ async def endpoints_get(identifier):
         activity_pub, actor = await manager.get_activity_pub(
             endpoint_information.bovine_user.hello_sub
         )
-
-        logger.info(g.retriever)
 
         if endpoint_path == g.retriever:
             return (

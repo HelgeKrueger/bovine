@@ -1,67 +1,20 @@
 import asyncio
-import json
 import logging
+import traceback
 
 from bovine.activitystreams.utils import recipients_for_object, remove_public
 from bovine_store.store.collection import collection_all
 from quart import current_app
 
-from . import default_content_processors
-from .add_to_queue import add_to_queue
-from .content.store_incoming import (
-    add_incoming_to_inbox,
-    add_incoming_to_outbox,
-    store_incoming,
-    store_outgoing,
-)
-from .fetch.incoming_actor import incoming_actor
-from .follow.accept_follow import accept_follow
-from .follow.follow_accept import follow_accept
-from .types.processing_item import ProcessingItem
-from .utils.processor_list import ProcessorList
-
 logger = logging.getLogger(__name__)
-
-
-default_inbox_process = (
-    ProcessorList()
-    .add_for_types(**default_content_processors, Accept=follow_accept)
-    .add(store_incoming)
-    .add(add_incoming_to_inbox)
-    .add(incoming_actor)
-    .add(add_to_queue)
-    .apply
-)
-
-
-default_outbox_process = (
-    ProcessorList()
-    .add(store_outgoing)
-    .add(add_incoming_to_outbox)
-    .add_for_types(**default_content_processors)
-    .apply
-)
-
-
-default_async_outbox_process = (
-    ProcessorList().add_for_types(Accept=accept_follow).add(add_to_queue).apply
-)
-
-
-async def process_inbox(request, activity_pub, actor):
-    logger.info("Processing inbox request")
-    data = await request.get_json()
-
-    item = ProcessingItem(json.dumps(data))
-
-    await default_inbox_process(item, activity_pub, actor)
-
-    logger.debug(json.dumps(data))
 
 
 async def get_inbox_for_recipient(activity_pub, recipient):
     try:
-        actor = await activity_pub.get(recipient)
+        store = current_app.config["bovine_store"]
+        actor = await store.retrieve(activity_pub.actor_id, recipient)
+        if not actor:
+            actor = await activity_pub.get(recipient)
         return actor["inbox"]
     except Exception as ex:
         logger.warning("Failed to fetch inbox for %s with %s", recipient, ex)
@@ -69,8 +22,6 @@ async def get_inbox_for_recipient(activity_pub, recipient):
 
 
 async def send_outbox_item(item, activity_pub, actor):
-    await default_async_outbox_process(item, activity_pub, actor)
-
     logger.info("Sending outbox item")
 
     data = item.get_data()
@@ -109,5 +60,10 @@ async def send_outbox_item(item, activity_pub, actor):
     logger.info("Inboxes %s", " - ".join(inboxes))
 
     for inbox in inboxes:
-        response = await activity_pub.post(inbox, data)
-        logger.info(await response.text())
+        try:
+            response = await activity_pub.post(inbox, data)
+            logger.info(await response.text())
+        except Exception as ex:
+            logger.warning("Sending to %s failed with %s", inbox, ex)
+            for log_line in traceback.format_exc().splitlines():
+                logger.warning(log_line)

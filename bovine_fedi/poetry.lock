@@ -218,6 +218,25 @@ tests = ["attrs[tests-no-zope]", "zope.interface"]
 tests-no-zope = ["cloudpickle", "cloudpickle", "hypothesis", "hypothesis", "mypy (>=0.971,<0.990)", "mypy (>=0.971,<0.990)", "pympler", "pympler", "pytest (>=4.3.0)", "pytest (>=4.3.0)", "pytest-mypy-plugins", "pytest-mypy-plugins", "pytest-xdist[psutil]", "pytest-xdist[psutil]"]
 
 [[package]]
+name = "bases"
+version = "0.2.1"
+description = "Python library for general Base-N encodings."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "bases-0.2.1-py3-none-any.whl", hash = "sha256:d030b5e349773ad2a067bfaaf3a9794b70d23a1f923033c15c2e0ce869854f6d"},
+    {file = "bases-0.2.1.tar.gz", hash = "sha256:b0999e14725b59bff38974b00e918629e0e29f3d80a40e022c6f0f8d5cdff9d4"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+typing-validation = "*"
+
+[package.extras]
+dev = ["base58", "mypy", "pylint", "pytest", "pytest-cov"]
+
+[[package]]
 name = "black"
 version = "23.1.0"
 description = "The uncompromising code formatter."
@@ -291,7 +310,9 @@ develop = true
 [package.dependencies]
 aiohttp = "^3.8.3"
 cryptography = "^39.0.0"
+multiformats = "^0.2.1"
 python-dateutil = "^2.8.2"
+tomli = "^2.0.1"
 
 [package.source]
 type = "directory"
@@ -308,6 +329,7 @@ files = []
 develop = true
 
 [package.dependencies]
+bovine = {path = "../bovine", develop = true}
 bovine-store = {path = "../bovine_store", develop = true}
 
 [package.source]
@@ -654,14 +676,14 @@ tests = ["check-manifest (>=0.42)", "mock (>=1.3.0)", "pytest (==5.4.3)", "pytes
 
 [[package]]
 name = "exceptiongroup"
-version = "1.1.0"
+version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "exceptiongroup-1.1.0-py3-none-any.whl", hash = "sha256:327cbda3da756e2de031a3107b81ab7b3770a602c4d16ca618298c526f4bec1e"},
-    {file = "exceptiongroup-1.1.0.tar.gz", hash = "sha256:bcb67d800a4497e1b404c2dd44fca47d3b7a5e5433dbab67f96c1a685cdfdf23"},
+    {file = "exceptiongroup-1.1.1-py3-none-any.whl", hash = "sha256:232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e"},
+    {file = "exceptiongroup-1.1.1.tar.gz", hash = "sha256:d484c3090ba2889ae2928419117447a14daf3c1231d5e30d0aae34f354f01785"},
 ]
 
 [package.extras]
@@ -1297,6 +1319,46 @@ files = [
 ]
 
 [[package]]
+name = "multiformats"
+version = "0.2.1"
+description = "Python implementation of multiformats protocols."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "multiformats-0.2.1-py3-none-any.whl", hash = "sha256:0655fad05cff4cb9eaae3a0f61c4cf8189857fef5a5d0ade6aa25d6b8439e204"},
+    {file = "multiformats-0.2.1.tar.gz", hash = "sha256:4aee6eb5289c3cd00315e3f2b97e36b60db6af9bcec91d65f32d7155942dbef9"},
+]
+
+[package.dependencies]
+bases = "*"
+multiformats-config = "*"
+typing-extensions = "*"
+typing-validation = "*"
+
+[package.extras]
+dev = ["blake3", "mmh3", "mypy", "pycryptodomex", "pylint", "pysha3", "pyskein", "pytest", "pytest-cov"]
+full = ["blake3", "mmh3", "pycryptodomex", "pysha3", "pyskein"]
+
+[[package]]
+name = "multiformats-config"
+version = "0.2.0.post4"
+description = "Pre-loading configuration module for the 'multiformats' package."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "multiformats-config-0.2.0.post4.tar.gz", hash = "sha256:3b5d0be63211681edbcf887abe149fc17b43a79d0c009fb44232af9addf7a309"},
+    {file = "multiformats_config-0.2.0.post4-py3-none-any.whl", hash = "sha256:221a630732f7bb2cd6cb708b94a85da683e29618e4a2055eea1bf4f980feefce"},
+]
+
+[package.dependencies]
+multiformats = "*"
+
+[package.extras]
+dev = ["mypy", "pylint", "pytest", "pytest-cov"]
+
+[[package]]
 name = "mypy-extensions"
 version = "1.0.0"
 description = "Type system extensions for programs checked with the mypy type checker."
@@ -1322,26 +1384,26 @@ files = [
 
 [[package]]
 name = "pathspec"
-version = "0.11.0"
+version = "0.11.1"
 description = "Utility library for gitignore style pattern matching of file paths."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pathspec-0.11.0-py3-none-any.whl", hash = "sha256:3a66eb970cbac598f9e5ccb5b2cf58930cd8e3ed86d393d541eaf2d8b1705229"},
-    {file = "pathspec-0.11.0.tar.gz", hash = "sha256:64d338d4e0914e91c1792321e6907b5a593f1ab1851de7fc269557a21b30ebbc"},
+    {file = "pathspec-0.11.1-py3-none-any.whl", hash = "sha256:d8af70af76652554bd134c22b3e8a1cc46ed7d91edcdd721ef1a0c51a84a5293"},
+    {file = "pathspec-0.11.1.tar.gz", hash = "sha256:2798de800fa92780e33acca925945e9a19a133b715067cf165b8866c15a31687"},
 ]
 
 [[package]]
 name = "platformdirs"
-version = "3.1.0"
+version = "3.1.1"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "platformdirs-3.1.0-py3-none-any.whl", hash = "sha256:13b08a53ed71021350c9e300d4ea8668438fb0046ab3937ac9a29913a1a1350a"},
-    {file = "platformdirs-3.1.0.tar.gz", hash = "sha256:accc3665857288317f32c7bebb5a8e482ba717b474f3fc1d18ca7f9214be0cef"},
+    {file = "platformdirs-3.1.1-py3-none-any.whl", hash = "sha256:e5986afb596e4bb5bde29a79ac9061aa955b94fca2399b7aaac4090860920dd8"},
+    {file = "platformdirs-3.1.1.tar.gz", hash = "sha256:024996549ee88ec1a9aa99ff7f8fc819bb59e2c3477b410d90a16d32d6e707aa"},
 ]
 
 [package.extras]
@@ -1800,7 +1862,7 @@ files = [
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1871,6 +1933,21 @@ files = [
 ]
 
 [[package]]
+name = "typing-validation"
+version = "1.0.0.post2"
+description = "A simple library for runtime type-checking."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "typing-validation-1.0.0.post2.tar.gz", hash = "sha256:6a30dec74373f9dca29db6f79ef65eb765a6934c09d87639cf422288933b2aa4"},
+    {file = "typing_validation-1.0.0.post2-py3-none-any.whl", hash = "sha256:c9f5cb42435ee59fcf5a1a69dc88ccd5dc6f904436e61b5b8c276906a1c9e454"},
+]
+
+[package.extras]
+dev = ["mypy", "pylint", "pytest", "pytest-cov", "rich"]
+
+[[package]]
 name = "url-normalize"
 version = "1.4.3"
 description = "URL normalization for Python"
@@ -1887,14 +1964,14 @@ six = "*"
 
 [[package]]
 name = "urllib3"
-version = "1.26.14"
+version = "1.26.15"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 files = [
-    {file = "urllib3-1.26.14-py2.py3-none-any.whl", hash = "sha256:75edcdc2f7d85b137124a6c3c9fc3933cdeaa12ecb9a6a959f22797a0feca7e1"},
-    {file = "urllib3-1.26.14.tar.gz", hash = "sha256:076907bf8fd355cde77728471316625a4d2f7e713c125f51953bb5b3eecf4f72"},
+    {file = "urllib3-1.26.15-py2.py3-none-any.whl", hash = "sha256:aa751d169e23c7479ce47a0cb0da579e3ede798f994f5816a74e4f4500dcea42"},
+    {file = "urllib3-1.26.15.tar.gz", hash = "sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305"},
 ]
 
 [package.extras]

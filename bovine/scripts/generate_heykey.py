@@ -1,9 +1,9 @@
 from bovine.utils.crypto.did_key import (
     generate_keys,
-    public_key_to_did_key,
-    public_key_to_hey_key,
     private_key_to_hey_secret,
     private_key_to_secret,
+    public_key_to_did_key,
+    public_key_to_hey_key,
 )
 
 if __name__ == "__main__":

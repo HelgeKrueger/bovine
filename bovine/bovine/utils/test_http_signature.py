@@ -1,7 +1,7 @@
 import json
 
 from . import build_signature
-from .crypto import generate_public_private_key, content_digest_sha256
+from .crypto import content_digest_sha256, generate_public_private_key
 from .http_signature import HttpSignature
 
 

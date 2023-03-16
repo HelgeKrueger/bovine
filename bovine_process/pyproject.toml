@@ -10,6 +10,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.10"
 bovine-store = {path = "../bovine_store", develop = true}
+bovine = {path = "../bovine", develop = true}
 
 
 [tool.poetry.group.test.dependencies]

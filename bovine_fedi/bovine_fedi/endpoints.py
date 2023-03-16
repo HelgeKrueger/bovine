@@ -1,65 +1,17 @@
 import asyncio
 import json
 import logging
-import re
 from urllib.parse import urljoin
 
 from bovine.types import Visibility
-from bovine.utils.crypto import content_digest_sha256
-from bovine_process.process import (
-    default_outbox_process,
-    process_inbox,
-    send_outbox_item,
-)
+from bovine_process import default_outbox_process, process_inbox, process_outbox_item
 from bovine_process.types.processing_item import ProcessingItem
 from bovine_store.collection import collection_response
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, make_response, request
-from quart_auth import current_user
 
+from .server.authorization import add_authorization
 from .utils import update_id
-
-# from .process.content.store_incoming import add_incoming_to_outbox
-
-
-def is_get():
-    return re.match(r"^get$", request.method, re.IGNORECASE)
-
-
-def is_post():
-    return re.match(r"^post$", request.method, re.IGNORECASE)
-
-
-async def compute_signature_result() -> str | None:
-    if is_get():
-        return await current_app.config["validate_signature"](request, digest=None)
-
-    if is_post():
-        raw_data = await request.get_data()
-        digest = content_digest_sha256(raw_data)
-        return await current_app.config["validate_signature"](request, digest=digest)
-
-    return None
-
-
-async def add_authorization():
-    g.signature_result = await compute_signature_result()
-
-    g.retriever = "NONE"
-
-    if g.signature_result:
-        g.retriever = g.signature_result.split("#")[0]
-        return
-
-    if await current_user.is_authenticated:
-        manager = current_app.config["bovine_user_manager"]
-        _, actor = await manager.get_activity_pub(current_user.auth_id)
-        if actor:
-            g.retriever = actor.build()["id"]
-            return
-
-        logging.warning("Unknown auth id %s", current_user.auth_id)
-
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +53,7 @@ async def endpoints_get(identifier):
                 {"content-type": "application/activity+json"},
             )
 
-        if g.retriever is "NONE":
+        if g.retriever == "NONE":
             return (
                 actor.build(visibility=Visibility.WEB),
                 200,
@@ -169,7 +121,7 @@ async def endpoints_post(identifier):
         item = ProcessingItem(json.dumps(data))
         await default_outbox_process(item, activity_pub, actor)
 
-        current_app.add_background_task(send_outbox_item, item, activity_pub, actor)
+        current_app.add_background_task(process_outbox_item, item, activity_pub, actor)
 
         logger.debug(result)
 

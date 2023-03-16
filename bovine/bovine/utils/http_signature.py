@@ -4,7 +4,6 @@ from cryptography.hazmat.primitives.asymmetric import ed25519
 from multiformats import multibase, multicodec
 
 from .crypto import sign_message, verify_signature
-
 from .crypto.did_key import did_key_to_public_key
 
 logger = logging.getLogger(__name__)

@@ -31,7 +31,9 @@ jobs:
         poetry install
     - name: Lint with flake8
       run: |
+        cd bovine
         poetry run flake8
     - name: Test with pytest
       run: |
+        cd bovine
         poetry run pytest

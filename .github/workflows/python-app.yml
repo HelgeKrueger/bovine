@@ -33,27 +33,28 @@ jobs:
         poetry install
         poetry run flake8
         poetry run pytest
-    - name: bovine_store
-      run: |
-        cd bovine_store
-        poetry install
-        poetry run flake8
-        poetry run pytest
-    - name: bovine_user
-      run: |
-        cd bovine_user
-        poetry install
-        poetry run flake8
-        poetry run pytest
-    - name: bovine_fedi
-      run: |
-        cd bovine_fedi
-        poetry install
-        poetry run flake8
-        poetry run pytest
-    - name: tests
-      run: |
-        cd tests
-        poetry install
-        poetry run flake8
-        poetry run pytest
+# Github does not support hypercorn...
+#     - name: bovine_store
+#       run: |
+#         cd bovine_store
+#         poetry install
+#         poetry run flake8
+#         poetry run pytest
+#     - name: bovine_user
+#       run: |
+#         cd bovine_user
+#         poetry install
+#         poetry run flake8
+#         poetry run pytest
+#     - name: bovine_fedi
+#       run: |
+#         cd bovine_fedi
+#         poetry install
+#         poetry run flake8
+#         poetry run pytest
+#     - name: tests
+#       run: |
+#         cd tests
+#         poetry install
+#         poetry run flake8
+#         poetry run pytest

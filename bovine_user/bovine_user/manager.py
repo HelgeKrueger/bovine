@@ -27,6 +27,9 @@ class BovineUserManager:
         if user is None:
             return None, None
 
+        return await self.get_activity_pub_for_user(user)
+
+    async def get_activity_pub_for_user(self, user):
         mapped_endpoints = {x.endpoint_type: x for x in user.endpoints}
 
         account_url = mapped_endpoints[EndpointType.ACTOR].name

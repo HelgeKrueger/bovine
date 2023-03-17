@@ -42,9 +42,9 @@ async def endpoints_get(identifier):
         )
 
     if endpoint_information.endpoint_type == EndpointType.ACTOR:
-        activity_pub, actor = await manager.get_activity_pub(
-            endpoint_information.bovine_user.hello_sub
-        )
+        user = endpoint_information.bovine_user
+        await user.fetch_related("endpoints", "keypairs", "properties")
+        activity_pub, actor = await manager.get_activity_pub_for_user(user)
 
         if endpoint_path == g.retriever:
             return (
@@ -93,9 +93,9 @@ async def endpoints_post(identifier):
     ]:
         return {"status": "method not allowed"}, 405
 
-    activity_pub, actor = await manager.get_activity_pub(
-        endpoint_information.bovine_user.hello_sub
-    )
+    user = endpoint_information.bovine_user
+    await user.fetch_related("endpoints", "keypairs", "properties")
+    activity_pub, actor = await manager.get_activity_pub_for_user(user)
 
     actor = actor.build(visibility=Visibility.OWNER)
 

@@ -49,8 +49,6 @@ app.register_blueprint(default_configuration)
 
 @pytest.fixture
 def test_client_with_authorization():
-    app.config["account_name_or_none_for_token"] = AsyncMock()
-    app.config["account_name_or_none_for_token"].return_value = "user"
     app.config["validate_signature"] = AsyncMock()
     app.config["validate_signature"].return_value = "public_key"
 
@@ -61,8 +59,6 @@ def test_client_with_authorization():
 
 @pytest.fixture
 def test_client_with_bearer_authorization():
-    app.config["account_name_or_none_for_token"] = AsyncMock()
-    app.config["account_name_or_none_for_token"].return_value = "user"
     app.config["validate_signature"] = AsyncMock()
     app.config["validate_signature"].return_value = None
 

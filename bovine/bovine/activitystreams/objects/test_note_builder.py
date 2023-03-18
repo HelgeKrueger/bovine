@@ -2,7 +2,7 @@ from .note_builder import NoteBuilder
 
 
 def test_note_builder_basic():
-    result = NoteBuilder("account", "url", "content").build()
+    result = NoteBuilder("account", "content").build()
 
     assert result["@context"] == "https://www.w3.org/ns/activitystreams"
     assert result["type"] == "Note"
@@ -10,7 +10,7 @@ def test_note_builder_basic():
 
 
 def test_note_builder_hashtags():
-    result = NoteBuilder("account", "url", "content").with_hashtag("#tag1").build()
+    result = NoteBuilder("account", "content").with_hashtag("#tag1").build()
 
     assert isinstance(result["tag"], list)
     assert result["tag"][0] == {"name": "#tag1", "type": "Hashtag"}
@@ -18,7 +18,7 @@ def test_note_builder_hashtags():
 
 def test_note_builder_hashtag_and_mention():
     result = (
-        NoteBuilder("account", "url", "content")
+        NoteBuilder("account", "content")
         .with_hashtag("#tag1")
         .with_mention("proto://server/path/mention")
         .build()
@@ -35,14 +35,19 @@ def test_note_builder_hashtag_and_mention():
 
 
 def test_note_builder_cc():
-    result = NoteBuilder("account", "url", "content").as_public().add_cc("user").build()
+    result = (
+        NoteBuilder("account", "content", followers="account/followers")
+        .as_public()
+        .add_cc("user")
+        .build()
+    )
 
     assert set(result["cc"]) == {"account/followers", "user"}
 
 
 def test_note_builder_cc_and_to():
     result = (
-        NoteBuilder("account", "url", "content")
+        NoteBuilder("account", "content", followers="account/followers")
         .as_public()
         .add_cc("user")
         .add_cc("user")
@@ -57,21 +62,17 @@ def test_note_builder_cc_and_to():
 
 def test_note_builder_for_reply():
     result = (
-        NoteBuilder("account", "url", "content")
+        NoteBuilder("account", "content")
         .with_conversation("conversation")
         .with_reply("reply_id")
-        .with_reply_to_atom_uri("atom_uri")
         .build()
     )
 
     assert result["conversation"] == "conversation"
     assert result["inReplyTo"] == "reply_id"
-    assert result["inReplyToAtomUri"] == "atom_uri"
 
 
 def test_note_builder_for_source():
-    result = (
-        NoteBuilder("account", "url", "content").with_source("source", "format").build()
-    )
+    result = NoteBuilder("account", "content").with_source("source", "format").build()
 
     assert result["source"] == {"content": "source", "mediaType": "format"}

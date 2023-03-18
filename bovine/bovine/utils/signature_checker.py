@@ -66,8 +66,6 @@ class SignatureChecker:
             if http_signature.verify(public_key, parsed_signature.signature):
                 return parsed_signature.key_id
 
-            logger.info(request.headers)
-
         except Exception as e:
             logger.error(str(e))
             logger.error(request.headers)

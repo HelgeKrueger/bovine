@@ -1,25 +1,20 @@
 import asyncio
 from argparse import ArgumentParser
 
-import aiohttp
-
-from bovine.activitypub import actor_from_file
-from bovine.activitystreams.activities import build_create
+from bovine import BovineActor
 
 
 async def send_note(config_file, text):
-    async with aiohttp.ClientSession() as session:
-        actor = actor_from_file(config_file, session)
-
-        note = actor.note(text).as_public().build()
-        create = build_create(note).build()
+    async with BovineActor(config_file) as actor:
+        note = actor.note(text).add_to("https://mas.to/users/themilkman").build()
+        create = actor.activity_factory.create(note).build()
 
         await actor.send_to_outbox(create)
 
 
 parser = ArgumentParser()
 parser.add_argument("text")
-parser.add_argument("--config_file", default="helge.toml")
+parser.add_argument("--config_file", default="h.toml")
 
 args = parser.parse_args()
 

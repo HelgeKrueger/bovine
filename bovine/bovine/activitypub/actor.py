@@ -4,9 +4,11 @@ import logging
 import aiohttp
 import tomli
 
-from bovine.activitystreams.objects import build_note
 from bovine.clients.activity_pub import ActivityPubClient
 from bovine.clients.signed_http import signed_post
+
+from .activity_factory import ActivityFactory
+from .object_factory import ObjectFactory
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +18,8 @@ class ActivityPubActor:
         self.actor_id = actor_id
         self.client = None
         self.information = None
+        self._activity_factory = None
+        self._object_factory = None
 
     def with_http_signature(self, public_key_url, private_key, session=None):
         if session is None:
@@ -77,8 +81,21 @@ class ActivityPubActor:
         event_source_url = self.information["endpoints"]["eventSource"]
         return self.client.event_source(event_source_url)
 
-    def note(self, text):
-        return build_note(self.actor_id, "", text)
+    @property
+    def activity_factory(self):
+        if self._activity_factory is None:
+            self._activity_factory = ActivityFactory(self.information)
+        return self._activity_factory
+
+    @property
+    def object_factory(self):
+        if self._object_factory is None:
+            self._object_factory = ObjectFactory(self.information)
+        return self._object_factory
+
+    @property
+    def factories(self):
+        return self.activity_factory, self.object_factory
 
     @staticmethod
     def from_file(filename, session):

@@ -1,15 +1,16 @@
 # Bovine Core
 
 The core of bovine. This is intended to be sufficient to build
-an ActivityPub Client application. There are currently three
-things covered:
+an ActivityPub Client application. The only package of interest
+should be `bovine.activitypub`
 
-- `bovine_core.activitystreams` contains builders to create
+
+- `bovine.activitystreams` contains builders to create
  [ActivityStreams](https://www.w3.org/ns/activitystreams) objects.
-- `bovine_core.clients` contains routines to interact with
+- `bovine.clients` contains routines to interact with
  ActivityPub servers. In particular, routines to perform
  POST and GET requests using HTTP Signatures are implemented.
-- `bovine_core.utils` contains the cryptographic stuff to
+- `bovine.utils` contains the cryptographic stuff to
  handle HTTP Signatures.
 
 ## Examples and toml file format
@@ -25,8 +26,6 @@ private_key = """-----BEGIN PRIVATE KEY-----
 -----END PRIVATE KEY-----
 """
 ```
-
-__FIXME__: Use hello.coop to provide oauth support.
 
 The two scripts are `examples/sse.py` which opens the event source for the inbox
 and displays new elements. The second script `examples/send_note.py` allows one

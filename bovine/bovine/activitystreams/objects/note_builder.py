@@ -3,10 +3,9 @@ from typing import Set
 
 
 class NoteBuilder:
-    def __init__(self, account: str, url: str, content: str):
+    def __init__(self, account: str, content: str, followers=None):
         self.account = account
         self.content = content
-        self.url = url
         self.to: Set[str] = set()
         self.cc: Set[str] = set()
         self.published = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
@@ -14,16 +13,18 @@ class NoteBuilder:
         self.mentions: Set[str] = set()
         self.conversation: str | None = None
         self.reply_to_id: str | None = None
-        self.reply_to_atom_uri: str | None = None
         self.source: dict | None = None
+        self.followers = followers
 
     def as_public(self, followers=None):
         # FIXME: Broken in the way followers is added
         self.to.add("https://www.w3.org/ns/activitystreams#Public")
         if followers:
             self.cc.add(followers)
+        elif self.followers:
+            self.cc.add(self.followers)
         else:
-            self.cc.add(f"{self.account}/followers")
+            raise Exception("Followers unkown")
         return self
 
     def add_cc(self, recipient: str):
@@ -34,8 +35,13 @@ class NoteBuilder:
         self.to.add(recipient)
         return self
 
-    def as_unlisted(self):
-        self.to.add(f"{self.account}/followers")
+    def as_unlisted(self, followers=None):
+        if followers:
+            self.cc.add(followers)
+        elif self.followers:
+            self.cc.add(self.followers)
+        else:
+            raise Exception("Followers unkown")
         self.cc.add("https://www.w3.org/ns/activitystreams#Public")
         return self
 
@@ -56,10 +62,6 @@ class NoteBuilder:
         self.reply_to_id = rid
         return self
 
-    def with_reply_to_atom_uri(self, uri: str):
-        self.reply_to_atom_uri = uri
-        return self
-
     def with_source(self, content: str, media_type: str):
         self.source = {"content": content, "mediaType": media_type}
         return self
@@ -67,7 +69,6 @@ class NoteBuilder:
     def build(self) -> dict:
         result: dict = {
             "@context": "https://www.w3.org/ns/activitystreams",
-            "id": self.url,
             "attributedTo": self.account,
             "type": "Note",
             "inReplyTo": None,
@@ -81,9 +82,6 @@ class NoteBuilder:
 
         if self.reply_to_id:
             result["inReplyTo"] = self.reply_to_id
-
-        if self.reply_to_atom_uri:
-            result["inReplyToAtomUri"] = self.reply_to_atom_uri
 
         if self.conversation:
             result["conversation"] = self.conversation

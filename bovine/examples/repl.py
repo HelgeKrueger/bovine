@@ -1,7 +1,27 @@
-import aiohttp
+import asyncio
+from argparse import ArgumentParser
 
-from bovine.activitypub import actor_from_file
+from ptpython.repl import embed
+
+from bovine import BovineActor
+
+loop = asyncio.get_event_loop()
 
 
-async def get_actor():
-    return actor_from_file("h.toml", aiohttp.ClientSession())
+async def repl(config_file):
+    async with BovineActor(config_file) as actor:
+        activity_factory, object_factory = actor.factories
+        await embed(
+            globals=globals(),
+            locals=locals(),
+            return_asyncio_coroutine=True,
+            patch_stdout=True,
+        )
+
+
+parser = ArgumentParser()
+parser.add_argument("--config_file", default="h.toml")
+
+args = parser.parse_args()
+
+asyncio.run(repl(args.config_file))

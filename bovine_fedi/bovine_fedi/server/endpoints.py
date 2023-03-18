@@ -10,8 +10,9 @@ from bovine_store.collection import collection_response
 from bovine_user.types import EndpointType
 from quart import Blueprint, current_app, g, make_response, request
 
-from .server.authorization import add_authorization
-from .utils import update_id
+from bovine_fedi.utils import update_id
+
+from .authorization import add_authorization
 
 logger = logging.getLogger(__name__)
 

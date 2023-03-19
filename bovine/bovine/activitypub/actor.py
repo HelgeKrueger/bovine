@@ -8,6 +8,7 @@ from bovine.clients.activity_pub import ActivityPubClient
 from bovine.clients.signed_http import signed_post
 
 from .activity_factory import ActivityFactory
+from .collection_helper import CollectionHelper
 from .object_factory import ObjectFactory
 
 logger = logging.getLogger(__name__)
@@ -96,6 +97,16 @@ class ActivityPubActor:
     @property
     def factories(self):
         return self.activity_factory, self.object_factory
+
+    async def inbox(self):
+        inbox_collection = CollectionHelper(self.information["inbox"], self)
+        await inbox_collection.refresh()
+        return inbox_collection
+
+    async def outbox(self):
+        inbox_collection = CollectionHelper(self.information["outbox"], self)
+        await inbox_collection.refresh()
+        return inbox_collection
 
     @staticmethod
     def from_file(filename, session):

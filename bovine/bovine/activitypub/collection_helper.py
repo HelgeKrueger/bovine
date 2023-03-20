@@ -1,5 +1,9 @@
 import bleach
 
+from bovine.activitystreams.utils.print import print_activity
+
+from .collection_iterator import CollectionIterator
+
 
 def short_version_of_object(obj):
     if "object" in obj:
@@ -50,13 +54,12 @@ class CollectionHelper:
             return self.element_cache[element]
 
         result = await self.actor.proxy_element(element)
-        result = await result.json()
 
         self.element_cache[element] = result
 
         return result
 
-    async def next_item(self, do_print=True):
+    async def next_item(self, do_print=False):
         if self.item_index >= len(self.items):
             response = await self.actor.get(self.next_items)
             self.items += response["orderedItems"]
@@ -68,28 +71,9 @@ class CollectionHelper:
         result = await self.get_element(result)
 
         if do_print:
-            if "type" in result:
-                print(f"Type: {result['type']}")
-                print()
-
-            if "object" in result and isinstance(result["object"], dict):
-                obj = result["object"]
-
-                if "type" in obj:
-                    print(f"Type: {obj['type']}")
-                    print()
-
-                if "name" in obj and obj["name"]:
-                    print(f"Name: {obj['name']}")
-                    print()
-                if "summary" in obj and obj["summary"]:
-                    print("Summary")
-                    print(bleach.clean(obj["summary"], tags=[], strip=True))
-                    print()
-
-                if "content" in obj and obj["content"]:
-                    print("Content")
-                    print(bleach.clean(obj["content"], tags=[], strip=True))
-                    print()
+            print_activity(result)
 
         return result
+
+    def iterate(self, max_number=10):
+        return CollectionIterator(self, max_number)

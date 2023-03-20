@@ -28,7 +28,10 @@ def property_for_key_as_set(data, key):
 
 def recipients_for_object(data):
     return set.union(
-        *[property_for_key_as_set(data, key) for key in ["to", "cc", "bto", "bcc"]]
+        *[
+            property_for_key_as_set(data, key)
+            for key in ["to", "cc", "bto", "bcc", "audience"]
+        ]
     )
 
 

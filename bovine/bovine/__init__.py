@@ -2,7 +2,6 @@ import aiohttp
 import tomli
 
 from .activitypub.actor import ActivityPubActor
-from .version import __version__
 
 
 class BovineActor(ActivityPubActor):
@@ -14,14 +13,19 @@ class BovineActor(ActivityPubActor):
 
         super().__init__(self.config["account_url"])
 
-    async def __aenter__(self):
-        self.session = aiohttp.ClientSession()
+    async def init(self, session=None):
+        self.session = session
+        if session is None:
+            self.session = aiohttp.ClientSession()
         self.with_http_signature(
             self.config["public_key_url"],
             self.config["private_key"],
             session=self.session,
         )
         await self.load()
+
+    async def __aenter__(self):
+        await self.init()
         return self
 
     async def __aexit__(self, *args):

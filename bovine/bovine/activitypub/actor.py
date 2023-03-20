@@ -58,7 +58,7 @@ class ActivityPubActor:
         return response
 
     async def proxy_element(self, target):
-        return await signed_post(
+        result = await signed_post(
             self.client.session,
             self.client.public_key_url,
             self.client.private_key,
@@ -66,6 +66,7 @@ class ActivityPubActor:
             f"id={target}",
             content_type="application/x-www-form-urlencoded",
         )
+        return await result.json()
 
     async def get_ordered_collection(self, target):
         return await self.client.get_ordered_collection(target)

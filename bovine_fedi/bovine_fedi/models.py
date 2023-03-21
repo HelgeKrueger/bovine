@@ -22,6 +22,11 @@ class PublicKey(Model):
     public_key = fields.TextField()
 
 
+class PublicKeyPK(Model):
+    url = fields.CharField(max_length=255, pk=True)
+    public_key = fields.TextField()
+
+
 class StoredObject(Model):
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255, unique=True)

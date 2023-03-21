@@ -1,6 +1,6 @@
 import logging
 
-from bovine_fedi.models import PublicKey
+from bovine_fedi.models import PublicKeyPK as PublicKey
 
 logger = logging.getLogger(__name__)
 

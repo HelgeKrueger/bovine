@@ -33,11 +33,7 @@ class ActivityPubActor:
     async def load(self):
         if self.client is None:
             raise Exception("Client not set in ActivityPubActor")
-
-        response = await self.client.get(self.actor_id)
-        response.raise_for_status()
-
-        self.information = json.loads(await response.text())
+        self.information = self.get(self.actor_id)
 
         logger.debug("Retrieved information %s", self.information)
 

@@ -15,6 +15,7 @@ aerich = "^0.7.1"
 bovine-store = {path = "../bovine_store", develop = true}
 bovine-user = {path = "../bovine_user", develop = true}
 bovine-process = {path = "../bovine_process", develop = true}
+asyncstdlib = "^3.10.5"
 
 [tool.aerich]
 tortoise_orm = "bovine_fedi.TORTOISE_ORM"

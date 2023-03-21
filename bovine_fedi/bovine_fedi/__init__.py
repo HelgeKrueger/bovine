@@ -15,7 +15,8 @@ from .server import default_configuration
 from .server.authorization import add_authorization
 from .server.endpoints import endpoints
 from .utils import rewrite_activity_request
-from .version import __version__
+
+# from .version import __version__
 
 log_format = "[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s"
 logging.basicConfig(

@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 endpoints = Blueprint("endpoint", __name__)
 endpoints.before_request(add_authorization)
 
+actor_cache = {}
+
 
 @endpoints.get("/<identifier>")
 async def endpoints_get(identifier):
@@ -43,6 +45,9 @@ async def endpoints_get(identifier):
         )
 
     if endpoint_information.endpoint_type == EndpointType.ACTOR:
+        if endpoint_path in actor_cache and endpoint_path not in [g.retriever, "NONE"]:
+            return actor_cache[endpoint_path]
+
         user = endpoint_information.bovine_user
         await user.fetch_related("endpoints", "keypairs", "properties")
         activity_pub, actor = await manager.get_activity_pub_for_user(user)
@@ -60,8 +65,12 @@ async def endpoints_get(identifier):
                 200,
                 {"content-type": "application/activity+json"},
             )
+        to_cache = actor.build(visibility=Visibility.PUBLIC)
+
+        actor_cache[endpoint_path] = to_cache
+
         return (
-            actor.build(visibility=Visibility.PUBLIC),
+            to_cache,
             200,
             {"content-type": "application/activity+json"},
         )

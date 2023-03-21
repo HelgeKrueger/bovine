@@ -20,6 +20,8 @@ def id_for_object(data):
 
 
 def property_for_key_as_set(data, key):
+    if data is None:
+        return set()
     result = data.get(key, [])
     if isinstance(result, str):
         return set([result])

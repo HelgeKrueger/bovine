@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Object not available</title>
+  </head>
+  <body>
+    <h1>This object is not available as a web object</h1>
+
+    Please search for <b>{{object_path}}</b> in your ActivityPub Client
+    application.
+
+    <p>
+      <b>Example:</b> In the Mastodon web client this can be achieved by copying
+      the url and pasting it into the search field at the top left.
+    </p>
+
+    <h3>Technical Note</h3>
+    Not providing a web view for all objects is due to:
+    <ol>
+      <li>
+        Wanting <a href="https://github.com/HelgeKrueger/bovine">Bovine</a> to
+        implement some "privacy maximalist" opinion
+      </li>
+      <li>
+        Thinking about how to properly displaying an arbitary ActivityStreams
+        object gives me a headache, actually arbitrary json-ld objects. If you
+        have a plan, please submit it as a
+        <a href="https://codeberg.org/fediverse/fep/src/branch/main/feps"
+          >FEP</a
+        >
+        I will hopefully get around to implement it. Before making suggestions:
+        Bovine flattens all json-ld objects before storage. Please take this
+        into account for your proposal.
+      </li>
+      <li>
+        If this disappoints you, have a Recipe, this might well be the element
+        you were looking for.
+      </li>
+    </ol>
+    <pre>
+        {
+            "@context": "http://schema.org",
+            "@type": "Recipe",
+            "name": "Peanut Butter and Jelly Sandwich",
+            "recipeIngredient": [
+              "Bread",
+              "Peanut Butter",
+              "Raspberry Jam",
+              "Coffee (optional)"
+            ],
+            "recipeCategory": "Breakfast",
+            "recipeInstructions": [
+              {
+                "@type": "HowToStep",
+                "text": "Take a slice of bread and put it on a plate"
+              },
+              {
+                "@type": "HowToStep",
+                "text": "Spread peanut butter on the bread"
+              },
+              {
+                "@type": "HowToStep",
+                "text": "Spread raspberry jam on top of the peanut butter"
+              },
+              {
+                "@type": "HowToStep",
+                "text": "Eat your PB&J Sandwich and drink your coffee if you have it"
+              },
+              {
+                "@type": "HowToStep",
+                "text": "Check if you are still hungry, if yes a repeat step 1"
+              }
+            ]
+          }          
+    </pre>
+  </body>
+</html>

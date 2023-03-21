@@ -60,6 +60,7 @@ async def startup():
 @app.before_request
 async def add_actor():
     g.retriever = "owner"
+    # g.retriever = None
 
 
 app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")

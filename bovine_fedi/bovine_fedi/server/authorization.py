@@ -17,7 +17,7 @@ def is_post():
 
 
 async def compute_signature_result() -> str | None:
-    if is_get():
+    if request.method.lower() == "get":
         return await current_app.config["validate_signature"](request, digest=None)
 
     if is_post():
@@ -31,17 +31,15 @@ async def compute_signature_result() -> str | None:
 async def add_authorization():
     g.signature_result = await compute_signature_result()
 
-    g.retriever = "NONE"
-
     if g.signature_result:
         g.retriever = g.signature_result.split("#")[0]
-        return
-
-    if await current_user.is_authenticated:
+    elif await current_user.is_authenticated:
         manager = current_app.config["bovine_user_manager"]
         _, actor = await manager.get_activity_pub(current_user.auth_id)
         if actor:
             g.retriever = actor.build()["id"]
-            return
-
-        logger.warning("Unknown auth id %s", current_user.auth_id)
+        else:
+            g.retriever = "NONE"
+            logger.warning("Unknown auth id %s", current_user.auth_id)
+    else:
+        g.retriever = "NONE"

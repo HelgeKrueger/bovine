@@ -199,6 +199,22 @@ files = [
 ]
 
 [[package]]
+name = "asyncstdlib"
+version = "3.10.5"
+description = "The missing async toolbox"
+category = "main"
+optional = false
+python-versions = "~=3.6"
+files = [
+    {file = "asyncstdlib-3.10.5-py2.py3-none-any.whl", hash = "sha256:fcf828d1064f578e639728544717268e7a18500f7dfee3f80af3aa5609601037"},
+    {file = "asyncstdlib-3.10.5.tar.gz", hash = "sha256:e9fc35e811d5b51d8fe3d17b62234b5e8e1a2513364228081cd88637b3a3506a"},
+]
+
+[package.extras]
+doc = ["sphinx", "sphinxcontrib-trio"]
+test = ["black", "coverage", "flake8", "flake8-2020", "flake8-bugbear", "mypy", "pytest", "pytest-cov"]
+
+[[package]]
 name = "attrs"
 version = "22.2.0"
 description = "Classes Without Boilerplate"
@@ -352,6 +368,7 @@ develop = true
 [package.dependencies]
 aerich = "^0.7.1"
 aiohttp = "^3.8.3"
+asyncstdlib = "^3.10.5"
 bovine-process = {path = "../bovine_process", develop = true}
 bovine-store = {path = "../bovine_store", develop = true}
 bovine-user = {path = "../bovine_user", develop = true}

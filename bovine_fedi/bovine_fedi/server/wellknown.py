@@ -1,3 +1,4 @@
+import asyncstdlib
 from bovine.utils.parse import parse_fediverse_handle
 from quart import Blueprint, current_app, request
 
@@ -25,6 +26,11 @@ async def webfinger() -> tuple[dict, int]:
     if not resource or not resource.startswith("acct:"):
         return {"error": "invalid request"}, 400
 
+    return await webfinger_response(resource)
+
+
+@asyncstdlib.lru_cache(32)
+async def webfinger_response(resource):
     domain = current_app.config["DOMAIN"]
 
     account_name, account_domain = parse_fediverse_handle(resource[5:])

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from quart import Quart, g
 from quart_auth import AuthManager
@@ -46,7 +47,9 @@ async def startup():
         {
             "@context": "https://www.w3.org/ns/activitystreams",
             "type": "Like",
+            "summary": "Somebody liked something",
         },
+        as_public=True,
     )
 
     await add_to_collection("/endpoint", result[0]["id"])
@@ -59,8 +62,10 @@ async def startup():
 
 @app.before_request
 async def add_actor():
-    g.retriever = "owner"
-    # g.retriever = None
+    if os.environ.get("AUTH"):
+        g.retriever = "owner"
+    else:
+        g.retriever = None
 
 
 app.register_blueprint(bovine_store_blueprint, url_prefix="/objects")

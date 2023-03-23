@@ -1,9 +1,11 @@
 import logging
 from urllib.parse import urljoin
 
-from quart import Blueprint, g, request, current_app, render_template
+from quart import Blueprint, g, request, current_app, render_template, redirect
 
 from bovine.activitystreams.utils import is_public
+
+from .utils import determine_summary
 
 logger = logging.getLogger(__name__)
 
@@ -57,4 +59,23 @@ async def retrieve_from_store(uuid):
 
 
 async def fallback_handler(object_path):
-    return await render_template("fallback.html", object_path=object_path), 415
+    object_type = None
+    object_summary = None
+    store = current_app.config["bovine_store"]
+    obj = await store.retrieve("Public", object_path)
+
+    if obj:
+        if obj.get("url"):
+            return redirect(obj.get("url"))
+        object_type = obj.get("type")
+        object_summary = determine_summary(obj)
+
+    return (
+        await render_template(
+            "fallback.html",
+            object_path=object_path,
+            object_type=object_type,
+            object_summary=object_summary,
+        ),
+        415,
+    )

@@ -34,3 +34,8 @@ printed to the command line after start.
 Note: This example creates two files `db.sqlite3`, which contains the
 database and `context_cache.sqlite`, which contains the cache of json-ld
 contexts. Furthemore configuration values are read from `bovine_config.toml`.
+
+## TODO
+
+- [ ] Remote and local objects should be stored in different tables; this will improve access performance
+- [ ] Think about an audit of the code to consider if it actually does treat permissions correctly

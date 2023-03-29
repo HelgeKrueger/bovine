@@ -1,3 +1,6 @@
+# [Moved to codeberg.org](https://codeberg.org/helge/bovine/)
+
+
 # Bovine
 
 Bovine is a set of packages that simplify working with [ActivityPub](https://www.w3.org/TR/activitypub/). The design goal is to provide an architecture that allows one to replace certain parts. For example the package [bovine_store](bovine_store) contains as the name indicates the data store being used. If the architecture was properly modular, it should be possible to replace bovine_store with a different implementation, without having to change anything in the rest of the code. I don't think I have met this goal yet, but in this sense bovine should be _modular_.
